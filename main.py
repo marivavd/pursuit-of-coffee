@@ -1,4 +1,4 @@
-from menu import *
+from menu import start_screen, pygame, size
 from map import Map
 
 if __name__ == '__main__':

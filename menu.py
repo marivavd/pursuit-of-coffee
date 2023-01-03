@@ -24,6 +24,10 @@ class Rect(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
 
 
+class Exit(BaseException):
+    ...
+
+
 def terminate():
     pygame.quit()
     sys.exit()
@@ -33,7 +37,10 @@ def start_screen(screen):
     fon = pygame.transform.scale(load_image('fon.jpg'), (width, height))
     screen.blit(fon, (0, 0))
     init_intro_text(screen)
-    draw_heror(screen)
+    try:
+        draw_heror(screen)
+    except Exit:
+        return Exit
 
 
 def init_intro_text(screen, text_coord=50,
@@ -93,7 +100,7 @@ def event(raccoon, hedgehog, start):
         elif event.type == pygame.MOUSEBUTTONUP:
             x, y = event.pos
             if start.rect.collidepoint(x, y):
-                return 'raccoon' if raccoon.color == (0, 165, 80) else 'hedgehog'
+                raise Exit('raccoon' if raccoon.color == (0, 165, 80) else 'hedgehog')
             elif hedgehog.rect.collidepoint(x, y) and hedgehog.color != (0, 165, 80):
                 hedgehog.color = (0, 165, 80)
                 raccoon.color = (128, 128, 128)
