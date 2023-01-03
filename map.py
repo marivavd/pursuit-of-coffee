@@ -1,8 +1,9 @@
 from load_image import load_image
 from animals import Hedgehog, Raccoon
 from menu import pygame
-from const import FPS, size, clock
+from const import FPS, size, clock, period
 import controls
+import obstacles
 
 
 class Map:
@@ -17,17 +18,15 @@ class Map:
         self.fon = pygame.transform.scale(load_image('fon.jpg'), size)
 
     def start_screen(self):
+        all_obstancles = pygame.sprite.Group()
         t = 0
-        chase = False
-        self.hero.x += size[0] // 2
+        chase = True
         while True:
             self.screen.fill((255, 255, 255))
-            controls.event()
-            t += 20
+            controls.event(self.hero)
+            t += period
             self.screen.blit(self.fon, (-t, 0))
             self.screen.blit(self.fon, (-t + size[0], 0))
-            if t >= size[0] // 2:
-                chase = True
             if chase:
                 self.screen.blit(self.hero.img, (self.hero.x, self.hero.y))
                 self.screen.blit(self.enemy.img, (self.enemy.x, self.enemy.y))
