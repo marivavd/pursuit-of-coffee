@@ -17,7 +17,6 @@ class Raccoon(Animal):
         self.img = pygame.transform.scale(load_image('raccoon.png'), (width // 10, height // 10))
 
 
-
 class Hedgehog(Animal):
     def __init__(self):
         super(Hedgehog, self).__init__()

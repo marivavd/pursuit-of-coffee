@@ -1,7 +1,7 @@
-import pygame, sys
+import sys
 from const import *
 from load_image import load_image
-import animals
+
 
 class Images(pygame.sprite.Sprite):
 
@@ -12,8 +12,8 @@ class Images(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
 
-class Rect(pygame.sprite.Sprite):
 
+class Rect(pygame.sprite.Sprite):
     def __init__(self, group, x, y, color):
         super().__init__(group)
         width = 40
@@ -23,10 +23,10 @@ class Rect(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
 
 
-
 def terminate():
     pygame.quit()
     sys.exit()
+
 
 def start_screen(screen):
     intro_text = ["Pursuit of coffee", "",
@@ -52,7 +52,7 @@ def start_screen(screen):
     colors = [(100, 37, 51), (0, 0, 0), (0, 0, 0)]
     n = 0
     for line in intro_text:
-        string_rendered = font.render(line, 1, colors[n])
+        string_rendered = font.render(line, True, colors[n])
         n += 1
         font = pygame.font.Font(None, 50)
         intro_rect = string_rendered.get_rect()
