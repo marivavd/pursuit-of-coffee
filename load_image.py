@@ -1,4 +1,6 @@
-import pygame, os
+import pygame
+import os
+
 
 
 def load_image(name, color_key=None):
