@@ -9,6 +9,7 @@ class Stone(pygame.sprite.Sprite):
         self.rect.x = pos_x
         self.rect.y = pos_y
 
+
 class Bush(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y, group):
         super().__init__(group)
