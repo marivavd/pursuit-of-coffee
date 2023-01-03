@@ -6,8 +6,8 @@ from const import width, height, ground_level
 class Animal:
     def __init__(self):
         self.pose = []
-        self.x = 1000
-        self.y = 470
+        self.x = 400
+        self.y = 430
         self.max_y = 420
         self.min_y = 470
         self.flag_jump = False
@@ -31,13 +31,13 @@ class Animal:
 class Raccoon(Animal):
     def __init__(self):
         super(Raccoon, self).__init__()
-        self.img = pygame.transform.scale(load_image('raccoon.png'), (width // 10, height // 10))
+        self.img = pygame.transform.scale(load_image('raccoon.png'), (width // 6, height // 6))
 
 
 class Hedgehog(Animal):
     def __init__(self):
         super(Hedgehog, self).__init__()
-        self.img = pygame.transform.scale(load_image('hedgehog.png'), (width // 10, height // 10))
+        self.img = pygame.transform.scale(load_image('hedgehog.png'), (width // 6, height // 6))
 
 
 class Goose(Animal):
