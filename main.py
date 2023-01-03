@@ -5,6 +5,6 @@ import controls
 if __name__ == '__main__':
     pygame.init()
     screen = pygame.display.set_mode(size)
-    start_screen(screen)
-    map = Map(screen)
+    hero = start_screen(screen)
+    map = Map(screen, hero)
     map.start_screen()
