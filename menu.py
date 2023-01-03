@@ -1,6 +1,7 @@
 import pygame, sys
 from const import *
 from load_image import load_image
+import animals
 
 class Images(pygame.sprite.Sprite):
 
@@ -29,7 +30,7 @@ def terminate():
 
 def start_screen(screen):
     intro_text = ["Pursuit of coffee", "",
-                  "Выберите персонажа:",]
+                  "Выберите персонажа:"]
     fon = pygame.transform.scale(load_image('fon.jpg'), (width, height))
     all_sprites = pygame.sprite.Group()
     image_r = pygame.transform.scale(load_image('raccoon.png', -1), (213, 177))
@@ -51,7 +52,6 @@ def start_screen(screen):
     colors = [(100, 37, 51), (0, 0, 0), (0, 0, 0)]
     n = 0
     for line in intro_text:
-        print(n)
         string_rendered = font.render(line, 1, colors[n])
         n += 1
         font = pygame.font.Font(None, 50)
@@ -69,7 +69,10 @@ def start_screen(screen):
             elif event.type == pygame.MOUSEBUTTONUP:
                 x, y = event.pos
                 if start.rect.collidepoint(x, y):
-                    return  # начинаем игру
+                    if color_r == (0, 165, 80):
+                        return 'raccoon'
+                    else:
+                        return 'hedgehog'
                 elif hedgehog.rect.collidepoint(x, y):
                     if color_h != (0, 165, 80):
                         color_h = (0, 165, 80)
