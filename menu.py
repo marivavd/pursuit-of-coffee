@@ -5,8 +5,9 @@ from load_image import load_image
 
 class Images(pygame.sprite.Sprite):
 
-    def __init__(self, group, x, y, image):
+    def __init__(self, group, color, x, y, image):
         super().__init__(group)
+        self.color = color
         self.image = image
         self.rect = self.image.get_rect()
         self.rect.x = x
@@ -29,31 +30,19 @@ def terminate():
 
 
 def start_screen(screen):
-    intro_text = ["Pursuit of coffee", "",
-                  "Выберите персонажа:"]
     fon = pygame.transform.scale(load_image('fon.jpg'), (width, height))
-    all_sprites = pygame.sprite.Group()
-    image_r = pygame.transform.scale(load_image('raccoon.png', -1), (213, 177))
-    raccoon = Images(all_sprites, -10, 170, image_r)
-    all_sprites.add(raccoon)
-    rect_r = raccoon.rect
-    color_r = (0, 165, 80)
-    image_h = pygame.transform.scale(load_image('hedgehog.png', -1), (203, 167))
-    hedgehog = Images(all_sprites, 180, 170, image_h)
-    all_sprites.add(hedgehog)
-    rect_h = hedgehog.rect
-    color_h = (128, 128, 128)
-    image_s = load_image('start.png', -1)
-    start = Images(all_sprites, 400, 350, image_s)
-    all_sprites.add(start)
     screen.blit(fon, (0, 0))
+    init_intro_text(screen)
+    draw_heror(screen)
+
+
+def init_intro_text(screen, text_coord=50,
+                    colors=((100, 37, 51), (0, 0, 0), (0, 0, 0)),
+                    intro_text=("Pursuit of coffee", "",
+                                "Выберите персонажа:")):
     font = pygame.font.Font(None, 70)
-    text_coord = 50
-    colors = [(100, 37, 51), (0, 0, 0), (0, 0, 0)]
-    n = 0
-    for line in intro_text:
+    for n, line in enumerate(intro_text):
         string_rendered = font.render(line, True, colors[n])
-        n += 1
         font = pygame.font.Font(None, 50)
         intro_rect = string_rendered.get_rect()
         text_coord += 10
@@ -62,29 +51,61 @@ def start_screen(screen):
         text_coord += intro_rect.height
         screen.blit(string_rendered, intro_rect)
 
+
+def draw_heror(screen):
+    all_sprites = pygame.sprite.Group()
+    raccoon = init_raccoon(all_sprites)
+    hedgehog = init_hedgehog(all_sprites)
+    start = init_start(all_sprites)
     while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                terminate()
-            elif event.type == pygame.MOUSEBUTTONUP:
-                x, y = event.pos
-                if start.rect.collidepoint(x, y):
-                    if color_r == (0, 165, 80):
-                        return 'raccoon'
-                    else:
-                        return 'hedgehog'
-                elif hedgehog.rect.collidepoint(x, y):
-                    if color_h != (0, 165, 80):
-                        color_h = (0, 165, 80)
-                        color_r = (128, 128, 128)
-                elif raccoon.rect.collidepoint(x, y):
-                    if color_r != (0, 165, 80):
-                        color_r = (0, 165, 80)
-                        color_h = (128, 128, 128)
-        pygame.draw.rect(screen, color_r,
-                         (rect_r[0] + 40, rect_r[1] + 30, rect_r[2] - 60, rect_r[3] - 30), 8)
-        pygame.draw.rect(screen, color_h,
-                         (rect_h[0] + 10, rect_h[1] + 30, rect_h[2] - 20, rect_h[3] - 20), 8)
+        event(raccoon, hedgehog, start)
+        draw_rect(screen, raccoon, hedgehog)
         all_sprites.draw(screen)
         pygame.display.flip()
         clock.tick(FPS)
+
+
+def init_raccoon(all_sprites):
+    image_r = pygame.transform.scale(load_image('raccoon.png', -1), (213, 177))
+    raccoon = Images(all_sprites, (0, 165, 80), -10, 170, image_r)
+    all_sprites.add(raccoon)
+    return raccoon
+
+
+def init_hedgehog(all_sprites):
+    image_h = pygame.transform.scale(load_image('hedgehog.png', -1), (203, 167))
+    hedgehog = Images(all_sprites, (128, 128, 128), 180, 170, image_h)
+    all_sprites.add(hedgehog)
+    return hedgehog
+
+
+def init_start(all_sprites):
+    image_s = load_image('start.png', -1)
+    start = Images(all_sprites, None, 400, 350, image_s)
+    all_sprites.add(start)
+    return start
+
+
+def event(raccoon, hedgehog, start):
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            terminate()
+        elif event.type == pygame.MOUSEBUTTONUP:
+            x, y = event.pos
+            if start.rect.collidepoint(x, y):
+                return 'raccoon' if raccoon.color == (0, 165, 80) else 'hedgehog'
+            elif hedgehog.rect.collidepoint(x, y) and hedgehog.color != (0, 165, 80):
+                hedgehog.color = (0, 165, 80)
+                raccoon.color = (128, 128, 128)
+            elif raccoon.rect.collidepoint(x, y) and raccoon.color != (0, 165, 80):
+                raccoon.color = (0, 165, 80)
+                hedgehog.color = (128, 128, 128)
+
+
+def draw_rect(screen, raccoon, hedgehog):
+    pygame.draw.rect(screen, raccoon.color,
+                     (raccoon.rect[0] + 40, raccoon.rect[1] + 30,
+                      raccoon.rect[2] - 60, raccoon.rect[3] - 30), 8)
+    pygame.draw.rect(screen, hedgehog.color,
+                     (hedgehog.rect[0] + 10, hedgehog.rect[1] + 30,
+                      hedgehog.rect[2] - 20, hedgehog.rect[3] - 20), 8)
