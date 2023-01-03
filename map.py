@@ -1,6 +1,6 @@
 from load_image import load_image
 from animals import Hedgehog, Raccoon
-from menu import terminate, pygame
+from menu import pygame
 from const import FPS, size, clock
 import controls
 
