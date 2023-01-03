@@ -59,7 +59,7 @@ def draw_heror(screen):
     start = init_start(all_sprites)
     while True:
         event(raccoon, hedgehog, start)
-        draw_rect(screen, hedgehog, raccoon)
+        draw_rect(screen, raccoon, hedgehog)
         all_sprites.draw(screen)
         pygame.display.flip()
         clock.tick(FPS)
