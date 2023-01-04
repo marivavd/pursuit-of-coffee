@@ -2,7 +2,8 @@ from load_image import load_image
 from animals import Hedgehog, Raccoon
 from menu import pygame
 from const import FPS, size, clock, period
-import controls, obstacles, const
+from controls import Event
+import obstacles, const
 
 
 class Map:
@@ -14,6 +15,7 @@ class Map:
         else:
             self.hero = Hedgehog()
             self.enemy = Raccoon()
+        self.event = Event()
         self.is_jump = False
         self.jump_count = 10
         self.fon = pygame.transform.scale(load_image('fon.jpg'), size)
@@ -26,10 +28,9 @@ class Map:
         chase = True
         while True:
             self.screen.fill((255, 255, 255))
-            controls.event(self.hero, all_obstancles)
+            self.event.proverka(self.hero, all_obstancles)
             self.jump()
             self.check_game_over(chase)
-            flag_game_over = controls.check_crash()
             self.t %= size[0]
             pygame.display.flip()
             clock.tick(FPS)
@@ -43,9 +44,8 @@ class Map:
             self.enemy.x -= 5
 
     def jump(self):
-        flag_jump = controls.check_jump()
-        print(flag_jump)
-        if flag_jump:
+        if self.event.isjump:
+            self.event.isjump = False
             self.is_jump = True
         if self.is_jump:
             if self.jump_count >= -10:
@@ -59,8 +59,7 @@ class Map:
                 self.jump_count = 10
 
     def check_game_over(self, chase):
-        flag_game_over = controls.check_crash()
-        if not flag_game_over:
+        if not self.event.game_over:
             self.t += period
             self.screen.blit(self.fon, (-self.t, 0))
             self.screen.blit(self.fon, (-self.t + size[0], 0))
