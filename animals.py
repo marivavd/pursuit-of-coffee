@@ -13,7 +13,7 @@ class Animal:
 
     def shift_side(self, k=1):
         shift = 12 * k
-        if ground_level - abs(shift * 3) < self.min_y + shift < ground_level:  # 3 = колл дорожек
+        if ground_level - abs(shift * 3) < self.min_y + shift < ground_level:  # 3 = кол-во дорожек
             self.y += shift
             self.max_y += shift
             self.min_y += shift

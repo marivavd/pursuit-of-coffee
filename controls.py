@@ -12,6 +12,10 @@ def event(hero, all_obstacles):
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP:
                 Isjump = True
+            elif event.key == pygame.K_LEFT:
+                hero.shift_side(-1)
+            elif event.key == pygame.K_RIGHT:
+                hero.shift_side()
         elif True:
             for i in all_obstacles:
                 if not pygame.sprite.collide_mask(i, hero):
