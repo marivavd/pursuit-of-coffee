@@ -1,8 +1,9 @@
 import sys
 import pygame
 Isjump = False
+game_over = False
 
-def event(hero):
+def event(hero, all_obstacles):
     global Isjump, Jumpcount
     # обработка событий
     for event in pygame.event.get():
@@ -11,10 +12,24 @@ def event(hero):
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP:
                 Isjump = True
+        elif True:
+            for i in all_obstacles:
+                if not pygame.sprite.collide_mask(i, hero):
+                    game_over = True
 
-def check():
+def check_jump():
     global Isjump
     if Isjump:
         Isjump = False
         return True
+    return False
+
+def check_crash():
+    global game_over
+    if game_over:
+        game_over = False
+        return True
+    return False
+
+
 
