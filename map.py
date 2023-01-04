@@ -15,6 +15,7 @@ class Map:
             self.hero, self.enemy = Hedgehog(), Raccoon()
         self.sp_enemies = [self.enemy]
         self.event = Event()
+        self.a = 0
         self.is_jump = False
         self.jump_count = 10
         self.fon = pygame.transform.scale(load_image('fon.jpg'), size)
@@ -78,8 +79,12 @@ class Map:
             print('Game over')
 
     def check_goose(self):
-        if self.event.goose and len(self.sp_enemies) != 2:
+        self.a += 1
+        # if self.event.goose and len(self.sp_enemies) != 2:
+        if self.a == 56:
             self.sp_enemies.append(self.hero)
             self.hero = Goose()
             self.hero.x = self.sp_enemies[1].x
             self.sp_enemies[1].x = self.enemy.x + 100
+            self.hero.y = self.sp_enemies[1].y
+            self.sp_enemies[1].y = self.enemy.y
