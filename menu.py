@@ -2,6 +2,8 @@ import sys
 from const import *
 from load_image import load_image
 
+hero = True
+
 
 class Images(pygame.sprite.Sprite):
 
@@ -37,10 +39,8 @@ def start_screen(screen):
     fon = pygame.transform.scale(load_image('fon.jpg'), (width, height))
     screen.blit(fon, (0, 0))
     init_intro_text(screen)
-    try:
-        draw_heror(screen)
-    except Exit:
-        return Exit
+    hero1 = draw_heror(screen)
+    return hero1
 
 
 def init_intro_text(screen, text_coord=50,
@@ -60,16 +60,18 @@ def init_intro_text(screen, text_coord=50,
 
 
 def draw_heror(screen):
+    global hero
     all_sprites = pygame.sprite.Group()
     raccoon = init_raccoon(all_sprites)
     hedgehog = init_hedgehog(all_sprites)
     start = init_start(all_sprites)
-    while True:
+    while hero is True:
         event(raccoon, hedgehog, start)
         draw_rect(screen, raccoon, hedgehog)
         all_sprites.draw(screen)
         pygame.display.flip()
         clock.tick(FPS)
+    return hero
 
 
 def init_raccoon(all_sprites):
@@ -94,13 +96,17 @@ def init_start(all_sprites):
 
 
 def event(raccoon, hedgehog, start):
+    global hero
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             terminate()
         elif event.type == pygame.MOUSEBUTTONUP:
             x, y = event.pos
             if start.rect.collidepoint(x, y):
-                raise Exit('raccoon' if raccoon.color == (0, 165, 80) else 'hedgehog')
+                if raccoon.color == (0, 165, 80):
+                    hero = 'raccoon'
+                else:
+                    hero = 'hedgehog'
             elif hedgehog.rect.collidepoint(x, y) and hedgehog.color != (0, 165, 80):
                 hedgehog.color = (0, 165, 80)
                 raccoon.color = (128, 128, 128)
