@@ -11,7 +11,7 @@ class Event:
         self.knife = False
         self.mina = False
 
-    def proverka(self, hero, all_obstacles, things, weapon):
+    def proverka(self, hero, all_obstacles, things, weapon, cofe):
         # обработка событий
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -27,16 +27,18 @@ class Event:
                 for i in all_obstacles:  # проверка на соприкосновение с препятствием
                     if not pygame.sprite.collide_mask(i, hero):
                         self.game_over = True
-
                 for i in things:  # проверка на соприкосновение с кепкой и очками
                     if not pygame.sprite.collide_mask(i, hero):
                         if i.name == 'cap':
                             self.goose = True
                         else:
                             self.change = True
-                for i in things:  # проверка на соприкосновение с миной и ножом
+                for i in weapon:  # проверка на соприкосновение с миной и ножом
                     if not pygame.sprite.collide_mask(i, hero):
                         if i.name == 'knife':
                             self.knife = True
                         else:
                             self.mina = True
+                for i in cofe:
+                    if not pygame.sprite.collide_mask(i, hero):
+                        i.invigorating()

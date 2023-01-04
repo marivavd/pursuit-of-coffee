@@ -1,5 +1,6 @@
 import pygame
 from load_image import load_image
+from const import cofe, weapon, things, all_obstancles
 
 
 class Item(pygame.sprite.Sprite):
@@ -12,7 +13,12 @@ class Item(pygame.sprite.Sprite):
 
 
 class Cofe(Item):
-    ...
+    def __init__(self, *args):
+        super(Cofe, self).__init__(*args, cofe)
+        cofe.add(self)
+
+    def invigorating(self):
+        ...
 
 
 class MiniCofe(Cofe):
@@ -33,34 +39,40 @@ class BigCofe(Cofe):
         super(BigCofe, self).__init__(*args)
 
 
-class Glasses(Item):
+class Things(Item):
+    def __init__(self, *args):
+        super(Things, self).__init__(*args, things)
+        things.add(self)
+
+
+class Glasses(Things):
     def __init__(self, *args):
         self.image = pygame.transform.scale(load_image('cofe.png', -1), (100, 100))
         super(Glasses, self).__init__(*args)
         self.name = 'glasses'
 
 
-class Cap(Item):
+class Cap(Things):
     def __init__(self, *args):
         self.image = pygame.transform.scale(load_image('cofe.png', -1), (100, 100))
         super(Cap, self).__init__(*args)
         self.name = 'cap'
 
 
-class Knife(Item):
+class Weapon(Item):
+    def __init__(self, *args):
+        super(Weapon, self).__init__(*args, weapon)
+        weapon.add(self)
+
+
+class Knife(Weapon):
     def __init__(self, *args):
         self.image = pygame.transform.scale(load_image('cofe.png', -1), (100, 100))
         super(Knife, self).__init__(*args)
         self.name = 'knife'
 
 
-class Dynamite(Item):
-    def __init__(self, *args):
-        super(Dynamite, self).__init__(*args)
-        self.image = pygame.transform.scale(load_image('cofe.png', -1), (100, 100))
-
-
-class Mina(Item):
+class Mina(Weapon):
     def __init__(self, *args):
         super(Mina, self).__init__(*args)
         self.image = pygame.transform.scale(load_image('cofe.png', -1), (100, 100))
@@ -68,7 +80,9 @@ class Mina(Item):
 
 
 class Obstacle(Item):
-    ...
+    def __init__(self, *args):
+        super(Obstacle, self).__init__(*args, all_obstancles)
+        all_obstancles.add(self)
 
 
 class Stone(Obstacle):
