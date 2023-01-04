@@ -6,3 +6,4 @@ period = 10
 coffee = 5
 clock = pygame.time.Clock()
 ground_level = 500
+track_width = 12

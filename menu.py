@@ -99,10 +99,7 @@ def event(raccoon, hedgehog, start):
         elif event.type == pygame.MOUSEBUTTONUP:
             x, y = event.pos
             if start.rect.collidepoint(x, y):
-                if raccoon.color == (0, 165, 80):
-                    hero = 'raccoon'
-                else:
-                    hero = 'hedgehog'
+                    hero = 'raccoon' if raccoon.color == (0, 165, 80) else 'hedgehog'
             elif hedgehog.rect.collidepoint(x, y) and hedgehog.color != (0, 165, 80):
                 hedgehog.color = (0, 165, 80)
                 raccoon.color = (128, 128, 128)
