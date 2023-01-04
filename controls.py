@@ -1,19 +1,19 @@
 import sys
 import pygame
 
-Isjump = False
+isjump = False
 game_over = False
 
 
 def event(hero, all_obstacles):
-    global Isjump, Jumpcount
+    global isjump, game_over
     # обработка событий
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP:
-                Isjump = True
+                isjump = True
             elif event.key == pygame.K_LEFT:
                 hero.shift_side(-1)
             elif event.key == pygame.K_RIGHT:
@@ -25,9 +25,9 @@ def event(hero, all_obstacles):
 
 
 def check_jump():
-    global Isjump
-    if Isjump:
-        Isjump = False
+    global isjump
+    if isjump:
+        isjump = False
         return True
     return False
 

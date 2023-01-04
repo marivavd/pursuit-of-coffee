@@ -2,8 +2,7 @@ from load_image import load_image
 from animals import Hedgehog, Raccoon
 from menu import pygame
 from const import FPS, size, clock, period
-import controls
-import obstacles
+import controls, obstacles, const
 
 
 class Map:
@@ -21,22 +20,17 @@ class Map:
 
     def start_screen(self):
         all_obstancles = pygame.sprite.Group()
-        t = 0
+        things = pygame.sprite.Group()
+        self.hero.x += 100
+        self.t = 0
         chase = True
         while True:
             self.screen.fill((255, 255, 255))
             controls.event(self.hero, all_obstancles)
             self.jump()
+            self.check_game_over(chase)
             flag_game_over = controls.check_crash()
-            if not flag_game_over:
-                t += period
-                self.screen.blit(self.fon, (-t, 0))
-                self.screen.blit(self.fon, (-t + size[0], 0))
-                if chase:
-                    self.run()
-            else:
-                print('Game over')
-            t %= size[0]
+            self.t %= size[0]
             pygame.display.flip()
             clock.tick(FPS)
 
@@ -50,6 +44,7 @@ class Map:
 
     def jump(self):
         flag_jump = controls.check_jump()
+        print(flag_jump)
         if flag_jump:
             self.is_jump = True
         if self.is_jump:
@@ -62,3 +57,14 @@ class Map:
             else:
                 self.is_jump = False
                 self.jump_count = 10
+
+    def check_game_over(self, chase):
+        flag_game_over = controls.check_crash()
+        if not flag_game_over:
+            self.t += period
+            self.screen.blit(self.fon, (-self.t, 0))
+            self.screen.blit(self.fon, (-self.t + size[0], 0))
+            if chase:
+                self.run()
+        else:
+            print('Game over')
