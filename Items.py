@@ -37,25 +37,34 @@ class Glasses(Item):
     def __init__(self, *args):
         self.image = pygame.transform.scale(load_image('cofe.png', -1), (100, 100))
         super(Glasses, self).__init__(*args)
+        self.name = 'glasses'
 
 
 class Cap(Item):
     def __init__(self, *args):
         self.image = pygame.transform.scale(load_image('cofe.png', -1), (100, 100))
         super(Cap, self).__init__(*args)
+        self.name = 'cap'
 
 
 class Knife(Item):
     def __init__(self, *args):
         self.image = pygame.transform.scale(load_image('cofe.png', -1), (100, 100))
-
         super(Knife, self).__init__(*args)
+        self.name = 'knife'
 
 
 class Dynamite(Item):
     def __init__(self, *args):
         super(Dynamite, self).__init__(*args)
         self.image = pygame.transform.scale(load_image('cofe.png', -1), (100, 100))
+
+
+class Mina(Item):
+    def __init__(self, *args):
+        super(Mina, self).__init__(*args)
+        self.image = pygame.transform.scale(load_image('cofe.png', -1), (100, 100))
+        self.name = 'mina'
 
 
 class Obstacle(Item):
