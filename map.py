@@ -26,6 +26,7 @@ class Map:
         while True:
             self.screen.fill((255, 255, 255))
             controls.event(self.hero, all_obstancles)
+            self.jump()
             flag_game_over = controls.check_crash()
             if not flag_game_over:
                 t += period
