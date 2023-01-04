@@ -1,7 +1,9 @@
 import sys
 import pygame
+
 Isjump = False
 game_over = False
+
 
 def event(hero, all_obstacles):
     global Isjump, Jumpcount
@@ -21,6 +23,7 @@ def event(hero, all_obstacles):
                 if not pygame.sprite.collide_mask(i, hero):
                     game_over = True
 
+
 def check_jump():
     global Isjump
     if Isjump:
@@ -28,12 +31,10 @@ def check_jump():
         return True
     return False
 
+
 def check_crash():
     global game_over
     if game_over:
         game_over = False
         return True
     return False
-
-
-

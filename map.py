@@ -15,31 +15,18 @@ class Map:
         else:
             self.hero = Hedgehog()
             self.enemy = Raccoon()
+        self.is_jump = False
+        self.jump_count = 10
         self.fon = pygame.transform.scale(load_image('fon.jpg'), size)
 
     def start_screen(self):
         all_obstancles = pygame.sprite.Group()
         t = 0
         chase = True
-        is_jump = False
-        jump_count = 10
         while True:
             self.screen.fill((255, 255, 255))
             controls.event(self.hero, all_obstancles)
-            flag_jump = controls.check_jump()
             flag_game_over = controls.check_crash()
-            if flag_jump:
-                is_jump = True
-            if is_jump:
-                if jump_count >= -10:
-                    if jump_count > 0:
-                        self.hero.y -= (jump_count ** 2) / 2
-                    else:
-                        self.hero.y += (jump_count ** 2) / 2
-                    jump_count -= 1
-                else:
-                    is_jump = False
-                    jump_count = 10
             if not flag_game_over:
                 t += period
                 self.screen.blit(self.fon, (-t, 0))
@@ -59,3 +46,18 @@ class Map:
             self.hero.x -= 5
         if self.enemy.x >= -100:
             self.enemy.x -= 5
+
+    def jump(self):
+        flag_jump = controls.check_jump()
+        if flag_jump:
+            self.is_jump = True
+        if self.is_jump:
+            if self.jump_count >= -10:
+                if self.jump_count > 0:
+                    self.hero.y -= (self.jump_count ** 2) / 2
+                else:
+                    self.hero.y += (self.jump_count ** 2) / 2
+                self.jump_count -= 1
+            else:
+                self.is_jump = False
+                self.jump_count = 10
