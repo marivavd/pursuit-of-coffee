@@ -26,10 +26,6 @@ class Rect(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
 
 
-class Exit(BaseException):
-    ...
-
-
 def terminate():
     pygame.quit()
     sys.exit()
