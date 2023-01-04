@@ -19,6 +19,7 @@ class Map:
         self.event = Event()
         self.a = 0
         self.t = 0
+        self.not_event = 0
         self.is_jump = False
         self.jump_count = 10
         self.fon = pygame.transform.scale(load_image('fon.jpg'), size)
@@ -47,12 +48,17 @@ class Map:
         else:
             self.screen.blit(self.sp_enemies[0].img, (self.sp_enemies[0].x, self.sp_enemies[0].y))
             self.screen.blit(self.sp_enemies[1].img, (self.sp_enemies[1].x, self.sp_enemies[1].y))
-            if self.sp_enemies[1].x >= -100:
-                self.sp_enemies[1].x -= 5
-            if self.sp_enemies[0].x >= -100:
-                self.sp_enemies[0].x -= 5
+        self.offset()
         if self.hero.x > size[0] // 2:
             self.hero.x -= 5
+
+    def offset(self):
+        for i in self.sp_enemies:
+            if i.x >= -100:
+                i.x -= 5
+        for i in groups:
+            for j in i:
+                j.rect.x -= 5
 
     def jump(self):
         if self.event.isjump:
@@ -72,6 +78,7 @@ class Map:
     def check_game_over(self, chase):
         if not self.event.game_over:
             self.t += period
+            self.not_event += 1
             self.screen.blit(self.fon, (-self.t, 0))
             self.screen.blit(self.fon, (-self.t + size[0], 0))
             if chase:
@@ -92,15 +99,17 @@ class Map:
             self.sp_enemies[1].y = self.enemy.y
 
     def generation_obj(self):
-        probability_sp = [[Stone] * 100,
-                          [Bush] * 100,
-                          [Book] * 100,
-                          [MiniCofe] * 25,
-                          [StandartCofe] * 10,
-                          [BigCofe] * 5,
-                          [Glasses] * 1,
-                          [Cap] * 1,
-                          [Knife] * 2]
-        if 1 <= (track := randint(0, 60)) <= 3:
-            cls_obj = choice(probability_sp)[0]
-            cls_obj(600, ground_level - track * track_width)
+        if self.not_event > 100:
+            probability_sp = [[Stone] * 100,
+                              [Bush] * 100,
+                              [Book] * 100,
+                              [MiniCofe] * 25,
+                              [StandartCofe] * 10,
+                              [BigCofe] * 5,
+                              [Glasses] * 1,
+                              [Cap] * 1,
+                              [Knife] * 2]
+            if 1 <= (track := randint(0, 3)) <= 3:
+                cls_obj = choice(probability_sp)[0]
+                cls_obj(600, ground_level - track * track_width)
+                self.not_event = 0
