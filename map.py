@@ -1,5 +1,5 @@
 from load_image import load_image
-from animals import Hedgehog, Raccoon
+from animals import Hedgehog, Raccoon, Goose
 from menu import pygame
 from const import FPS, size, clock, period
 from controls import Event
@@ -10,25 +10,26 @@ class Map:
     def __init__(self, screen, hero):
         self.screen = screen
         if hero == 'raccoon':
-            self.hero = Raccoon()
-            self.enemy = Hedgehog()
+            self.hero, self.enemy = Raccoon(), Hedgehog()
         else:
-            self.hero = Hedgehog()
-            self.enemy = Raccoon()
+            self.hero, self.enemy = Hedgehog(), Raccoon()
+        self.sp_enemies = [self.enemy]
         self.event = Event()
         self.is_jump = False
         self.jump_count = 10
         self.fon = pygame.transform.scale(load_image('fon.jpg'), size)
+        self.all_obstancles = pygame.sprite.Group()  # все препятствия
+        self.things = pygame.sprite.Group()  # кепка и очки
+        self.weapon = pygame.sprite.Group()  # нож и мина
 
     def start_screen(self):
-        all_obstancles = pygame.sprite.Group()
-        things = pygame.sprite.Group()
         self.hero.x += 100
         self.t = 0
         chase = True
         while True:
             self.screen.fill((255, 255, 255))
-            self.event.proverka(self.hero, all_obstancles)
+            self.event.proverka(self.hero, self.all_obstancles, self.things, self.weapon)
+            self.check_goose()
             self.jump()
             self.check_game_over(chase)
             self.t %= size[0]
@@ -37,11 +38,19 @@ class Map:
 
     def run(self):
         self.screen.blit(self.hero.img, (self.hero.x, self.hero.y))
-        self.screen.blit(self.enemy.img, (self.enemy.x, self.enemy.y))
+        if len(self.sp_enemies) != 2:
+            self.screen.blit(self.enemy.img, (self.enemy.x, self.enemy.y))
+            if self.enemy.x >= -100:
+                self.enemy.x -= 5
+        else:
+            self.screen.blit(self.sp_enemies[0].img, (self.sp_enemies[0].x, self.sp_enemies[0].y))
+            self.screen.blit(self.sp_enemies[1].img, (self.sp_enemies[1].x, self.sp_enemies[1].y))
+            if self.sp_enemies[1].x >= -100:
+                self.sp_enemies[1].x -= 5
+            if self.sp_enemies[0].x >= -100:
+                self.sp_enemies[0].x -= 5
         if self.hero.x > size[0] // 2:
             self.hero.x -= 5
-        if self.enemy.x >= -100:
-            self.enemy.x -= 5
 
     def jump(self):
         if self.event.isjump:
@@ -67,3 +76,10 @@ class Map:
                 self.run()
         else:
             print('Game over')
+
+    def check_goose(self):
+        if self.event.goose and len(self.sp_enemies) != 2:
+            self.sp_enemies.append(self.hero)
+            self.hero = Goose()
+            self.hero.x = self.sp_enemies[1].x
+            self.sp_enemies[1].x = self.enemy.x + 100
