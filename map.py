@@ -30,9 +30,9 @@ class Map:
         chase = True
         while True:
             self.screen.fill((255, 255, 255))
-            self.check_goose()
-            self.check_game_over(chase)
             self.event.proverka_contact(self.hero, *groups)
+            self.check_game_over(chase)
+            self.check_goose()
             self.event.proverka_event(self.hero)
             self.jump()
             self.t %= size[0]
@@ -67,9 +67,9 @@ class Map:
         if self.is_jump:
             if self.jump_count >= -14:
                 if self.jump_count > 0:
-                    self.hero.y -= (self.jump_count ** 2) / 5
+                    self.hero.y -= (self.jump_count ** 2) / 4
                 else:
-                    self.hero.y += (self.jump_count ** 2) / 5
+                    self.hero.y += (self.jump_count ** 2) / 4
                 self.jump_count -= 1
             else:
                 self.is_jump = False
@@ -95,6 +95,10 @@ class Map:
             self.sp_enemies[1].x = self.enemy.x + 100
             self.hero.y = self.sp_enemies[1].y
             self.sp_enemies[1].y = self.enemy.y
+            if self.event.knife > 0:
+                self.event.take_knife(self.hero)
+            if self.event.mina > 0:
+                self.event.take_mina(self.hero)
             magic()
 
     def generation_obj(self):

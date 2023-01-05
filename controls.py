@@ -1,5 +1,7 @@
 import sys
 import pygame
+from const import width, height
+from load_image import load_image
 
 
 class Event:
@@ -8,8 +10,8 @@ class Event:
         self.game_over = False
         self.change = False
         self.goose = False
-        self.knife = False
-        self.mina = False
+        self.knife = 0
+        self.mina = 0
 
     def proverka_event(self, hero):
         # обработка событий
@@ -23,6 +25,11 @@ class Event:
                     hero.shift_side(-1)
                 elif event.key == pygame.K_RIGHT:
                     hero.shift_side()
+                elif event.key == pygame.K_DOWN:  # оставлять мину
+                    if self.mina > 0:
+                        ...
+                elif event.key == pygame.K_SPACE:
+                    print(0)
 
     def proverka_contact(self, hero, all_obstacles, things, weapon, cofe):
         for i in all_obstacles:  # проверка на соприкосновение с препятствием
@@ -40,10 +47,35 @@ class Event:
             offset = (abs(hero.x - i.rect.x), abs(hero.y - i.rect.y))
             if hero.mask.overlap_area(i.mask, offset) > 0:
                 if i.name == 'knife':
-                    self.knife = True
+                    self.knife += 1
+                    self.take_knife(hero, i)
                 else:
-                    self.mina = True
+                    self.mina += 1
         for i in cofe:
             offset = (abs(hero.x - i.rect.x), abs(hero.y - i.rect.y))
             if hero.mask.overlap_area(i.mask, offset) > 0:
                 i.invigorating(i.name)
+
+    def take_knife(self, hero, knife=None):
+        if hero.name == 'raccoon':
+            hero.img = pygame.transform.scale(load_image('raccoon_with_knife.gif'), (width // 6, height // 6))
+        elif hero.name == 'hedgehog':
+            hero.img = pygame.transform.scale(load_image('hedgehog_with_knife.gif'), (width // 6, height // 6))
+        else:
+            hero.img = pygame.transform.scale(load_image('goose_with_knife.gif'), (width // 6, height // 6))
+        hero.rect = hero.img.get_rect()
+        hero.mask = pygame.mask.from_surface(hero.img)
+        if knife is not None:
+            knife.kill()
+
+    def take_mina(self, hero, mina=None):
+        if hero.name == 'raccoon':
+            hero.img = pygame.transform.scale(load_image('raccoon_with_mina.gif'), (width // 6, height // 6))
+        elif hero.name == 'hedgehog':
+            hero.img = pygame.transform.scale(load_image('hedgehog_with_mina.gif'), (width // 6, height // 6))
+        else:
+            hero.img = pygame.transform.scale(load_image('goose_with_mina.gif'), (width // 6, height // 6))
+        hero.rect = hero.img.get_rect()
+        hero.mask = pygame.mask.from_surface(hero.img)
+        if mina is not None:
+            mina.kill()
