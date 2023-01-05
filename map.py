@@ -2,9 +2,9 @@ from load_image import load_image
 from animals import Hedgehog, Raccoon, Goose
 from menu import pygame
 from const import FPS, size, clock, period, \
-    ground_level, track_width, groups
+    ground_level, track_width, groups, width, height
 from random import randint, choice
-from Items import MiniCoffee, StandartCoffee, BigCoffee, Glasses, Cap, Knife, Stone, Bush, Book
+from Items import MiniCoffee, StandartCoffee, BigCoffee, Glasses, Cap, Knife, Stone, Bush, Book, Mina
 from controls import Event
 from magic import magic
 
@@ -22,7 +22,7 @@ class Map:
         self.a = 0
         self.not_event = 0
         self.is_jump = False
-        self.jump_count = 14
+        self.jump_count = 16
         self.fon = pygame.transform.scale(load_image('fon.jpg'), size)
 
     def start_screen(self):
@@ -30,11 +30,12 @@ class Map:
         chase = True
         while True:
             self.screen.fill((255, 255, 255))
+            self.jump()
             self.event.proverka_contact(self.hero, *groups)
             self.check_game_over(chase)
             self.check_goose()
             self.event.proverka_event(self.hero)
-            self.jump()
+            self.throw_knife()
             self.t %= size[0]
             for i in groups:
                 i.draw(self.screen)
@@ -65,15 +66,15 @@ class Map:
             self.event.isjump = False
             self.is_jump = True
         if self.is_jump:
-            if self.jump_count >= -14:
+            if self.jump_count >= -16:
                 if self.jump_count > 0:
-                    self.hero.y -= (self.jump_count ** 2) / 4
+                    self.hero.y -= (self.jump_count ** 2) / 6
                 else:
-                    self.hero.y += (self.jump_count ** 2) / 4
+                    self.hero.y += (self.jump_count ** 2) / 6
                 self.jump_count -= 1
             else:
                 self.is_jump = False
-                self.jump_count = 14
+                self.jump_count = 16
 
     def check_game_over(self, chase):
         if not self.event.game_over:
@@ -89,6 +90,10 @@ class Map:
 
     def check_goose(self):
         if self.event.goose and len(self.sp_enemies) != 2:
+            if self.hero.name == 'raccoon':
+                self.hero.img = pygame.transform.scale(load_image('raccoon.png'), (width // 6, height // 6))
+            else:
+                self.hero.img = pygame.transform.scale(load_image('hedgehog.png'), (width // 6, height // 6))
             self.sp_enemies.append(self.hero)
             self.hero = Goose()
             self.hero.x = self.sp_enemies[1].x
@@ -111,8 +116,15 @@ class Map:
                               [BigCoffee] * 5,
                               [Glasses] * 1,
                               [Cap] * 1,
+                              [Mina] * 2,
                               [Knife] * 2]
             if 1 <= (track := randint(0, 3)) <= 3:
                 cls_obj = choice(probability_sp)[0]
                 cls_obj(600, ground_level - track * track_width)
                 self.not_event = 0
+
+    def throw_knife(self):
+        if len(self.event.throw_knife) != 0:
+            for el in self.event.throw_knife:
+                self.screen.blit(pygame.transform.scale(load_image('cofe.png', -1), (100, 100)), (el.x, el.y))
+                el.x -= 4

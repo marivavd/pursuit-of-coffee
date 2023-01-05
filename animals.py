@@ -41,7 +41,7 @@ class Hedgehog(Animal):
 class Goose(Animal):
     def __init__(self):
         super(Goose, self).__init__()
-        self.y -= 10
+        self.y -= 48
         self.img = pygame.transform.scale(load_image('goose.png'), (width // 6, height // 6))
         self.rect = self.img.get_rect()
         self.mask = pygame.mask.from_surface(self.img)

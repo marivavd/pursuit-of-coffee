@@ -12,6 +12,7 @@ class Event:
         self.goose = False
         self.knife = 0
         self.mina = 0
+        self.throw_knife = []
 
     def proverka_event(self, hero):
         # обработка событий
@@ -28,9 +29,17 @@ class Event:
                 elif event.key == pygame.K_DOWN:  # оставлять мину
                     if self.mina > 0:
                         ...
-                elif event.key == pygame.K_SPACE:
-                    print(0)
-
+                elif event.key == pygame.K_SPACE: # пулять ножом во врага
+                    if self.knife > 0:
+                        self.throw_knife.append(pygame.transform.scale(load_image('cofe.png', -1), (100, 100)).get_rect(topleft=(hero.x - 30, hero.y)))
+                        self.knife -= 1
+                        if self.knife == 0:
+                            if hero.name == 'raccoon':
+                                hero.img = pygame.transform.scale(load_image('raccoon.png'), (width // 6, height // 6))
+                            elif hero.name == 'hedgehog':
+                                hero.img = pygame.transform.scale(load_image('hedgehog.png'), (width // 6, height // 6))
+                            else:
+                                hero.img = pygame.transform.scale(load_image('goose.png'), (width // 6, height // 6))
     def proverka_contact(self, hero, all_obstacles, things, weapon, cofe):
         for i in all_obstacles:  # проверка на соприкосновение с препятствием
             offset = (abs(hero.x - i.rect.x), abs(hero.y - i.rect.y))
