@@ -46,4 +46,4 @@ class Event:
         for i in cofe:
             offset = (abs(hero.x - i.rect.x), abs(hero.y - i.rect.y))
             if hero.mask.overlap_area(i.mask, offset) > 0:
-                i.invigorating()
+                i.invigorating(i.name)
