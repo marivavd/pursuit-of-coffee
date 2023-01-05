@@ -4,7 +4,7 @@ from menu import pygame
 from const import FPS, size, clock, period, \
     ground_level, track_width, groups
 from random import randint, choice
-from Items import MiniCofe, StandartCofe, BigCofe, Glasses, Cap, Knife, Stone, Bush, Book
+from Items import MiniCoffee, StandartCoffee, BigCoffee, Glasses, Cap, Knife, Stone, Bush, Book
 from controls import Event
 from magic import magic
 
@@ -102,9 +102,9 @@ class Map:
             probability_sp = [[Stone] * 100,
                               [Bush] * 100,
                               [Book] * 100,
-                              [MiniCofe] * 25,
-                              [StandartCofe] * 10,
-                              [BigCofe] * 5,
+                              [MiniCoffee] * 25,
+                              [StandartCoffee] * 10,
+                              [BigCoffee] * 5,
                               [Glasses] * 1,
                               [Cap] * 1,
                               [Knife] * 2]

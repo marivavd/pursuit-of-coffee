@@ -12,31 +12,34 @@ class Item(pygame.sprite.Sprite):
         self.rect.y = pos_y
 
 
-class Cofe(Item):
+class Coffee(Item):
     def __init__(self, *args):
-        super(Cofe, self).__init__(*args, cofe)
+        super(Coffee, self).__init__(*args, cofe)
         cofe.add(self)
 
-    def invigorating(self):
+    def invigorating(self, name):
         ...
 
 
-class MiniCofe(Cofe):
+class MiniCoffee(Coffee):
     def __init__(self, *args):
         self.image = pygame.transform.scale(load_image('cofe.png', -1), (100, 100))
-        super(MiniCofe, self).__init__(*args)
+        super(MiniCoffee, self).__init__(*args)
+        self.name = 'minicofe'
 
 
-class StandartCofe(Cofe):
+class StandartCoffee(Coffee):
     def __init__(self, *args):
         self.image = pygame.transform.scale(load_image('cofe.png', -1), (100, 100))
-        super(StandartCofe, self).__init__(*args)
+        super(StandartCoffee, self).__init__(*args)
+        self.name = 'standartcofe'
 
 
-class BigCofe(Cofe):
+class BigCoffee(Coffee):
     def __init__(self, *args):
         self.image = pygame.transform.scale(load_image('cofe.png', -1), (100, 100))
-        super(BigCofe, self).__init__(*args)
+        super(BigCoffee, self).__init__(*args)
+        self.name = 'bigcoffee'
 
 
 class Things(Item):
