@@ -3,8 +3,9 @@ import pygame
 from const import width, height, ground_level
 
 
-class Animal:
+class Animal(pygame.sprite.Sprite):
     def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
         self.pose = []
         self.x = 400
         self.y = 430

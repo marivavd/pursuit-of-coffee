@@ -1,6 +1,6 @@
 import pygame
 from load_image import load_image
-from const import cofe, weapon, things, all_obstancles
+from const import cofe, weapon, things, all_obstacles
 
 
 class Item(pygame.sprite.Sprite):
@@ -81,8 +81,8 @@ class Mina(Weapon):
 
 class Obstacle(Item):
     def __init__(self, *args):
-        super(Obstacle, self).__init__(*args, all_obstancles)
-        all_obstancles.add(self)
+        super(Obstacle, self).__init__(*args, all_obstacles)
+        all_obstacles.add(self)
 
 
 class Stone(Obstacle):

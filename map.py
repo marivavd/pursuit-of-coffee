@@ -6,6 +6,7 @@ from const import FPS, size, clock, period, \
 from random import randint, choice
 from Items import MiniCofe, StandartCofe, BigCofe, Glasses, Cap, Knife, Stone, Bush, Book
 from controls import Event
+from magic import magic
 
 
 class Map:
@@ -17,11 +18,11 @@ class Map:
             self.hero, self.enemy = Hedgehog(), Raccoon()
         self.sp_enemies = [self.enemy]
         self.event = Event()
-        self.a = 0
         self.t = 0
+        self.a = 0
         self.not_event = 0
         self.is_jump = False
-        self.jump_count = 10
+        self.jump_count = 14
         self.fon = pygame.transform.scale(load_image('fon.jpg'), size)
 
     def start_screen(self):
@@ -29,13 +30,14 @@ class Map:
         chase = True
         while True:
             self.screen.fill((255, 255, 255))
-            self.event.proverka(self.hero, *groups)
             self.check_goose()
-            self.jump()
             self.check_game_over(chase)
             self.t %= size[0]
             for i in groups:
                 i.draw(self.screen)
+            self.jump()
+            self.event.proverka_contact(self.hero, *groups)
+            self.event.proverka_event(self.hero)
             pygame.display.flip()
             clock.tick(FPS)
 
@@ -43,8 +45,6 @@ class Map:
         self.screen.blit(self.hero.img, (self.hero.x, self.hero.y))
         if len(self.sp_enemies) != 2:
             self.screen.blit(self.enemy.img, (self.enemy.x, self.enemy.y))
-            if self.enemy.x >= -100:
-                self.enemy.x -= 5
         else:
             self.screen.blit(self.sp_enemies[0].img, (self.sp_enemies[0].x, self.sp_enemies[0].y))
             self.screen.blit(self.sp_enemies[1].img, (self.sp_enemies[1].x, self.sp_enemies[1].y))
@@ -65,15 +65,15 @@ class Map:
             self.event.isjump = False
             self.is_jump = True
         if self.is_jump:
-            if self.jump_count >= -10:
+            if self.jump_count >= -14:
                 if self.jump_count > 0:
-                    self.hero.y -= (self.jump_count ** 2) / 2
+                    self.hero.y -= (self.jump_count ** 2) / 5
                 else:
-                    self.hero.y += (self.jump_count ** 2) / 2
+                    self.hero.y += (self.jump_count ** 2) / 5
                 self.jump_count -= 1
             else:
                 self.is_jump = False
-                self.jump_count = 10
+                self.jump_count = 14
 
     def check_game_over(self, chase):
         if not self.event.game_over:
@@ -88,15 +88,14 @@ class Map:
             print('Game over')
 
     def check_goose(self):
-        self.a += 1
-        # if self.event.goose and len(self.sp_enemies) != 2:
-        if self.a == 56:
+        if self.event.goose and len(self.sp_enemies) != 2:
             self.sp_enemies.append(self.hero)
             self.hero = Goose()
             self.hero.x = self.sp_enemies[1].x
             self.sp_enemies[1].x = self.enemy.x + 100
             self.hero.y = self.sp_enemies[1].y
             self.sp_enemies[1].y = self.enemy.y
+            magic()
 
     def generation_obj(self):
         if self.not_event > 100:
