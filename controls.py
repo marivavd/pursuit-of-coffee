@@ -29,9 +29,10 @@ class Event:
                 elif event.key == pygame.K_DOWN:  # оставлять мину
                     if self.mina > 0:
                         ...
-                elif event.key == pygame.K_SPACE: # пулять ножом во врага
+                elif event.key == pygame.K_SPACE:  # пулять ножом во врага
                     if self.knife > 0:
-                        self.throw_knife.append(pygame.transform.scale(load_image('cofe.png', -1), (100, 100)).get_rect(topleft=(hero.x - 30, hero.y)))
+                        self.throw_knife.append(pygame.transform.scale(load_image('cofe.png', -1), (100, 100)).get_rect(
+                            topleft=(hero.x - 30, hero.y)))
                         self.knife -= 1
                         if self.knife == 0:
                             if hero.name == 'raccoon':
@@ -40,21 +41,22 @@ class Event:
                                 hero.img = pygame.transform.scale(load_image('hedgehog.png'), (width // 6, height // 6))
                             else:
                                 hero.img = pygame.transform.scale(load_image('goose.png'), (width // 6, height // 6))
+
     def proverka_contact(self, hero, all_obstacles, things, weapon, cofe):
         for i in all_obstacles:  # проверка на соприкосновение с препятствием
             offset = (abs(hero.x - i.rect.x), abs(hero.y - i.rect.y))
-            if hero.mask.overlap_area(i.mask, offset) > 0:
+            if hero.mask.overlap_area(i.mask, offset) > 0 and i.z == hero.z:
                 self.game_over = True
         for i in things:  # проверка на соприкосновение с кепкой и очками
             offset = (abs(hero.x - i.rect.x), abs(hero.y - i.rect.y))
-            if hero.mask.overlap_area(i.mask, offset) > 0:
+            if hero.mask.overlap_area(i.mask, offset) > 0 and i.z == hero.z:
                 if i.name == 'cap':
                     self.goose = True
                 else:
                     self.change = True
         for i in weapon:  # проверка на соприкосновение с миной и ножом
             offset = (abs(hero.x - i.rect.x), abs(hero.y - i.rect.y))
-            if hero.mask.overlap_area(i.mask, offset) > 0:
+            if hero.mask.overlap_area(i.mask, offset) > 0 and i.z == hero.z:
                 if i.name == 'knife':
                     self.knife += 1
                     self.take_knife(hero, i)
@@ -62,10 +64,13 @@ class Event:
                     self.mina += 1
         for i in cofe:
             offset = (abs(hero.x - i.rect.x), abs(hero.y - i.rect.y))
-            if hero.mask.overlap_area(i.mask, offset) > 0:
+            if hero.mask.overlap_area(i.mask, offset) > 0 and i.z == hero.z:
                 i.invigorating(i.name)
+            else:
+                print(i.z, hero.z)
 
-    def take_knife(self, hero, knife=None):
+    @staticmethod
+    def take_knife(hero, knife=None):
         if hero.name == 'raccoon':
             hero.img = pygame.transform.scale(load_image('raccoon_with_knife.gif'), (width // 6, height // 6))
         elif hero.name == 'hedgehog':
@@ -77,7 +82,8 @@ class Event:
         if knife is not None:
             knife.kill()
 
-    def take_mina(self, hero, mina=None):
+    @staticmethod
+    def take_mina(hero, mina=None):
         if hero.name == 'raccoon':
             hero.img = pygame.transform.scale(load_image('raccoon_with_mina.gif'), (width // 6, height // 6))
         elif hero.name == 'hedgehog':

@@ -100,6 +100,7 @@ class Map:
             self.sp_enemies[1].x = self.enemy.x + 100
             self.hero.y = self.sp_enemies[1].y
             self.sp_enemies[1].y = self.enemy.y
+            self.hero.z = self.sp_enemies[1].z
             if self.event.knife > 0:
                 self.event.take_knife(self.hero)
             if self.event.mina > 0:
@@ -118,10 +119,10 @@ class Map:
                               [Cap] * 1,
                               [Mina] * 2,
                               [Knife] * 2]
-            if 1 <= (track := randint(0, 3)) <= 3:
-                cls_obj = choice(probability_sp)[0]
-                cls_obj(600, ground_level - track * track_width)
-                self.not_event = 0
+            cls_obj = choice(probability_sp)[0]
+            track = randint(0, 2)
+            cls_obj(600, ground_level - track * track_width, track)
+            self.not_event = 0
 
     def throw_knife(self):
         if len(self.event.throw_knife) != 0:

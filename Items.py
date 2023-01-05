@@ -4,12 +4,14 @@ from const import cofe, weapon, things, all_obstacles
 
 
 class Item(pygame.sprite.Sprite):
-    def __init__(self, pos_x, pos_y, group):
+    def __init__(self, pos_x, pos_y, k, group):
         super(Item, self).__init__(group)
         self.rect = self.image.get_rect()
         self.mask = pygame.mask.from_surface(self.image)
         self.rect.x = pos_x
+        # не понимаю, как сделать так, чтоб нижний край маски изображения = pos_y
         self.rect.y = pos_y
+        self.z = k
 
 
 class Coffee(Item):
@@ -18,7 +20,7 @@ class Coffee(Item):
         cofe.add(self)
 
     def invigorating(self, name):
-        ...
+        print('COFE!')
 
 
 class MiniCoffee(Coffee):

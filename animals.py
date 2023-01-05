@@ -9,15 +9,13 @@ class Animal(pygame.sprite.Sprite):
         self.pose = []
         self.x = 400
         self.y = 430
-        self.max_y = 420
-        self.min_y = 470
+        self.z = 2
 
     def shift_side(self, k=1):
         shift = 12 * k
-        if ground_level - abs(shift * 3) < self.min_y + shift < ground_level:  # 3 = кол-во дорожек
+        if 0 <= self.z - k <= 2:  # 3 = кол-во дорожек
             self.y += shift
-            self.max_y += shift
-            self.min_y += shift
+            self.z -= k
 
 
 class Raccoon(Animal):
