@@ -26,20 +26,24 @@ class Event:
 
     def proverka_contact(self, hero, all_obstacles, things, weapon, cofe):
         for i in all_obstacles:  # проверка на соприкосновение с препятствием
-            if pygame.sprite.collide_mask(i, hero):
+            offset = (abs(hero.x - i.rect.x), abs(hero.y - i.rect.y))
+            if hero.mask.overlap_area(i.mask, offset) > 0:
                 self.game_over = True
         for i in things:  # проверка на соприкосновение с кепкой и очками
-            if pygame.sprite.collide_mask(i, hero):
+            offset = (abs(hero.x - i.rect.x), abs(hero.y - i.rect.y))
+            if hero.mask.overlap_area(i.mask, offset) > 0:
                 if i.name == 'cap':
                     self.goose = True
                 else:
                     self.change = True
         for i in weapon:  # проверка на соприкосновение с миной и ножом
-            if pygame.sprite.collide_mask(i, hero):
+            offset = (abs(hero.x - i.rect.x), abs(hero.y - i.rect.y))
+            if hero.mask.overlap_area(i.mask, offset) > 0:
                 if i.name == 'knife':
                     self.knife = True
                 else:
                     self.mina = True
         for i in cofe:
-            if pygame.sprite.collide_mask(i, hero):
+            offset = (abs(hero.x - i.rect.x), abs(hero.y - i.rect.y))
+            if hero.mask.overlap_area(i.mask, offset) > 0:
                 i.invigorating()

@@ -32,12 +32,12 @@ class Map:
             self.screen.fill((255, 255, 255))
             self.check_goose()
             self.check_game_over(chase)
+            self.event.proverka_contact(self.hero, *groups)
+            self.event.proverka_event(self.hero)
+            self.jump()
             self.t %= size[0]
             for i in groups:
                 i.draw(self.screen)
-            self.jump()
-            self.event.proverka_contact(self.hero, *groups)
-            self.event.proverka_event(self.hero)
             pygame.display.flip()
             clock.tick(FPS)
 
