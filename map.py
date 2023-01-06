@@ -7,11 +7,10 @@ from random import randint, choice
 from Items import MiniCoffee, StandartCoffee, BigCoffee, Glasses, Cap, Knife, Stone, Bush, Book, Mina
 from controls import Event
 from magic import magic
-import time
 
 
 class Map:
-    def __init__(self, screen, hero, last_level):
+    def __init__(self, screen, hero):
         self.screen = screen
         if hero == 'raccoon':
             self.hero, self.enemy = Raccoon(), Hedgehog()
@@ -24,7 +23,6 @@ class Map:
         self.not_event = 0
         self.is_jump = False
         self.jump_count = 16
-        self.level = last_level + 1
         self.fon = pygame.transform.scale(load_image('fon.jpg'), size)
 
     def start_screen(self):
@@ -38,7 +36,6 @@ class Map:
             self.check_goose()
             self.event.proverka_event(self.hero)
             self.throw_knife()
-            self.mina_explosion()
             self.t %= size[0]
             for i in groups:
                 i.draw(self.screen)
@@ -132,13 +129,3 @@ class Map:
             for el in self.event.throw_knife:
                 self.screen.blit(pygame.transform.scale(load_image('cofe.png', -1), (100, 100)), (el.x, el.y))
                 el.x -= 4
-
-    def mina_explosion(self):
-        if len(self.event.mina_time) != 0:
-            for index in range(len(self.event.mina_time)):
-                now = time.perf_counter()
-                if now - self.event.mina_time[index][2] >= 3:
-                    del self.event.mina_time[index]
-                else:
-                    self.screen.blit(pygame.transform.scale(load_image('cofe.png', -1), (100, 100)),
-                                     (self.event.mina_time[index][0], self.event.mina_time[index][1]))

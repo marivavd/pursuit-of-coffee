@@ -1,6 +1,6 @@
 import pygame
 from load_image import load_image
-from const import cofe, weapon, things, all_obstacles
+from const import cofe, weapon, things, all_obstacles, period
 
 
 class Item(pygame.sprite.Sprite):
@@ -19,8 +19,15 @@ class Coffee(Item):
         super(Coffee, self).__init__(*args, cofe)
         cofe.add(self)
 
-    def invigorating(self, name):
-        print('COFE!')
+    @staticmethod
+    def invigorating(coffe):
+        if type(coffe) is MiniCoffee:
+            period[0] += 1
+        elif type(coffe) is StandartCoffee:
+            period[0] += 3
+        elif type(coffe) is BigCoffee:
+            period[0] += 5
+        coffe.kill()
 
 
 class MiniCoffee(Coffee):

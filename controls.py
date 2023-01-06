@@ -1,4 +1,5 @@
-import sys, time, pygame
+import sys
+import pygame
 from const import width, height
 from load_image import load_image
 
@@ -12,7 +13,6 @@ class Event:
         self.knife = 0
         self.mina = 0
         self.throw_knife = []
-        self.mina_time = []
 
     def proverka_event(self, hero):
         # обработка событий
@@ -28,7 +28,7 @@ class Event:
                     hero.shift_side()
                 elif event.key == pygame.K_DOWN:  # оставлять мину
                     if self.mina > 0:
-                        self.mina_time.append((hero.x, hero.y - 40, time.perf_counter()))
+                        ...
                 elif event.key == pygame.K_SPACE:  # пулять ножом во врага
                     if self.knife > 0:
                         self.throw_knife.append(pygame.transform.scale(load_image('cofe.png', -1), (100, 100)).get_rect(
