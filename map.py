@@ -7,12 +7,12 @@ from random import randint, choice
 from Items import MiniCoffee, StandartCoffee, BigCoffee, Glasses, Cap, Knife, Stone, Bush, Book, Mina
 from controls import Event
 from magic import magic
-import time
+import time, new_level
 from math import sin, cos, radians
 
 
 class Map:
-    def __init__(self, screen, hero, last_level):
+    def __init__(self, screen, hero):
         self.screen = screen
         if hero == 'raccoon':
             self.hero, self.enemy = Raccoon(), Hedgehog()
@@ -26,11 +26,12 @@ class Map:
         self.not_event = 0
         self.is_jump = False
         self.jump_count = 16
-        self.level = last_level + 1
+        self.hero.x += 100
         self.fon = pygame.transform.scale(load_image('fon.jpg'), size)
 
-    def start_screen(self):
-        self.hero.x += 100
+    def start_screen(self, last_level):
+        self.level = last_level + 1
+        new_level.new_level(self.level)
         chase = True
         while True:
             self.screen.fill((255, 255, 255))
@@ -44,6 +45,7 @@ class Map:
             if not self.s % 500:
                 self.event.check_cofe()
             self.throw_knife()
+            self.mina_explosion()
             self.t %= size[0]
             for i in groups:
                 i.draw(self.screen)
