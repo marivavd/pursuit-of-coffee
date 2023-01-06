@@ -8,6 +8,7 @@ from Items import MiniCoffee, StandartCoffee, BigCoffee, Glasses, Cap, Knife, St
 from controls import Event
 from magic import magic
 import time
+from math import sin, cos, radians
 
 
 class Map:
@@ -20,6 +21,7 @@ class Map:
         self.sp_enemies = [self.enemy]
         self.event = Event()
         self.t = 0
+        self.s = 0
         self.a = 0
         self.not_event = 0
         self.is_jump = False
@@ -37,8 +39,11 @@ class Map:
             self.check_game_over(chase)
             self.check_goose()
             self.event.proverka_event(self.hero)
+            if self.s > 10_000:
+                self.end()
+            if not self.s % 500:
+                self.event.check_cofe()
             self.throw_knife()
-            self.mina_explosion()
             self.t %= size[0]
             for i in groups:
                 i.draw(self.screen)
@@ -80,12 +85,15 @@ class Map:
                 self.jump_count = 16
 
     def check_game_over(self, chase):
+        # перевести в декораторы и обернуть в него старт скрин
         if not self.event.game_over:
-            self.t += period
+            self.t += period[0]
+            self.s += period[0]
             self.not_event += 1
             self.screen.blit(self.fon, (-self.t, 0))
             self.screen.blit(self.fon, (-self.t + size[0], 0))
             if chase:
+                self.draw_coffee_sensor()
                 self.run()
                 self.generation_obj()
         else:
@@ -132,6 +140,32 @@ class Map:
             for el in self.event.throw_knife:
                 self.screen.blit(pygame.transform.scale(load_image('cofe.png', -1), (100, 100)), (el.x, el.y))
                 el.x -= 4
+
+    def end(self):
+        ...
+
+    def draw_coffee_sensor(self):
+        center = (700, 50)
+        self.draw_pie(self.screen, (122, 122, 122), center, 40, 0, 180)
+        self.draw_pie(self.screen, (0, 125, 0), center, 40, 180, 225)
+        self.draw_pie(self.screen, (125, 125, 0), center, 40, 225, 270)
+        self.draw_pie(self.screen, (125, 0, 0), center, 40, 270, 315)
+        self.draw_pie(self.screen, (0, 0, 0), center, 40, 315, 360)
+        coffe = period[0] - 5
+        angle = 180 + 360 * coffe // 40
+        pygame.draw.line(self.screen, (255, 0, 0), center,
+                         (center[0] + 40 * cos(radians(angle)),
+                          center[1] + 40 * sin(radians(angle))), 3)
+        pygame.draw.circle(self.screen, (255, 0, 0), center, 40, 3)
+
+    @staticmethod
+    def draw_pie(scr, color, center, radius, start_angle, stop_angle):
+        radius -= 3
+        theta = start_angle
+        while theta <= stop_angle:
+            pygame.draw.line(scr, color, center,
+                             (center[0] + radius * cos(radians(theta)), center[1] + radius * sin(radians(theta))), 2)
+            theta += 0.01
 
     def mina_explosion(self):
         if len(self.event.mina_time) != 0:
