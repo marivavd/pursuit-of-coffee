@@ -1,5 +1,5 @@
 import sys, time, pygame
-from const import width, height
+from const import width, height, period
 from load_image import load_image
 
 
@@ -47,6 +47,7 @@ class Event:
             offset = (abs(hero.x - i.rect.x), abs(hero.y - i.rect.y))
             if hero.mask.overlap_area(i.mask, offset) > 0 and i.z == hero.z:
                 self.game_over = True
+                i.kill()
         for i in things:  # проверка на соприкосновение с кепкой и очками
             offset = (abs(hero.x - i.rect.x), abs(hero.y - i.rect.y))
             if hero.mask.overlap_area(i.mask, offset) > 0 and i.z == hero.z:
@@ -54,6 +55,7 @@ class Event:
                     self.goose = True
                 else:
                     self.change = True
+                i.kill()
         for i in weapon:  # проверка на соприкосновение с миной и ножом
             offset = (abs(hero.x - i.rect.x), abs(hero.y - i.rect.y))
             if hero.mask.overlap_area(i.mask, offset) > 0 and i.z == hero.z:
@@ -62,12 +64,12 @@ class Event:
                     self.take_knife(hero, i)
                 else:
                     self.mina += 1
+                i.kill()
         for i in cofe:
             offset = (abs(hero.x - i.rect.x), abs(hero.y - i.rect.y))
             if hero.mask.overlap_area(i.mask, offset) > 0 and i.z == hero.z:
-                i.invigorating(i.name)
-            else:
-                print(i.z, hero.z)
+                i.invigorating(i)
+                i.kill()
 
     @staticmethod
     def take_knife(hero, knife=None):
@@ -94,3 +96,8 @@ class Event:
         hero.mask = pygame.mask.from_surface(hero.img)
         if mina is not None:
             mina.kill()
+
+    def check_cofe(self):
+        period[0] -= 1
+        if not 5 <= period[0] <= 20:
+            self.game_over = True
