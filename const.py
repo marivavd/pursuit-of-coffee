@@ -11,3 +11,4 @@ things = pygame.sprite.Group()  # кепка и очки
 weapon = pygame.sprite.Group()  # нож и мина
 cofe = pygame.sprite.Group()  # кофе
 groups = [all_obstacles, things, weapon, cofe]
+sp_fons = ['fon.jpg', 'fon1.jpg']

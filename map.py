@@ -175,6 +175,9 @@ class Map:
                 now = time.perf_counter()
                 if now - self.event.mina_time[index][2] >= 3:
                     del self.event.mina_time[index]
+                    self.screen.blit(pygame.transform.scale(load_image('bang.png', -1), (100, 100)),
+                                     (self.event.mina_time[index][0], self.event.mina_time[index][1]))
+                    pygame.time.delay(1000)
                 else:
                     self.screen.blit(pygame.transform.scale(load_image('cofe.png', -1), (100, 100)),
                                      (self.event.mina_time[index][0], self.event.mina_time[index][1]))

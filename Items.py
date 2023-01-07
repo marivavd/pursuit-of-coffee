@@ -10,7 +10,7 @@ class Item(pygame.sprite.Sprite):
         self.mask = pygame.mask.from_surface(self.image)
         self.rect.x = pos_x
         # не понимаю, как сделать так, чтоб нижний край маски изображения = pos_y
-        self.rect.y = pos_y
+        self.rect.y = pos_y - 50
         self.z = k
 
 
