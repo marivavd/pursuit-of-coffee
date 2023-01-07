@@ -82,6 +82,7 @@ class Knife(Weapon):
         self.image = pygame.transform.scale(load_image('knife.png', -1), (100, 100))
         super(Knife, self).__init__(*args)
         self.name = 'knife'
+        self.rect.y += 40
 
 
 class Mina(Weapon):
@@ -89,6 +90,7 @@ class Mina(Weapon):
         self.image = pygame.transform.scale(load_image('mina.png', -1), (100, 100))
         super(Mina, self).__init__(*args)
         self.name = 'mina'
+        self.rect.y += 40
 
 
 class Obstacle(Item):

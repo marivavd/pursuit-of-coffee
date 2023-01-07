@@ -140,8 +140,8 @@ class Map:
     def throw_knife(self):
         if len(self.event.throw_knife) != 0:
             for el in self.event.throw_knife:
-                self.screen.blit(pygame.transform.scale(load_image('cofe.png', -1), (100, 100)), (el.x, el.y))
-                el.x -= 4
+                self.screen.blit(pygame.transform.scale(load_image('knife.png', -1), (100, 100)), (el.x, el.y))
+                el.x -= 10
 
     def end(self):
         ...

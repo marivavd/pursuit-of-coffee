@@ -29,10 +29,10 @@ class Event:
                     hero.shift_side()
                 elif event.key == pygame.K_DOWN:  # оставлять мину
                     if self.mina > 0:
-                        self.mina_time.append((hero.x, hero.y + 40, time.perf_counter()))
+                        self.mina_time.append([hero.x, hero.y + 40, time.perf_counter()])
                 elif event.key == pygame.K_SPACE:  # пулять ножом во врага
                     if self.knife > 0:
-                        self.throw_knife.append(pygame.transform.scale(load_image('cofe.png', -1), (100, 100)).get_rect(
+                        self.throw_knife.append(pygame.transform.scale(load_image('knife.png', -1), (100, 100)).get_rect(
                             topleft=(hero.x - 30, hero.y)))
                         self.knife -= 1
                         if self.knife == 0:
@@ -46,12 +46,12 @@ class Event:
     def proverka_contact(self, hero, all_obstacles, things, weapon, cofe):
         for i in all_obstacles:  # проверка на соприкосновение с препятствием
             offset = (abs(hero.x - i.rect.x), abs(hero.y - i.rect.y))
-            if hero.mask.overlap_area(i.mask, offset) > 0 and i.z == hero.z:
+            if hero.mask.overlap_area(i.mask, offset) > 0:
                 self.game_over = True
                 i.kill()
         for i in things:  # проверка на соприкосновение с кепкой и очками
             offset = (abs(hero.x - i.rect.x), abs(hero.y - i.rect.y))
-            if hero.mask.overlap_area(i.mask, offset) > 0 and i.z == hero.z:
+            if hero.mask.overlap_area(i.mask, offset) > 0:
                 if i.name == 'cap':
                     self.goose = True
                 else:
@@ -59,7 +59,7 @@ class Event:
                 i.kill()
         for i in weapon:  # проверка на соприкосновение с миной и ножом
             offset = (abs(hero.x - i.rect.x), abs(hero.y - i.rect.y))
-            if hero.mask.overlap_area(i.mask, offset) > 0 and i.z == hero.z:
+            if hero.mask.overlap_area(i.mask, offset) > 0:
                 if i.name == 'knife':
                     self.knife += 1
                     self.take_knife(hero, i)
@@ -69,7 +69,7 @@ class Event:
                 i.kill()
         for i in cofe:
             offset = (abs(hero.x - i.rect.x), abs(hero.y - i.rect.y))
-            if hero.mask.overlap_area(i.mask, offset) > 0 and i.z == hero.z:
+            if hero.mask.overlap_area(i.mask, offset) > 0:
                 i.invigorating(i)
                 i.kill()
 
