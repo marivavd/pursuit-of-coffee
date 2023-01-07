@@ -173,11 +173,16 @@ class Map:
         if len(self.event.mina_time) != 0:
             for index in range(len(self.event.mina_time)):
                 now = time.perf_counter()
+                self.event.mina_time[index][0] -= self.t
                 if now - self.event.mina_time[index][2] >= 3:
-                    del self.event.mina_time[index]
                     self.screen.blit(pygame.transform.scale(load_image('bang.png', -1), (100, 100)),
                                      (self.event.mina_time[index][0], self.event.mina_time[index][1]))
-                    pygame.time.delay(1000)
+                    del self.event.mina_time[index]
+                    sound = pygame.mixer.Sound('sounds/bang.mp3')
+                    sound.play()
+                    while time.perf_counter() - now < 2:
+                        pass
+                    self.start_screen(self.level)
                 else:
                     self.screen.blit(pygame.transform.scale(load_image('cofe.png', -1), (100, 100)),
                                      (self.event.mina_time[index][0], self.event.mina_time[index][1]))

@@ -1,6 +1,7 @@
 import sys, time, pygame
 from const import width, height, period
 from load_image import load_image
+from Items import Mina
 
 
 class Event:
@@ -64,6 +65,7 @@ class Event:
                     self.take_knife(hero, i)
                 else:
                     self.mina += 1
+                    self.take_mina(hero, i)
                 i.kill()
         for i in cofe:
             offset = (abs(hero.x - i.rect.x), abs(hero.y - i.rect.y))

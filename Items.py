@@ -79,14 +79,14 @@ class Weapon(Item):
 
 class Knife(Weapon):
     def __init__(self, *args):
-        self.image = pygame.transform.scale(load_image('cofe.png', -1), (100, 100))
+        self.image = pygame.transform.scale(load_image('knife.png', -1), (100, 100))
         super(Knife, self).__init__(*args)
         self.name = 'knife'
 
 
 class Mina(Weapon):
     def __init__(self, *args):
-        self.image = pygame.transform.scale(load_image('cofe.png', -1), (100, 100))
+        self.image = pygame.transform.scale(load_image('mina.png', -1), (100, 100))
         super(Mina, self).__init__(*args)
         self.name = 'mina'
 
