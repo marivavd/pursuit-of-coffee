@@ -10,6 +10,8 @@ class Animal(pygame.sprite.Sprite):
         self.x = 400
         self.y = 430
         self.z = 2
+        self.measuring = 'normal'
+        self.alive = True
 
     def shift_side(self, k=1):
         shift = 12 * k

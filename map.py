@@ -37,13 +37,14 @@ class Map:
             self.screen.fill((255, 255, 255))
             self.jump()
             self.event.proverka_contact(self.hero, *groups)
-            self.check_game_over(chase)
+            if self.check_game_over(chase):
+                break
             self.check_goose()
             self.event.proverka_event(self.hero)
             if self.s > 10_000:
                 self.end()
             if not self.s % 500:
-                self.event.check_cofe()
+                self.event.check_cofe(self.hero)
             self.throw_knife()
             self.mina_explosion()
             self.t %= size[0]
@@ -51,6 +52,7 @@ class Map:
                 i.draw(self.screen)
             pygame.display.flip()
             clock.tick(FPS)
+        return self.hero
 
     def run(self):
         self.screen.blit(self.hero.img, (self.hero.x, self.hero.y))
@@ -99,7 +101,7 @@ class Map:
                 self.run()
                 self.generation_obj()
         else:
-            print('Game over')
+            return True
 
     def check_goose(self):
         if self.event.goose and len(self.sp_enemies) != 2:
@@ -186,3 +188,11 @@ class Map:
                 else:
                     self.screen.blit(pygame.transform.scale(load_image('cofe.png', -1), (100, 100)),
                                      (self.event.mina_time[index][0], self.event.mina_time[index][1]))
+
+
+class Hell(Map):
+    def __init__(self, *args):
+        super(Hell, self).__init__(*args)
+        self.fon = pygame.transform.scale(load_image('hell.jpg'), size)
+        period[0] = period[1]
+        self.hero.measuring = 'hell'

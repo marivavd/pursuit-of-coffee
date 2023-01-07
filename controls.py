@@ -1,7 +1,6 @@
 import sys, time, pygame
 from const import width, height, period
 from load_image import load_image
-from Items import Mina
 
 
 class Event:
@@ -30,6 +29,8 @@ class Event:
                 elif event.key == pygame.K_DOWN:  # оставлять мину
                     if self.mina > 0:
                         self.mina_time.append([hero.x, hero.y + 40, time.perf_counter()])
+                        self.mina -= 1
+                # сделать так, чтобы при смене персонажа, и нож, и мина оставались у него
                 elif event.key == pygame.K_SPACE:  # пулять ножом во врага
                     if self.knife > 0:
                         self.throw_knife.append(pygame.transform.scale(load_image('knife.png', -1), (100, 100)).get_rect(
@@ -99,7 +100,10 @@ class Event:
         if mina is not None:
             mina.kill()
 
-    def check_cofe(self):
+    def check_cofe(self, hero):
         period[0] -= 1
         if not 5 <= period[0] <= 20:
             self.game_over = True
+            hero.measuring = 'hell'
+
+# при гейм овер удалять все объекты!

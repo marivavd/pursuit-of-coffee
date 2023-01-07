@@ -1,7 +1,7 @@
 import pygame
 
 size = width, height = 800, 600
-FPS = 20
+FPS = 50
 period = [10, 10]
 clock = pygame.time.Clock()
 ground_level = 500
