@@ -1,5 +1,6 @@
 from menu import start_screen, pygame, size
-from map import Map, Hell, Raccoon, Hedgehog
+from map import Map, Hell
+from animals import Raccoon, Hedgehog
 
 sl_hero = {'raccoon': (Raccoon(), [Hedgehog()]),
            'hedgehog': (Hedgehog(), [Raccoon()])}

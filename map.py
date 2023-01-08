@@ -1,13 +1,13 @@
-from load_image import load_image
-from animals import Hedgehog, Raccoon, Goose
-from menu import pygame
+from load_image import load_image, pygame
+from animals import Goose
 from const import FPS, size, clock, period, sl_fons, groups, width, height, fon_new
-from random import randint, choice
 from Items import MiniCoffee, StandartCoffee, BigCoffee, Glasses, Cap, Knife, Stone, Bush, Book, Mina
 from controls import Event
 from magic import magic
-import time, new_level
+from new_level import new_level
 from math import sin, cos, radians
+from time import perf_counter
+from random import randint, choice
 
 
 class Map:
@@ -27,7 +27,7 @@ class Map:
 
     def start_screen(self, last_level):
         self.level = last_level + 1
-        new_level.new_level(self.level)
+        new_level(self.level)
         chase = True
         while True:
             self.screen.fill((255, 255, 255))
@@ -151,7 +151,7 @@ class Map:
     def mina_explosion(self):
         if len(self.event.mina_time) != 0:
             for index in range(len(self.event.mina_time)):
-                now = time.perf_counter()
+                now = perf_counter()
                 self.event.mina_time[index][0] -= self.t
                 if now - self.event.mina_time[index][2] >= 3:
                     self.screen.blit(pygame.transform.scale(load_image('bang.png', -1), (100, 100)),
@@ -159,7 +159,7 @@ class Map:
                     del self.event.mina_time[index]
                     sound = pygame.mixer.Sound('sounds/bang.mp3')
                     sound.play()
-                    while time.perf_counter() - now < 2:
+                    while perf_counter() - now < 2:
                         pass
                     self.start_screen(self.level)
                 else:
