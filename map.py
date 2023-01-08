@@ -8,6 +8,7 @@ from new_level import new_level
 from math import sin, cos, radians
 from time import perf_counter
 from random import randint, choice
+from final_window_loss import Loss_window
 
 
 class Map:
@@ -18,22 +19,24 @@ class Map:
         self.event = Event()
         self.t, self.s = 0, 0
         self.level = 1
+        self.event = Event()
         self.not_event = 0
         self.hero.x += 100  # 100 - рандомное число, нужно для того, чтобы персонаж был дальше, чем враг
         self.fon = pygame.transform.scale(load_image('fon.jpg'), size)
 
-    @check_game_over
-    def start_screen(self):
+    def start_screen(self, last_level):
+        self.level = last_level + 1
         new_level(self.level)
-        chase = True
+        self.chase = True
         while True:
             self.t += period[0]
             self.s += period[0]
             self.not_event += 1
             self.screen.blit(self.fon, (-self.t, 0))
             self.screen.blit(self.fon, (-self.t + size[0], 0))
-            if chase:
+            if self.chase:
                 self.chasing()
+            self.check_game_over()
             pygame.display.flip()
             clock.tick(FPS)
 
@@ -66,6 +69,11 @@ class Map:
         if self.hero.x > size[0] // 2:
             self.hero.x -= 5
 
+    def check_game_over(self):
+        if self.event.game_over:
+            self.chase = False
+            window = Loss_window()
+
     def offset(self):
         for i in self.sp_enemies:
             if i.x >= -100:
@@ -79,21 +87,6 @@ class Map:
             self.event.isjump = False
             self.hero.is_jump = True
         self.hero.jump()
-
-    # def check_game_over(self, chase):
-    #     # перевести в декораторы и обернуть в него старт скрин
-    #     if not self.event.game_over:
-    #         self.t += period[0]
-    #         self.s += period[0]
-    #         self.not_event += 1
-    #         self.screen.blit(self.fon, (-self.t, 0))
-    #         self.screen.blit(self.fon, (-self.t + size[0], 0))
-    #         if chase:
-    #             self.draw_coffee_sensor()
-    #             self.run()
-    #             self.generation_obj()
-    #     else:
-    #         return True
 
     def check_goose(self):
         if self.event.goose and len(self.sp_enemies) != 2:

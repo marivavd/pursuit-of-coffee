@@ -1,0 +1,3 @@
+class Loss_window:
+    def __init__(self):
+        ...
