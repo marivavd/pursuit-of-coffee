@@ -1,6 +1,6 @@
 import pygame
 from load_image import load_image
-from const import cofe, weapon, things, all_obstacles, period
+from const import coffee, weapon, things, all_obstacles, period, width, height
 
 
 class Item(pygame.sprite.Sprite):
@@ -16,8 +16,8 @@ class Item(pygame.sprite.Sprite):
 
 class Coffee(Item):
     def __init__(self, *args):
-        super(Coffee, self).__init__(*args, cofe)
-        cofe.add(self)
+        super(Coffee, self).__init__(*args, coffee)
+        coffee.add(self)
 
     @staticmethod
     def invigorating(coffe):

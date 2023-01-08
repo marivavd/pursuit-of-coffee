@@ -1,6 +1,6 @@
 from load_image import load_image
 import pygame
-from const import width, height, ground_level
+from const import width, height, sl_fons
 
 
 class Animal(pygame.sprite.Sprite):
