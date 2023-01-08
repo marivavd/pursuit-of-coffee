@@ -1,8 +1,7 @@
 from load_image import load_image
 from animals import Hedgehog, Raccoon, Goose
 from menu import pygame
-from const import FPS, size, clock, period, \
-    ground_level, track_width, groups, width, height
+from const import FPS, size, clock, period, sl_fons, groups, width, height, fon_new
 from random import randint, choice
 from Items import MiniCoffee, StandartCoffee, BigCoffee, Glasses, Cap, Knife, Stone, Bush, Book, Mina
 from controls import Event
@@ -33,11 +32,11 @@ class Map:
         while True:
             self.screen.fill((255, 255, 255))
             self.jump()
-            self.event.proverka_contact(self.hero, *groups)
+            self.event.check_contact(self.hero, groups)
             if self.check_game_over(chase):
                 break
             self.check_goose()
-            self.event.proverka_event(self.hero)
+            self.event.check_event(self.hero)
             if self.s > 10_000:
                 self.end()
             if not self.s % 500:
@@ -49,7 +48,7 @@ class Map:
                 i.draw(self.screen)
             pygame.display.flip()
             clock.tick(FPS)
-        return self.hero
+        return self.hero, self.sp_enemies
 
     def run(self):
         self.screen.blit(self.hero.img, (self.hero.x, self.hero.y))
@@ -133,7 +132,7 @@ class Map:
                               [Knife] * 2]
             cls_obj = choice(probability_sp)[0]
             track = randint(0, 2)
-            cls_obj(600, ground_level - track * track_width, track)
+            cls_obj(600, sl_fons[fon_new]['ground_level'] - track * sl_fons[fon_new]['track_width'], track)
             self.not_event = 0
 
     def throw_knife(self):
