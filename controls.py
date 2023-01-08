@@ -42,7 +42,7 @@ class Event:
             if not self.knife:
                 hero.img = pygame.transform.scale(load_image(f'{hero.name}.png'), (width // 6, height // 6))
 
-    def check_contact(self, hero, groups):
+    def check_contact(self, hero, *groups):
         sl_group = {all_obstacles: self.crash_obstacles,
                     things: self.crash_things,
                     weapon: self.crash_weapon,
