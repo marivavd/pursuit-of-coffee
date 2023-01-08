@@ -101,3 +101,7 @@ class Event:
             hero.measuring = 'hell'
 
 # при гейм овер удалять все объекты!
+
+
+def check_game_over(funk): # ретёрн хиров и врагов
+    ...

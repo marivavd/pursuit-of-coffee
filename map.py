@@ -2,7 +2,7 @@ from load_image import load_image, pygame
 from animals import Goose
 from const import FPS, size, clock, period, sl_fons, groups, width, height, fon_new
 from Items import MiniCoffee, StandartCoffee, BigCoffee, Glasses, Cap, Knife, Stone, Bush, Book, Mina
-from controls import Event
+from controls import Event, check_game_over
 from magic import magic
 from new_level import new_level
 from math import sin, cos, radians
@@ -16,35 +16,44 @@ class Map:
         self.hero, self.enemy = hero, enemies[0]
         self.sp_enemies = enemies
         self.event = Event()
-        self.t, self.s, self.a = 0, 0, 0
+        self.t, self.s = 0, 0
+        self.level = 1
         self.not_event = 0
-        self.hero.x += 100
+        self.hero.x += 100  # 100 - рандомное число, нужно для того, чтобы персонаж был дальше, чем враг
         self.fon = pygame.transform.scale(load_image('fon.jpg'), size)
 
-    def start_screen(self, last_level):
-        self.level = last_level + 1
+    @check_game_over
+    def start_screen(self):
         new_level(self.level)
         chase = True
         while True:
-            self.screen.fill((255, 255, 255))
-            self.jump()
-            self.event.check_contact(self.hero, *groups)
-            if self.check_game_over(chase):
-                break
-            self.check_goose()
-            self.event.check_event(self.hero)
-            if self.s > 10_000:
-                self.end()
-            if not self.s % 500:
-                self.event.check_cofe(self.hero)
-            self.throw_knife()
-            self.mina_explosion()
-            self.t %= size[0]
-            for i in groups:
-                i.draw(self.screen)
+            self.t += period[0]
+            self.s += period[0]
+            self.not_event += 1
+            self.screen.blit(self.fon, (-self.t, 0))
+            self.screen.blit(self.fon, (-self.t + size[0], 0))
+            if chase:
+                self.chasing()
             pygame.display.flip()
             clock.tick(FPS)
-        return self.hero
+
+    def chasing(self):
+        self.draw_coffee_sensor()
+        self.run()
+        self.jump()
+        self.generation_obj()
+        self.event.check_contact(self.hero, *groups)
+        self.check_goose()
+        self.event.check_event(self.hero)
+        if self.s > 10_000:
+            self.end()
+        if not self.s % 500:
+            self.event.check_cofe(self.hero)
+        self.throw_knife()
+        self.mina_explosion()
+        self.t %= size[0]
+        for i in groups:
+            i.draw(self.screen)
 
     def run(self):
         self.screen.blit(self.hero.img, (self.hero.x, self.hero.y))
@@ -71,20 +80,20 @@ class Map:
             self.hero.is_jump = True
         self.hero.jump()
 
-    def check_game_over(self, chase):
-        # перевести в декораторы и обернуть в него старт скрин
-        if not self.event.game_over:
-            self.t += period[0]
-            self.s += period[0]
-            self.not_event += 1
-            self.screen.blit(self.fon, (-self.t, 0))
-            self.screen.blit(self.fon, (-self.t + size[0], 0))
-            if chase:
-                self.draw_coffee_sensor()
-                self.run()
-                self.generation_obj()
-        else:
-            return True
+    # def check_game_over(self, chase):
+    #     # перевести в декораторы и обернуть в него старт скрин
+    #     if not self.event.game_over:
+    #         self.t += period[0]
+    #         self.s += period[0]
+    #         self.not_event += 1
+    #         self.screen.blit(self.fon, (-self.t, 0))
+    #         self.screen.blit(self.fon, (-self.t + size[0], 0))
+    #         if chase:
+    #             self.draw_coffee_sensor()
+    #             self.run()
+    #             self.generation_obj()
+    #     else:
+    #         return True
 
     def check_goose(self):
         if self.event.goose and len(self.sp_enemies) != 2:
