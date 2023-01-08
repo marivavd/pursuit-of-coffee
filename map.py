@@ -144,9 +144,31 @@ class Map:
             for el in self.event.throw_knife:
                 self.screen.blit(pygame.transform.scale(load_image('knife.png', -1), (100, 100)), (el.x, el.y))
                 el.x -= 10
+                for (index, enemy_el) in self.sp_enemies:
+                    if el.colliderect(enemy_el):
+                        self.event.throw_knife.pop(index)
+                        self.start_screen(self.level)
 
     def end(self):
         ...
+
+    def mina_explosion(self):
+        if len(self.event.mina_time) != 0:
+            for index in range(len(self.event.mina_time)):
+                now = time.perf_counter()
+                self.event.mina_time[index][0] -= self.t
+                if now - self.event.mina_time[index][2] >= 3:
+                    self.screen.blit(pygame.transform.scale(load_image('bang.png', -1), (100, 100)),
+                                     (self.event.mina_time[index][0], self.event.mina_time[index][1]))
+                    del self.event.mina_time[index]
+                    sound = pygame.mixer.Sound('sounds/bang.mp3')
+                    sound.play()
+                    while time.perf_counter() - now < 2:
+                        pass
+                    self.start_screen(self.level)
+                else:
+                    self.screen.blit(pygame.transform.scale(load_image('cofe.png', -1), (100, 100)),
+                                     (self.event.mina_time[index][0], self.event.mina_time[index][1]))
 
     def draw_coffee_sensor(self):
         center = (700, 50)
@@ -170,24 +192,6 @@ class Map:
             pygame.draw.line(scr, color, center,
                              (center[0] + radius * cos(radians(theta)), center[1] + radius * sin(radians(theta))), 2)
             theta += 0.01
-
-    def mina_explosion(self):
-        if len(self.event.mina_time) != 0:
-            for index in range(len(self.event.mina_time)):
-                now = time.perf_counter()
-                self.event.mina_time[index][0] -= self.t
-                if now - self.event.mina_time[index][2] >= 3:
-                    self.screen.blit(pygame.transform.scale(load_image('bang.png', -1), (100, 100)),
-                                     (self.event.mina_time[index][0], self.event.mina_time[index][1]))
-                    del self.event.mina_time[index]
-                    sound = pygame.mixer.Sound('sounds/bang.mp3')
-                    sound.play()
-                    while time.perf_counter() - now < 2:
-                        pass
-                    self.start_screen(self.level)
-                else:
-                    self.screen.blit(pygame.transform.scale(load_image('cofe.png', -1), (100, 100)),
-                                     (self.event.mina_time[index][0], self.event.mina_time[index][1]))
 
 
 class Hell(Map):
