@@ -164,7 +164,7 @@ class Map:
                         pass
                     self.start_screen(self.level)
                 else:
-                    self.screen.blit(pygame.transform.scale(load_image('cofe.png', -1), (100, 100)),
+                    self.screen.blit(pygame.transform.scale(load_image('mina.png', -1), (100, 100)),
                                      (self.event.mina_time[index][0], self.event.mina_time[index][1]))
 
     def draw_coffee_sensor(self):
