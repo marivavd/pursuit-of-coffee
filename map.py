@@ -12,13 +12,10 @@ from math import sin, cos, radians
 
 
 class Map:
-    def __init__(self, screen, hero):
+    def __init__(self, screen, hero, enemies):
         self.screen = screen
-        if hero == 'raccoon':
-            self.hero, self.enemy = Raccoon(), Hedgehog()
-        else:
-            self.hero, self.enemy = Hedgehog(), Raccoon()
-        self.sp_enemies = [self.enemy]
+        self.hero, self.enemy = hero, enemies[0]
+        self.sp_enemies = enemies
         self.event = Event()
         self.t = 0
         self.s = 0
@@ -191,8 +188,4 @@ class Map:
 
 
 class Hell(Map):
-    def __init__(self, *args):
-        super(Hell, self).__init__(*args)
-        self.fon = pygame.transform.scale(load_image('hell.jpg'), size)
-        period[0] = period[1]
-        self.hero.measuring = 'hell'
+    ...
