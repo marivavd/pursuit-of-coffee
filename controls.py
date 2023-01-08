@@ -37,18 +37,6 @@ class Event:
                 self.mina -= 1
             if not self.mina:
                 hero.img = pygame.transform.scale(load_image(f'{hero.name}.png'), (width // 6, height // 6))
-        elif event.key == pygame.K_SPACE:  # пулять ножом во врага
-            if self.knife > 0:
-                self.throw_knife.append(pygame.transform.scale(load_image('knife.png', -1), (100, 100)).get_rect(
-                    topleft=(hero.x - 30, hero.y)))
-                self.knife -= 1
-                if self.knife == 0:
-                    if hero.name == 'raccoon':
-                        hero.img = pygame.transform.scale(load_image('raccoon.png'), (width // 6, height // 6))
-                    elif hero.name == 'hedgehog':
-                        hero.img = pygame.transform.scale(load_image('hedgehog.png'), (width // 6, height // 6))
-                    else:
-                        hero.img = pygame.transform.scale(load_image('goose.png'), (width // 6, height // 6))
         elif event.key == pygame.K_SPACE and self.knife > 0:  # пулять ножом во врага
             self.knife -= 1
             if not self.knife:
