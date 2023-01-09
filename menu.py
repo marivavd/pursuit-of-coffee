@@ -71,7 +71,7 @@ def draw_heror(screen):
 
 
 def init_raccoon(all_sprites):
-    image_r = pygame.transform.scale(load_image('raccoon_move.png', -1), (213, 177))
+    image_r = pygame.transform.scale(load_image('raccoon.png', -1), (213, 177))
     raccoon = Images(all_sprites, (0, 165, 80), -10, 170, image_r)
     all_sprites.add(raccoon)
     return raccoon

@@ -14,6 +14,8 @@ class Animal(pygame.sprite.Sprite):
         self.alive = True
         self.is_jump = False
         self.jump_count = 16
+        self.koef = 6
+        self.minus = 530
 
     def shift_side(self, k=1):
         shift = 12 * k
@@ -33,21 +35,28 @@ class Animal(pygame.sprite.Sprite):
                 self.is_jump = False
                 self.jump_count = 16
 
+    def rise(self, name):
+        self.koef -= 0.5
+        self.y = self.minus - (height // self.koef)
+        self.img = pygame.transform.scale(load_image(f'{name}.png'), (width // self.koef, height // self.koef))
+        self.rect = self.img.get_rect()
+        self.mask = pygame.mask.from_surface(self.img)
+
 
 class Raccoon(Animal):
     def __init__(self):
         super(Raccoon, self).__init__()
-        self.img = pygame.transform.scale(load_image('raccoon.png'), (width // 7, height // 7))
+        self.img = pygame.transform.scale(load_image('raccoon.png'), (width // self.koef, height // self.koef))
         self.rect = self.img.get_rect()
         self.mask = pygame.mask.from_surface(self.img)
-        self.y += 20
         self.name = 'raccoon'
+        self.minus += 10
 
 
 class Hedgehog(Animal):
     def __init__(self):
         super(Hedgehog, self).__init__()
-        self.img = pygame.transform.scale(load_image('hedgehog.png'), (width // 6, height // 6))
+        self.img = pygame.transform.scale(load_image('hedgehog.png'), (width // self.koef, height // self.koef))
         self.rect = self.img.get_rect()
         self.mask = pygame.mask.from_surface(self.img)
         self.name = 'hedgehog'
@@ -57,7 +66,7 @@ class Goose(Animal):
     def __init__(self):
         super(Goose, self).__init__()
         self.y -= 48
-        self.img = pygame.transform.scale(load_image('goose.png'), (width // 6, height // 6))
+        self.img = pygame.transform.scale(load_image('goose.png'), (width // self.koef, height // self.koef))
         self.rect = self.img.get_rect()
         self.mask = pygame.mask.from_surface(self.img)
         self.name = 'goose'
