@@ -1,5 +1,6 @@
 import time
 import pygame
+import sqlite3
 from const import size, width, height
 
 pygame.init()
@@ -15,25 +16,20 @@ def init_intro_text(screen, line):
 
 
 def check_level(level):
-    if level == 1:
-        return '1 level'
-    elif level == 2:
-        return '2 level'
-    elif level == 3:
-        return '3 level'
-    elif level == 4:
-        return '4 level'
-    else:
-        return '5 level'
+    con = sqlite3.connect("sounds.db")
+    cur = con.cursor()
+    result = cur.execute(f"""SELECT levels.name, levels.sound FROM levels
+               WHERE levels.numer = {level}""").fetchall()
+    return result[0][0], result[0][1]
 
 
 def new_level(level):
     time_begin = time.perf_counter()
     all_sprites = pygame.sprite.Group()
     clock = pygame.time.Clock()
-    line = check_level(level)
+    line, sound = check_level(level)
     init_intro_text(screen, line)
-    sound = pygame.mixer.Sound(f'sounds/{line}.mp3')
+    sound = pygame.mixer.Sound(f'sounds/{sound}')
     sound.play()
     running = True
     while running:
