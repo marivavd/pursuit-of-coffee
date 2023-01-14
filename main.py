@@ -1,5 +1,6 @@
 from menu import start_screen, pygame, size
 from map import Map, Hell
+from final_window_loss import Loss_window
 from animals import Raccoon, Hedgehog
 
 sl_hero = {'raccoon': (Raccoon(), [Hedgehog()]),
@@ -16,4 +17,6 @@ if __name__ == '__main__':
 
     while hero.alive:  # пока персонаж жив, при его псевдо-смерти мы пермещаем его в соответствии с измерением
         cls_map = sl_measuring[hero.measuring]
-        hero, enemies = cls_map(screen, hero, enemies).start_screen(0)
+        hero, enemies = cls_map(screen, hero, enemies).start_screen()
+    else:
+        window = Loss_window()

@@ -1,6 +1,7 @@
 from load_image import load_image
+from const import width, height
 import pygame
-from const import width, height, sl_fons
+import time
 
 
 class Animal(pygame.sprite.Sprite):
@@ -11,11 +12,20 @@ class Animal(pygame.sprite.Sprite):
         self.y = 430
         self.z = 2
         self.measuring = 'normal'
+
         self.alive = True
         self.is_jump = False
+        self.knife = False
+        self.mina = False
+
         self.jump_count = 16
         self.koef = 6
         self.minus = 530
+
+        self.img = ...
+        self.rect = ...
+        self.mask = ...
+        self.name = ...
 
     def shift_side(self, k=1):
         shift = 12 * k
@@ -41,6 +51,36 @@ class Animal(pygame.sprite.Sprite):
         self.img = pygame.transform.scale(load_image(f'{name}.png'), (width // self.koef, height // self.koef))
         self.rect = self.img.get_rect()
         self.mask = pygame.mask.from_surface(self.img)
+
+    def drop_mima(self):
+        if self.mina:
+            self.mina = False
+            self.img = pygame.transform.scale(load_image(f'{self.name}.png'), (width // 6, height // 6))
+            return [self.x, self.y + 40, time.perf_counter()]
+        return []
+
+    def drop_knife(self):
+        if self.knife:
+            self.knife = False
+            self.img = pygame.transform.scale(load_image(f'{self.name}.png'), (width // 6, height // 6))
+            return [self.x, self.y + 40, time.perf_counter()]
+        return []
+
+    def take_knife(self, knife=None):
+        self.knife = True
+        self.img = pygame.transform.scale(load_image(f'{self.name}_with_knife.gif'), (width // 6, height // 6))
+        self.rect = self.img.get_rect()
+        self.mask = pygame.mask.from_surface(self.img)
+        if knife is not None:
+            knife.kill()
+
+    def take_mina(self, mina=None):
+        self.mina = True
+        self.img = pygame.transform.scale(load_image(f'{self.name}_with_mina.gif'), (width // 6, height // 6))
+        self.rect = self.img.get_rect()
+        self.mask = pygame.mask.from_surface(self.img)
+        if mina is not None:
+            mina.kill()
 
 
 class Raccoon(Animal):

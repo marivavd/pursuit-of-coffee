@@ -2,7 +2,7 @@ import pygame
 
 size = width, height = 800, 600
 FPS = 50
-period = [10, 10]
+period = [20, 10]
 clock = pygame.time.Clock()
 
 all_obstacles = pygame.sprite.Group()  # все препятствия
@@ -17,3 +17,4 @@ sl_fons = {'fon.jpg': {'ground_level': 500,
                        'track_width': 12},
            'fon1.jpg': {'ground_level': 500,
                         'track_width': 12}}
+

@@ -1,5 +1,4 @@
 import sys
-import time
 from Items import *
 
 
@@ -9,8 +8,7 @@ class Event:
         self.game_over = False
         self.change = False
         self.goose = False
-        self.knife = 0
-        self.mina = 0
+
         self.throw_knife = []
         self.mina_time = []
 
@@ -26,21 +24,15 @@ class Event:
     def check_key(self, event, hero):
         # обработка нажатия на кнопку
         if event.key == pygame.K_UP:  # прыжок
-            self.isjump = True
+            hero.is_jump = True
         elif event.key == pygame.K_LEFT:
             hero.shift_side(-1)
         elif event.key == pygame.K_RIGHT:
             hero.shift_side()
         elif event.key == pygame.K_DOWN:  # оставлять мину
-            if self.mina > 0:
-                self.mina_time.append([hero.x, hero.y + 40, time.perf_counter()])
-                self.mina -= 1
-            if not self.mina:
-                hero.img = pygame.transform.scale(load_image(f'{hero.name}.png'), (width // 6, height // 6))
-        elif event.key == pygame.K_SPACE and self.knife > 0:  # пулять ножом во врага
-            self.knife -= 1
-            if not self.knife:
-                hero.img = pygame.transform.scale(load_image(f'{hero.name}.png'), (width // 6, height // 6))
+            self.mina_time = hero.drop_mima()
+        elif event.key == pygame.K_SPACE:  # пулять ножом во врага
+            hero.drop_knife()
 
     def check_contact(self, hero, *groups):
         sl_group = {all_obstacles: self.crash_obstacles,
@@ -54,6 +46,7 @@ class Event:
                     sl_group[group](hero, i)
 
     def crash_obstacles(self, hero, i):
+        hero.alive = False
         self.game_over = True
         i.kill()
 
@@ -66,33 +59,15 @@ class Event:
 
     def crash_weapon(self, hero, i):
         if type(i) is Knife:
-            self.knife += 1
-            self.take_knife(hero, i)
+            hero.take_knife(i)
         elif type(i) is Mina:
-            self.mina += 1
-            self.take_mina(hero, i)
+            hero.take_mina(i)
         i.kill()
 
     @staticmethod
     def crash_coffee(hero, i):
         i.invigorating(i)
         i.kill()
-
-    @staticmethod
-    def take_knife(hero, knife=None):
-        hero.img = pygame.transform.scale(load_image(f'{hero.name}_with_knife.gif'), (width // 6, height // 6))
-        hero.rect = hero.img.get_rect()
-        hero.mask = pygame.mask.from_surface(hero.img)
-        if knife is not None:
-            knife.kill()
-
-    @staticmethod
-    def take_mina(hero, mina=None):
-        hero.img = pygame.transform.scale(load_image(f'{hero.name}_with_mina.gif'), (width // 6, height // 6))
-        hero.rect = hero.img.get_rect()
-        hero.mask = pygame.mask.from_surface(hero.img)
-        if mina is not None:
-            mina.kill()
 
     def check_cofe(self, hero):
         period[0] -= 1
@@ -101,7 +76,3 @@ class Event:
             hero.measuring = 'hell'
 
 # при гейм овер удалять все объекты!
-
-
-def check_game_over(funk): # ретёрн хиров и врагов
-    ...
