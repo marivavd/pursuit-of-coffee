@@ -33,14 +33,21 @@ class Animal(pygame.sprite.Sprite):
             self.y += shift
             self.z -= k
 
-    def jump(self):
+    def jump(self, flag):
         if self.is_jump:
             if self.jump_count >= -16:
-                if self.jump_count > 0:
-                    self.y -= (self.jump_count ** 2) / 6
+                if flag is False:
+                    if self.jump_count > 0:
+                        self.y -= (self.jump_count ** 2) / 6
+                    else:
+                        self.y += (self.jump_count ** 2) / 6
+                    self.jump_count -= 1
                 else:
-                    self.y += (self.jump_count ** 2) / 6
-                self.jump_count -= 1
+                    if self.jump_count > 0:
+                        self.y += (self.jump_count ** 2) / 6
+                    else:
+                        self.y -= (self.jump_count ** 2) / 6
+                    self.jump_count -= 1
             else:
                 self.is_jump = False
                 self.jump_count = 16

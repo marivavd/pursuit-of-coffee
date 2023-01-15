@@ -1,6 +1,6 @@
 from load_image import load_image, pygame
 from animals import Goose
-from const import FPS, size, clock, period, sl_fons, groups, fon_new, level
+from const import FPS, size, clock, period, sl_fons, groups
 from Items import MiniCoffee, StandartCoffee, BigCoffee, Glasses, Cap, Knife, Stone, Bush, Book, Mina
 from controls import Event
 from magic import magic
@@ -8,6 +8,7 @@ from new_level import new_level
 from math import sin, cos, radians
 from time import perf_counter
 from random import randint, choice
+
 
 
 class Map:
@@ -18,7 +19,7 @@ class Map:
         self.hero, self.enemy = hero, sp_enemies[0]
         self.sp_enemies = sp_enemies
         self.hero.x += 100  # 100 - рандомное число, нужно для того, чтобы персонаж был дальше, чем враг
-
+        self.fon_new = 'fon.jpg'
         self.chase = True
         self.t, self.s = 0, 0
         self.level = 1
@@ -38,10 +39,9 @@ class Map:
                                 [Mina] * 2,
                                 [Knife] * 2]
 
-    def start_screen(self):
-        global level
+    def start_screen(self, level):
         """метод запускающий обработку карты"""
-        level += 1
+        self.level = 1 + level
         new_level(self.level)
         while self.check_game_over():
             self.t += period[0]
@@ -80,7 +80,10 @@ class Map:
         if self.not_event > 100:
             self.generation_obj()
         if self.hero.is_jump:
-            self.hero.jump()
+            if self.fon_new == 'hell.jpg':
+                self.hero.jump(True)
+            else:
+                self.hero.jump(False)
         if self.s > 10_000:
             self.end()
         if not self.s % 500:
@@ -107,11 +110,18 @@ class Map:
             return False
         return True
 
-    @staticmethod
-    def draw_obj():
+
+    def draw_obj(self):
         for group in groups:
             for obj in group:
+                if self.fon_new == 'hell.jpg' and obj.rotate is False:
+                    if obj.name == 'bush':
+                        obj.image = pygame.transform.scale(load_image('hell_bush.png', -1), (100, 100))
+                    obj.rotate = True
+                    obj.image = pygame.transform.flip(obj.image, False, True)
                 obj.rect.x -= 5
+
+
 
     def check_goose(self):
         if self.event.goose and len(self.sp_enemies) != 2:
@@ -140,7 +150,7 @@ class Map:
     def generation_obj(self):
         cls_obj = choice(self.get_probability())[0]
         track = randint(0, 2)
-        cls_obj(600, sl_fons[fon_new]['ground_level'] - track * sl_fons[fon_new]['track_width'], track)
+        cls_obj(600, sl_fons[self.fon_new]['ground_level'] - track * sl_fons[self.fon_new]['track_width'], track)
         self.not_event = 0
 
     def throw_knife(self):
@@ -170,7 +180,7 @@ class Map:
                 sound.play()
                 while perf_counter() - now < 2:
                     pass
-                self.start_screen()
+                self.start_screen(self.level)
             else:
                 self.screen.blit(pygame.transform.scale(load_image('mina.png', -1), (100, 100)),
                                  (self.event.mina_time[0], self.event.mina_time[1]))
@@ -209,7 +219,7 @@ class Hell(Map):
         super().__init__(screen, hero, sp_enemies)
         self.fon = pygame.transform.scale(load_image('hell.jpg'), size)
         self.fon = pygame.transform.rotate(self.fon, 180)
-        fon_new = 'hell.jpg'
+        self.fon_new = 'hell.jpg'
         self.hero.img = pygame.transform.flip(self.hero.img, False, True)
         self.hero.y -= 400
         for i in range(len(self.sp_enemies)):
@@ -220,4 +230,3 @@ class Hell(Map):
         if self.event.goose and len(self.sp_enemies) != 2:
             super().check_goose()
             self.hero.img = pygame.transform.flip(self.hero.img, False, True)
-
