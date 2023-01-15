@@ -32,7 +32,7 @@ class Event:
         elif event.key == pygame.K_DOWN:  # оставлять мину
             self.mina_time = hero.drop_mima()
         elif event.key == pygame.K_SPACE:  # пулять ножом во врага
-            hero.drop_knife()
+            self.throw_knife = hero.drop_knife()
 
     def check_contact(self, hero, *groups):
         sl_group = {all_obstacles: self.crash_obstacles,
@@ -41,8 +41,7 @@ class Event:
                     coffee: self.crash_coffee}
         for group in groups:
             for i in group:
-                offset = (abs(hero.x - i.rect.x), abs(hero.y - i.rect.y))
-                if hero.mask.overlap_area(i.mask, offset) > 0:
+                if pygame.sprite.collide_mask(i, hero):
                     sl_group[group](hero, i)
 
     def crash_obstacles(self, hero, i):

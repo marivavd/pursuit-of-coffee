@@ -10,7 +10,6 @@ from time import perf_counter
 from random import randint, choice
 
 
-
 class Map:
     """класс для обработки карты на которой происходят все события"""
 
@@ -18,7 +17,7 @@ class Map:
         self.screen = screen
         self.hero, self.enemy = hero, sp_enemies[0]
         self.sp_enemies = sp_enemies
-        self.hero.x += 100  # 100 - рандомное число, нужно для того, чтобы персонаж был дальше, чем враг
+        self.hero.rect.x += 100  # 100 - рандомное число, нужно для того, чтобы персонаж был дальше, чем враг
         self.fon_new = 'fon.jpg'
         self.chase = True
         self.t, self.s = 0, 0
@@ -41,8 +40,9 @@ class Map:
 
     def start_screen(self, level):
         """метод запускающий обработку карты"""
-        self.level = 1 + level
-        new_level(self.level)
+        if self.hero.measuring == 'normal':
+            self.level = 1 + level
+            new_level(self.level)
         while self.check_game_over():
             self.t += period[0]
             self.s += period[0]
@@ -94,22 +94,21 @@ class Map:
         self.screen.blit(self.fon, (-self.t + size[0], 0))
 
     def draw_hero(self):
-        self.screen.blit(self.hero.img, (self.hero.x, self.hero.y))
-        if self.hero.x > size[0] // 2:
-            self.hero.x -= 5
+        self.screen.blit(self.hero.img, (self.hero.rect.x, self.hero.rect.y))
+        if self.hero.rect.x > size[0] // 2:
+            self.hero.rect.x -= 5
 
     def draw_enemies(self):
         for enemy in self.sp_enemies:
-            if enemy.x >= -100:
-                enemy.x -= 5
-            self.screen.blit(enemy.img, (enemy.x, enemy.y))
+            if enemy.rect.x >= -100:
+                enemy.rect.x -= 5
+            self.screen.blit(enemy.img, (enemy.rect.x, enemy.rect.y))
 
     def check_game_over(self):
         if self.event.game_over:
             self.chase = False
             return False
         return True
-
 
     def draw_obj(self):
         for group in groups:
@@ -121,21 +120,21 @@ class Map:
                     obj.image = pygame.transform.flip(obj.image, False, True)
                 obj.rect.x -= 5
 
-
-
     def check_goose(self):
         if self.event.goose and len(self.sp_enemies) != 2:
             goose = Goose()
-            goose.y = self.hero.y
-            goose.x = self.hero.x
+            goose.rect.y = self.hero.rect.y
+            goose.rect.x = self.hero.rect.x
             goose.z = self.hero.z
-
-            self.hero.y = self.enemy.y
-            self.hero.x = self.enemy.x + 100
+            self.hero.rect.y = self.enemy.rect.y
+            self.hero.rect.x = self.enemy.rect.x + 100
             self.hero.z = self.enemy.z
 
             self.sp_enemies.append(self.hero)
-            self.hero = goose
+            if self.hero.is_jump:
+                goose.jump_count = self.hero.jump_count
+                self.hero.is_jump = True
+                self.hero = goose
 
             if self.hero.knife:
                 self.hero.take_knife()
@@ -155,35 +154,50 @@ class Map:
 
     def throw_knife(self):
         # не прошло рефакторинг
-        if len(self.event.throw_knife):
-            for el in self.event.throw_knife:
-                self.screen.blit(pygame.transform.scale(load_image('knife.png', -1), (100, 100)), (el.x, el.y))
-                el.x -= 10
-                for (index, enemy_el) in self.sp_enemies:
-                    if el.colliderect(enemy_el):
-                        self.event.throw_knife.pop(index)
-                        self.start_screen()
+        if len(self.event.throw_knife) != 0:
+            self.screen.blit(pygame.transform.scale(load_image('knife.png', -1), (100, 100)), (self.event.throw_knife[0], self.event.throw_knife[1]))
+            self.event.throw_knife[0] -= 10
+            for (index, enemy_el) in enumerate(self.sp_enemies):
+                if self.event.throw_knife[2] - perf_counter() >= 2:
+                    self.event.throw_knife.pop(index)
+                    self.start_screen(self.level)
+                    self.event.throw_knife = []
 
     def end(self):
         ...
 
     def mina_explosion(self):
         if len(self.event.mina_time):
-            print(self.event.mina_time)
-            now = perf_counter()
-            self.event.mina_time[0] -= self.t
-            if now - self.event.mina_time[2] >= 3:
-                self.screen.blit(pygame.transform.scale(load_image('bang.png', -1), (100, 100)),
-                                 (self.event.mina_time[0], self.event.mina_time[1]))
-                self.event.mina_time = []
-                sound = pygame.mixer.Sound('sounds/bang.mp3')
-                sound.play()
-                while perf_counter() - now < 2:
-                    pass
-                self.start_screen(self.level)
-            else:
+            if self.event.mina_time[2] >= -12:
+                if self.hero.measuring == 'normal':
+                    if self.event.mina_time[2] > 0:
+                        self.event.mina_time[1] -= (self.event.mina_time[2] ** 2) / 6
+                    else:
+                        self.event.mina_time[1] += (self.event.mina_time[2] ** 2) / 6
+                    self.event.mina_time[2] -= 1
+                else:
+                    if self.event.mina_time[2] > 0:
+                        self.event.mina_time[1] += (self.event.mina_time[2] ** 2) / 6
+                    else:
+                        self.event.mina_time[1] -= (self.event.mina_time[2] ** 2) / 6
+                    self.event.mina_time[2] -= 1
+                self.event.mina_time[0] -= 10
                 self.screen.blit(pygame.transform.scale(load_image('mina.png', -1), (100, 100)),
                                  (self.event.mina_time[0], self.event.mina_time[1]))
+            elif self.event.mina_time[3] is False:
+                self.event.mina_time[3] = True
+                self.screen.blit(pygame.transform.scale(load_image('bang.png', -1), (200, 200)),
+                                 (self.event.mina_time[0], self.event.mina_time[1] - 40))
+                self.event.mina_time.append(perf_counter())
+                sound = pygame.mixer.Sound('sounds/bang.mp3')
+                sound.play()
+            elif self.event.mina_time[3] is True:
+                if perf_counter() - self.event.mina_time[4] >= 2:
+                    self.event.mina_time = []
+                    self.start_screen(self.level)
+                else:
+                    self.screen.blit(pygame.transform.scale(load_image('bang.png', -1), (200, 200)),
+                                     (self.event.mina_time[0], self.event.mina_time[1] - 40))
 
     def draw_coffee_sensor(self):
         center = (700, 50)
@@ -221,10 +235,10 @@ class Hell(Map):
         self.fon = pygame.transform.rotate(self.fon, 180)
         self.fon_new = 'hell.jpg'
         self.hero.img = pygame.transform.flip(self.hero.img, False, True)
-        self.hero.y -= 400
+        self.hero.rect.y -= 400
         for i in range(len(self.sp_enemies)):
             self.sp_enemies[i].img = pygame.transform.flip(self.sp_enemies[i].img, False, True)
-            self.sp_enemies[i].y -= 400
+            self.sp_enemies[i].rect.y -= 400
 
     def check_goose(self):
         if self.event.goose and len(self.sp_enemies) != 2:
