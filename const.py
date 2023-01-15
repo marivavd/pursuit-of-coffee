@@ -10,11 +10,13 @@ things = pygame.sprite.Group()  # кепка и очки
 weapon = pygame.sprite.Group()  # нож и мина
 coffee = pygame.sprite.Group()  # кофе
 groups = (all_obstacles, things, weapon, coffee)
-
+level = 0
 fon_new = 'fon.jpg'
 
 sl_fons = {'fon.jpg': {'ground_level': 500,
                        'track_width': 12},
            'fon1.jpg': {'ground_level': 500,
+                        'track_width': 12},
+           'hell.jpg': {'ground_level': 100,
                         'track_width': 12}}
 

@@ -3,6 +3,7 @@ from const import *
 from load_image import load_image
 
 hero = True
+pygame.init()
 
 
 class Images(pygame.sprite.Sprite):

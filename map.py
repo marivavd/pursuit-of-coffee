@@ -1,6 +1,6 @@
 from load_image import load_image, pygame
 from animals import Goose
-from const import FPS, size, clock, period, sl_fons, groups, width, height, fon_new
+from const import FPS, size, clock, period, sl_fons, groups, fon_new, level
 from Items import MiniCoffee, StandartCoffee, BigCoffee, Glasses, Cap, Knife, Stone, Bush, Book, Mina
 from controls import Event
 from magic import magic
@@ -8,7 +8,6 @@ from new_level import new_level
 from math import sin, cos, radians
 from time import perf_counter
 from random import randint, choice
-from final_window_loss import open_loss_window
 
 
 class Map:
@@ -40,8 +39,10 @@ class Map:
                                 [Knife] * 2]
 
     def start_screen(self):
+        global level
         """метод запускающий обработку карты"""
-        # new_level(self.level)
+        level += 1
+        new_level(self.level)
         while self.check_game_over():
             self.t += period[0]
             self.s += period[0]
@@ -151,7 +152,7 @@ class Map:
                 for (index, enemy_el) in self.sp_enemies:
                     if el.colliderect(enemy_el):
                         self.event.throw_knife.pop(index)
-                        self.start_screen(self.level)
+                        self.start_screen()
 
     def end(self):
         ...
@@ -203,4 +204,20 @@ class Map:
 
 
 class Hell(Map):
-    ...
+    def __init__(self, screen, hero, sp_enemies):
+        global fon_new
+        super().__init__(screen, hero, sp_enemies)
+        self.fon = pygame.transform.scale(load_image('hell.jpg'), size)
+        self.fon = pygame.transform.rotate(self.fon, 180)
+        fon_new = 'hell.jpg'
+        self.hero.img = pygame.transform.flip(self.hero.img, False, True)
+        self.hero.y -= 400
+        for i in range(len(self.sp_enemies)):
+            self.sp_enemies[i].img = pygame.transform.flip(self.sp_enemies[i].img, False, True)
+            self.sp_enemies[i].y -= 400
+
+    def check_goose(self):
+        if self.event.goose and len(self.sp_enemies) != 2:
+            super().check_goose()
+            self.hero.img = pygame.transform.flip(self.hero.img, False, True)
+

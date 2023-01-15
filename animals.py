@@ -11,7 +11,7 @@ class Animal(pygame.sprite.Sprite):
         self.x = 400
         self.y = 430
         self.z = 2
-        self.measuring = 'normal'
+        self.measuring = 'hell'
 
         self.alive = True
         self.is_jump = False

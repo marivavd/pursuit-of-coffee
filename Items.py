@@ -1,10 +1,11 @@
 import pygame
 from load_image import load_image
-from const import coffee, weapon, things, all_obstacles, period, width, height
+from const import coffee, weapon, things, all_obstacles, period, fon_new
 
 
 class Item(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y, k, group):
+        global fon_new
         super(Item, self).__init__(group)
         self.rect = self.image.get_rect()
         self.mask = pygame.mask.from_surface(self.image)
@@ -12,7 +13,8 @@ class Item(pygame.sprite.Sprite):
         # не понимаю, как сделать так, чтоб нижний край маски изображения = pos_y
         self.rect.y = pos_y - 50
         self.z = k
-
+        if fon_new == 'hell.jpg':
+            self.image = pygame.transform.flip(self.image, False, True)
 
 class Coffee(Item):
     def __init__(self, *args):
@@ -107,7 +109,10 @@ class Stone(Obstacle):
 
 class Bush(Obstacle):
     def __init__(self, *args):
-        self.image = pygame.transform.scale(load_image('bush.png', -1), (100, 100))
+        if fon_new == 'hell.jpg':
+            self.image = pygame.transform.scale(load_image('hell_bush.png', -1), (100, 100))
+        else:
+            self.image = pygame.transform.scale(load_image('bush.png', -1), (100, 100))
         super().__init__(*args)
 
 
