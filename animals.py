@@ -11,7 +11,7 @@ class Animal(pygame.sprite.Sprite):
         self.x = 400
         self.y = 430
         self.z = 2
-        self.measuring = 'hell'
+        self.measuring = 'normal'
 
         self.alive = True
         self.is_jump = False
@@ -38,15 +38,15 @@ class Animal(pygame.sprite.Sprite):
             if self.jump_count >= -16:
                 if flag is False:
                     if self.jump_count > 0:
-                        self.y -= (self.jump_count ** 2) / 6
+                        self.y -= (self.jump_count ** 2) / 8
                     else:
-                        self.y += (self.jump_count ** 2) / 6
+                        self.y += (self.jump_count ** 2) / 8
                     self.jump_count -= 1
                 else:
                     if self.jump_count > 0:
-                        self.y += (self.jump_count ** 2) / 6
+                        self.y += (self.jump_count ** 2) / 4
                     else:
-                        self.y -= (self.jump_count ** 2) / 6
+                        self.y -= (self.jump_count ** 2) / 4
                     self.jump_count -= 1
             else:
                 self.is_jump = False
@@ -63,7 +63,7 @@ class Animal(pygame.sprite.Sprite):
         if self.mina:
             self.mina = False
             self.img = pygame.transform.scale(load_image(f'{self.name}.png'), (width // 6, height // 6))
-            return [self.x, self.y + 40, time.perf_counter()]
+            return [self.x, self.y + 40, 10, False]
         return []
 
     def drop_knife(self):
