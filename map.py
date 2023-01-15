@@ -8,6 +8,7 @@ from new_level import new_level
 from math import sin, cos, radians
 from time import perf_counter
 from random import randint, choice
+from final_window_loss import open_loss_window
 
 
 class Map:
