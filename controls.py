@@ -10,7 +10,7 @@ class Event:
         self.goose = False
 
         self.throw_knife = []
-        self.mina_time = []
+        self.active_mine = ActiveMine(0, 0, 0)
 
     def check_event(self, hero):
         # обработка событий
@@ -30,7 +30,7 @@ class Event:
         elif event.key == pygame.K_RIGHT:
             hero.shift_side()
         elif event.key == pygame.K_DOWN:  # оставлять мину
-            self.mina_time = hero.drop_mima()
+            hero.drop_mima(self.active_mine)
         elif event.key == pygame.K_SPACE:  # пулять ножом во врага
             self.throw_knife = hero.drop_knife()
 

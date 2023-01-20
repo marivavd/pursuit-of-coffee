@@ -61,7 +61,7 @@ class Animal(pygame.sprite.Sprite):
         self.rect = self.img.get_rect()
         self.mask = pygame.mask.from_surface(self.img)
 
-    def drop_mima(self):
+    def drop_mima(self, mina):
         if self.mina:
             self.mina = False
             self.img = pygame.transform.scale(load_image(f'{self.name}.png'), (width // 6, height // 6))
@@ -76,8 +76,8 @@ class Animal(pygame.sprite.Sprite):
                 self.mask = pygame.mask.from_surface(self.img)
                 self.rect.x = 400
                 self.rect.y = 430
-            return [self.rect.x, self.rect.y + 40, 12, False]
-        return []
+            mina.redefine_pos(self.rect.x, self.rect.y + 40)
+            mina.activate()
 
     def drop_knife(self):
         if self.knife:
@@ -109,8 +109,8 @@ class Animal(pygame.sprite.Sprite):
         else:
             self.rect = self.img.get_rect()
             self.mask = pygame.mask.from_surface(self.img)
-            self.rect.x = 400
-            self.rect.y = 430
+            # self.rect.x = 400
+            # self.rect.y = 430
         if knife is not None:
             knife.kill()
 

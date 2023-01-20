@@ -1,6 +1,7 @@
 import pygame
 from load_image import load_image
 from const import coffee, weapon, things, all_obstacles, period
+from time import perf_counter
 
 
 class Item(pygame.sprite.Sprite):
@@ -91,7 +92,6 @@ class Mina(Weapon):
         self.image = pygame.transform.scale(load_image('mina.png', -1), (100, 100))
         super(Mina, self).__init__(*args)
         self.name = 'mina'
-        self.rect.y += 40
 
 
 class Obstacle(Item):
@@ -119,3 +119,69 @@ class Book(Obstacle):
         self.image = pygame.transform.scale(load_image('book.png', -1), (100, 100))
         super().__init__(*args)
         self.name = 'stone'
+
+
+class ActiveMine(pygame.sprite.Sprite):
+    def __init__(self, pos_x, pos_y, z):
+        super(ActiveMine, self).__init__()
+
+        self.image = pygame.transform.scale(load_image('mina.png', -1), (100, 100))
+        self.rect = self.image.get_rect()
+        self.mask = pygame.mask.from_surface(self.image)
+
+        self.rect.x = pos_x
+        self.rect.y = pos_y
+        self.z = z
+
+        self.timer = -1
+        self.time_band = -1
+        self.fly_height = 12
+        self.band = False
+
+    def redefine_pos(self, pos_x=0, pos_y=0, z=0):
+        self.rect.x = pos_x
+        self.rect.y = pos_y
+        self.z = z
+
+    def activate(self):
+        self.timer = perf_counter()
+
+    def check_activate(self):
+        return True if self.timer != -1 else False
+
+    def move(self, screen, upheaval=1):
+        if self.fly_height >= -12:
+            self.fly(upheaval)
+        self.rect.x -= 10
+        self.draw_mina(screen)
+
+        if self.rect.x <= 0:
+            return self.explosion(screen)
+
+    def draw_mina(self, screen):
+        screen.blit(pygame.transform.scale(load_image('mina.png', -1), (100, 100)),
+                    (self.rect.x, self.rect.y))
+
+    def draw_band(self, screen):
+        screen.blit(pygame.transform.scale(load_image('bang.png', -1), (200, 200)),
+                    (self.rect.x, self.rect.y - 40))
+
+    def fly(self, upheaval):
+        if self.fly_height > 0:
+            self.rect.y -= (self.fly_height ** 2) / 6 * upheaval
+        else:
+            self.rect.y += (self.fly_height ** 2) / 6 * upheaval
+        self.fly_height -= 1
+
+    def explosion(self, screen):
+        if not self.band:
+            self.band = True
+            self.draw_band(screen)
+            self.time_band = perf_counter()
+            sound = pygame.mixer.Sound('sounds/bang.mp3')
+            sound.play()
+        else:
+            if perf_counter() - self.time_band >= 2:
+                return True
+            else:
+                self.draw_band(screen)

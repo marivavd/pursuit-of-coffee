@@ -1,7 +1,7 @@
 from load_image import load_image, pygame
 from animals import Goose
 from const import FPS, size, clock, period, sl_fons, groups
-from Items import MiniCoffee, StandartCoffee, BigCoffee, Glasses, Cap, Knife, Stone, Bush, Book, Mina
+from Items import MiniCoffee, StandartCoffee, BigCoffee, Glasses, Cap, Knife, Stone, Bush, Book, Mina, ActiveMine
 from controls import Event
 from magic import magic
 from new_level import new_level
@@ -11,7 +11,7 @@ from random import randint, choice
 
 
 class Map:
-    """класс для обработки карты на которой происходят все события"""
+    """класс для обработки карты на которой происходят все события в обычном мире"""
 
     def __init__(self, screen, hero, sp_enemies):
         self.screen = screen
@@ -73,7 +73,7 @@ class Map:
         self.event.check_contact(self.hero, *groups)
         self.event.check_event(self.hero)
         self.check_goose()
-        self.mina_explosion()
+        self.check_mina_explosion()
         self.check_throw_knife()
 
         if self.not_event > 100:
@@ -132,7 +132,8 @@ class Map:
             # перенос координат героя на координаты гуся
             goose.rect.y = self.hero.rect.y
             goose.rect.x = self.hero.rect.x
-            goose.z = self.hero.z
+            while goose.z != self.hero.z:
+                goose.shift_side()
 
             # перенос координат врага на координаты героя
             self.hero.rect.y = self.enemy.rect.y
@@ -172,47 +173,25 @@ class Map:
                 self.event.throw_knife = []
 
     def draw_knife(self):
+        """функция отрисовки ножа"""
         self.screen.blit(pygame.transform.scale(load_image('knife.png', -1), (100, 100)),
                          (self.event.throw_knife[0], self.event.throw_knife[1]))
         self.event.throw_knife[0] -= 10
 
+    def check_mina_explosion(self):
+        """выпущена ли мина? Если да, то отрисовать её и сменить уровень"""
+        mina = self.event.active_mine
+        if mina.check_activate():
+            if mina.move(self.screen):
+                self.event.active_mine = ActiveMine(0, 0, 0)
+                self.start_screen(self.level)
+
     def end(self):
+        """запуск концовки"""
         ...
 
-    def mina_explosion(self):
-        if len(self.event.mina_time):
-            if self.event.mina_time[2] >= -12:
-                if self.hero.measuring == 'normal':
-                    if self.event.mina_time[2] > 0:
-                        self.event.mina_time[1] -= (self.event.mina_time[2] ** 2) / 6
-                    else:
-                        self.event.mina_time[1] += (self.event.mina_time[2] ** 2) / 6
-                    self.event.mina_time[2] -= 1
-                else:
-                    if self.event.mina_time[2] > 0:
-                        self.event.mina_time[1] += (self.event.mina_time[2] ** 2) / 6
-                    else:
-                        self.event.mina_time[1] -= (self.event.mina_time[2] ** 2) / 6
-                    self.event.mina_time[2] -= 1
-                self.event.mina_time[0] -= 10
-                self.screen.blit(pygame.transform.scale(load_image('mina.png', -1), (100, 100)),
-                                 (self.event.mina_time[0], self.event.mina_time[1]))
-            elif self.event.mina_time[3] is False:
-                self.event.mina_time[3] = True
-                self.screen.blit(pygame.transform.scale(load_image('bang.png', -1), (200, 200)),
-                                 (self.event.mina_time[0], self.event.mina_time[1] - 40))
-                self.event.mina_time.append(perf_counter())
-                sound = pygame.mixer.Sound('sounds/bang.mp3')
-                sound.play()
-            elif self.event.mina_time[3] is True:
-                if perf_counter() - self.event.mina_time[4] >= 2:
-                    self.event.mina_time = []
-                    self.start_screen(self.level)
-                else:
-                    self.screen.blit(pygame.transform.scale(load_image('bang.png', -1), (200, 200)),
-                                     (self.event.mina_time[0], self.event.mina_time[1] - 40))
-
     def draw_coffee_sensor(self):
+        """отрисовка датчика кофе"""
         center = (700, 50)
 
         # отображение самого счётчика
@@ -232,6 +211,7 @@ class Map:
 
     @staticmethod
     def draw_pie(scr, color, center, radius, start_angle, stop_angle):
+        """вспомогательная фанкция для рисования заполненой дуги (кусочка пирога)"""
         radius -= 3
         theta = start_angle
         while theta <= stop_angle:
@@ -241,6 +221,7 @@ class Map:
 
 
 class Hell(Map):
+    """класс для обработки карты на которой происходят все события в нижнем мире"""
     def __init__(self, screen, hero, sp_enemies):
         global fon_new
         super().__init__(screen, hero, sp_enemies)
@@ -258,8 +239,6 @@ class Hell(Map):
             super().check_goose()
             self.hero.img = pygame.transform.flip(self.hero.img, False, True)
 
-    def flight_mine(self):
-        if self.event.mina_time[2] > 0:
-            self.event.mina_time[1] += (self.event.mina_time[2] ** 2) / 6
-        else:
-            self.event.mina_time[1] -= (self.event.mina_time[2] ** 2) / 6
+    def check_mina_explosion(self):
+        if self.event.active_mine != -1:
+            self.event.active_mine.move(self.sp_enemies, -1)
