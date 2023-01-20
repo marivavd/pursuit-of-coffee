@@ -109,8 +109,8 @@ class Animal(pygame.sprite.Sprite):
         else:
             self.rect = self.img.get_rect()
             self.mask = pygame.mask.from_surface(self.img)
-            # self.rect.x = 400
-            # self.rect.y = 430
+            self.rect.x = 400
+            self.rect.y = 430
         if knife is not None:
             knife.kill()
 

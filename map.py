@@ -20,6 +20,7 @@ class Map:
         self.hero.rect.x += 100  # 100 - рандомное число, нужно для того, чтобы персонаж был дальше, чем враг
         self.fon_new = 'fon.jpg'
         self.chase = True
+        self.flag_weapon = True
         self.t, self.s = 0, 0
         self.level = 1
         self.not_event = 0
@@ -27,21 +28,14 @@ class Map:
         self.event = Event()
         self.fon = pygame.transform.scale(load_image('fon.jpg'), size)
 
-        self._probability_sp = [[Stone] * 100,
-                                [Bush] * 100,
-                                [Book] * 100,
-                                [MiniCoffee] * 25,
-                                [StandartCoffee] * 10,
-                                [BigCoffee] * 5,
-                                [Glasses] * 1,
-                                [Cap] * 10000,
-                                [Mina] * 2,
+        self._probability_sp = [[Mina] * 2,
                                 [Knife] * 2]
 
     def start_screen(self, level):
         """метод запускающий обработку карты"""
         if self.hero.measuring == 'normal':
             self.level = 1 + level
+            self.flag_weapon = False
             new_level(self.level)
         while self.check_game_over():
             self.t += period[0]
@@ -155,14 +149,29 @@ class Map:
 
     def get_probability(self):
         """взять список вероятностей появления предметов"""
-        return self._probability_sp
+        return self._probability_sp[:]
 
     def generation_obj(self):
         """метод для генерации объетов"""
-        cls_obj = choice(self.get_probability())[0]
-        track = randint(0, 2)
-        cls_obj(600, sl_fons[self.fon_new]['ground_level'] - track * sl_fons[self.fon_new]['track_width'], track)
         self.not_event = 0
+
+        cls_obj = self.generation_cls_obj()
+        track = randint(0, 2)
+        ground_level = sl_fons[self.fon_new]['ground_level']
+        track_width = sl_fons[self.fon_new]['track_width']
+        cls_obj(600, ground_level - track_width * track, track)
+
+    def generation_cls_obj(self):
+        sp = self.get_probability()
+        if self.flag_weapon:
+            while [Mina] in sp or [Knife] in sp:
+                sp.remove([Mina])
+                sp.remove([Knife])
+
+        cls_obj = choice(sp)[0]
+        if cls_obj in (Mina, Knife) and not self.flag_weapon:
+            self.flag_weapon = True
+        return cls_obj
 
     def check_throw_knife(self):
         """метод при помощи которого осуществляется правельное движение ножа во время полёта"""
