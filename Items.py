@@ -133,8 +133,8 @@ class ActiveMine(pygame.sprite.Sprite):
         self.rect.y = pos_y
         self.z = z
 
-        self.timer = -1
-        self.time_band = -1
+        self._timer = -1
+        self._time_band = -1
         self.fly_height = 12
         self.band = False
 
@@ -144,10 +144,16 @@ class ActiveMine(pygame.sprite.Sprite):
         self.z = z
 
     def activate(self):
-        self.timer = perf_counter()
+        self._timer = perf_counter()
+
+    def overwrite_time_band(self):
+        self._time_band = perf_counter()
+
+    def get_time_band(self):
+        return self._time_band
 
     def check_activate(self):
-        return True if self.timer != -1 else False
+        return True if self._timer != -1 else False
 
     def move(self, screen, upheaval=1):
         if self.fly_height >= -12:
@@ -177,11 +183,11 @@ class ActiveMine(pygame.sprite.Sprite):
         if not self.band:
             self.band = True
             self.draw_band(screen)
-            self.time_band = perf_counter()
+            self.overwrite_time_band()
             sound = pygame.mixer.Sound('sounds/bang.mp3')
             sound.play()
         else:
-            if perf_counter() - self.time_band >= 2:
+            if perf_counter() - self.get_time_band() >= 2:
                 return True
             else:
                 self.draw_band(screen)
