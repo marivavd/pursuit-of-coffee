@@ -28,7 +28,15 @@ class Map:
         self.event = Event()
         self.fon = pygame.transform.scale(load_image('fon.jpg'), size)
 
-        self._probability_sp = [[Mina] * 2,
+        self._probability_sp = [[Stone] * 100,
+                                [Bush] * 100,
+                                [Book] * 100,
+                                [MiniCoffee] * 25,
+                                [StandartCoffee] * 10,
+                                [BigCoffee] * 5,
+                                [Glasses] * 1,
+                                [Cap] * 1,
+                                [Mina] * 2,
                                 [Knife] * 2]
 
     def start_screen(self, level):
@@ -250,4 +258,4 @@ class Hell(Map):
 
     def check_mina_explosion(self):
         if self.event.active_mine != -1:
-            self.event.active_mine.move(self.sp_enemies, -1)
+            self.event.active_mine.move(self.screen, -1)

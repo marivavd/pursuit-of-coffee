@@ -2,7 +2,6 @@ import sys
 from const import *
 from load_image import load_image
 
-hero = True
 pygame.init()
 
 
@@ -57,13 +56,13 @@ def init_intro_text(screen, text_coord=50,
 
 
 def draw_heror(screen):
-    global hero
     all_sprites = pygame.sprite.Group()
     raccoon = init_raccoon(all_sprites)
     hedgehog = init_hedgehog(all_sprites)
     start = init_start(all_sprites)
+    hero = True
     while hero is True:
-        event(raccoon, hedgehog, start)
+        hero = event(raccoon, hedgehog, start, hero)
         draw_rect(screen, raccoon, hedgehog)
         all_sprites.draw(screen)
         pygame.display.flip()
@@ -92,8 +91,7 @@ def init_start(all_sprites):
     return start
 
 
-def event(raccoon, hedgehog, start):
-    global hero
+def event(raccoon, hedgehog, start, hero):
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             terminate()
@@ -107,6 +105,7 @@ def event(raccoon, hedgehog, start):
             elif raccoon.rect.collidepoint(x, y) and raccoon.color != (0, 165, 80):
                 raccoon.color = (0, 165, 80)
                 hedgehog.color = (128, 128, 128)
+    return hero
 
 
 def draw_rect(screen, raccoon, hedgehog):
