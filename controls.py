@@ -56,7 +56,8 @@ class Event:
             self.change = True
         i.kill()
 
-    def crash_weapon(self, hero, i):
+    @staticmethod
+    def crash_weapon(hero, i):
         if type(i) is Knife:
             hero.take_knife(i)
         elif type(i) is Mina:

@@ -65,17 +65,16 @@ class Map:
         self.draw_enemies()
         self.draw_obj()
         self.draw_event()
-
-        self.mina_explosion()
-        self.throw_knife()
         for group in groups:
             group.draw(self.screen)
 
     def draw_event(self):
-        """проверка на то, что ничего не происходит,| а если происходит, то отображение этого"""
+        """проверка на то, что ничего не происходит | если происходит, то отображение этого"""
         self.event.check_contact(self.hero, *groups)
-        self.check_goose()
         self.event.check_event(self.hero)
+        self.check_goose()
+        self.mina_explosion()
+        self.check_throw_knife()
 
         if self.not_event > 100:
             self.generation_obj()
@@ -90,27 +89,32 @@ class Map:
             self.event.check_cofe(self.hero)
 
     def draw_fon(self):
+        """метод для рисования фона"""
         self.screen.blit(self.fon, (-self.t, 0))
         self.screen.blit(self.fon, (-self.t + size[0], 0))
 
     def draw_hero(self):
+        """метод для рисования галавного героя"""
         self.screen.blit(self.hero.img, (self.hero.rect.x, self.hero.rect.y))
         if self.hero.rect.x > size[0] // 2:
             self.hero.rect.x -= 5
 
     def draw_enemies(self):
+        """метод для рисования врагов"""
         for enemy in self.sp_enemies:
             if enemy.rect.x >= -100:
                 enemy.rect.x -= 5
             self.screen.blit(enemy.img, (enemy.rect.x, enemy.rect.y))
 
     def check_game_over(self):
+        """метод для проверки продолжается ли игра"""
         if self.event.game_over:
             self.chase = False
             return False
         return True
 
     def draw_obj(self):
+        """рисование объектов"""
         for group in groups:
             for obj in group:
                 if self.fon_new == 'hell.jpg' and obj.rotate is False:
@@ -121,47 +125,56 @@ class Map:
                 obj.rect.x -= 5
 
     def check_goose(self):
-        if self.event.goose and len(self.sp_enemies) != 2:
+        """если превращение в гуся должно произойти, то оно произойдёт"""
+        if self.event.goose and len(self.sp_enemies) == 1:
             goose = Goose()
+
+            # перенос координат героя на координаты гуся
             goose.rect.y = self.hero.rect.y
             goose.rect.x = self.hero.rect.x
             goose.z = self.hero.z
+
+            # перенос координат врага на координаты героя
             self.hero.rect.y = self.enemy.rect.y
             self.hero.rect.x = self.enemy.rect.x + 100
             self.hero.z = self.enemy.z
 
-            self.sp_enemies.append(self.hero)
+            # перено всех вещей
             if self.hero.is_jump:
                 goose.jump_count = self.hero.jump_count
-                self.hero.is_jump = True
-                self.hero = goose
-
+                goose.is_jump = self.hero.is_jump
             if self.hero.knife:
-                self.hero.take_knife()
+                goose.take_knife()
             if self.hero.mina:
-                self.hero.take_mina()
+                goose.take_mina()
 
+            self.sp_enemies.append(self.hero)
+            self.hero = goose
             magic()
 
     def get_probability(self):
+        """взять список вероятностей появления предметов"""
         return self._probability_sp
 
     def generation_obj(self):
+        """метод для генерации объетов"""
         cls_obj = choice(self.get_probability())[0]
         track = randint(0, 2)
         cls_obj(600, sl_fons[self.fon_new]['ground_level'] - track * sl_fons[self.fon_new]['track_width'], track)
         self.not_event = 0
 
-    def throw_knife(self):
-        # не прошло рефакторинг
-        if len(self.event.throw_knife) != 0:
-            self.screen.blit(pygame.transform.scale(load_image('knife.png', -1), (100, 100)), (self.event.throw_knife[0], self.event.throw_knife[1]))
-            self.event.throw_knife[0] -= 10
-            for (index, enemy_el) in enumerate(self.sp_enemies):
-                if self.event.throw_knife[2] - perf_counter() >= 2:
-                    self.event.throw_knife.pop(index)
-                    self.start_screen(self.level)
-                    self.event.throw_knife = []
+    def check_throw_knife(self):
+        """метод при помощи которого осуществляется правельное движение ножа во время полёта"""
+        if self.event.throw_knife:
+            self.draw_knife()
+            if self.event.throw_knife[2] - perf_counter() >= 2:
+                self.start_screen(self.level)
+                self.event.throw_knife = []
+
+    def draw_knife(self):
+        self.screen.blit(pygame.transform.scale(load_image('knife.png', -1), (100, 100)),
+                         (self.event.throw_knife[0], self.event.throw_knife[1]))
+        self.event.throw_knife[0] -= 10
 
     def end(self):
         ...
@@ -244,3 +257,9 @@ class Hell(Map):
         if self.event.goose and len(self.sp_enemies) != 2:
             super().check_goose()
             self.hero.img = pygame.transform.flip(self.hero.img, False, True)
+
+    def flight_mine(self):
+        if self.event.mina_time[2] > 0:
+            self.event.mina_time[1] += (self.event.mina_time[2] ** 2) / 6
+        else:
+            self.event.mina_time[1] -= (self.event.mina_time[2] ** 2) / 6

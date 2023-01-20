@@ -61,7 +61,6 @@ class Animal(pygame.sprite.Sprite):
         self.rect = self.img.get_rect()
         self.mask = pygame.mask.from_surface(self.img)
 
-
     def drop_mima(self):
         if self.mina:
             self.mina = False
@@ -154,7 +153,6 @@ class Hedgehog(Animal):
         self.name = 'hedgehog'
         self.rect.x = 400
         self.rect.y = 430
-
 
 
 class Goose(Animal):

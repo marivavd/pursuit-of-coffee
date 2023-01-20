@@ -14,6 +14,7 @@ class Item(pygame.sprite.Sprite):
         self.z = k
         self.rotate = False
 
+
 class Coffee(Item):
     def __init__(self, *args):
         super(Coffee, self).__init__(*args, coffee)
@@ -75,6 +76,7 @@ class Weapon(Item):
     def __init__(self, *args):
         super(Weapon, self).__init__(*args, weapon)
         weapon.add(self)
+        self.rect.y += 40
 
 
 class Knife(Weapon):
@@ -82,7 +84,6 @@ class Knife(Weapon):
         self.image = pygame.transform.scale(load_image('knife.png', -1), (100, 100))
         super(Knife, self).__init__(*args)
         self.name = 'knife'
-        self.rect.y += 40
 
 
 class Mina(Weapon):
@@ -111,6 +112,7 @@ class Bush(Obstacle):
         self.image = pygame.transform.scale(load_image('bush.png', -1), (100, 100))
         super().__init__(*args)
         self.name = 'bush'
+
 
 class Book(Obstacle):
     def __init__(self, *args):
