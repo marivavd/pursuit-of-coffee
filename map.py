@@ -1,12 +1,10 @@
-from load_image import load_image, pygame
-from animals import Goose
-from const import FPS, size, clock, period, sl_fons, groups
+from animals import Goose, perf_counter
+from const import pygame, load_image, FPS, size, clock, period, sl_fons, groups
 from Items import MiniCoffee, StandartCoffee, BigCoffee, Glasses, Cap, Knife, Stone, Bush, Book, Mina, ActiveMine
 from controls import Event
 from magic import magic
 from new_level import new_level
 from math import sin, cos, radians
-from time import perf_counter
 from random import randint, choice
 
 

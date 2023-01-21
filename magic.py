@@ -1,7 +1,5 @@
-import pygame
-import random
-from const import size, width, height
-from load_image import load_image
+from random import choice
+from const import pygame, load_image, size, width, height
 
 pygame.init()
 screen = pygame.display.set_mode(size)

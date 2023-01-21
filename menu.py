@@ -1,6 +1,5 @@
 import sys
-from const import pygame, width, height, clock, FPS
-from load_image import load_image
+from const import pygame, load_image, width, height, clock, FPS, size
 
 pygame.init()
 

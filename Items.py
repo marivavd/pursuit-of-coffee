@@ -1,6 +1,4 @@
-import pygame
-from load_image import load_image
-from const import coffee, weapon, things, all_obstacles, period
+from const import pygame, load_image, coffee, weapon, things, all_obstacles, period
 from time import perf_counter
 
 

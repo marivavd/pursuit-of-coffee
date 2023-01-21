@@ -1,7 +1,6 @@
 import time
-import pygame
 import sqlite3
-from const import size, width, height
+from const import pygame, size, width, height
 
 pygame.init()
 screen = pygame.display.set_mode(size)

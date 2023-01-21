@@ -1,7 +1,5 @@
-from load_image import load_image
-from const import width, height, sl_fons
-import pygame
-import time
+from const import pygame, width, height, sl_fons, load_image
+from time import perf_counter
 
 
 class Animal(pygame.sprite.Sprite):
@@ -101,7 +99,7 @@ class Animal(pygame.sprite.Sprite):
                 self.mask = pygame.mask.from_surface(self.img)
                 self.rect.x = 400
                 self.rect.y = 430
-            return [self.rect.x, self.rect.y + 40, time.perf_counter()]
+            return [self.rect.x, self.rect.y + 40, perf_counter()]
         return []
 
     def take_knife(self, knife=None):
