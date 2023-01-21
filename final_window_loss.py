@@ -29,4 +29,3 @@ def open_loss_window():
         clock.tick(50)
         if time.perf_counter() - time_begin >= 3:
             running = False
-

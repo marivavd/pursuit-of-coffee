@@ -13,7 +13,7 @@ class Particle(pygame.sprite.Sprite):
 
     def __init__(self, pos, dx, dy, all_sprites):
         super().__init__(all_sprites)
-        self.image = random.choice(self.fire)
+        self.image = choice(self.fire)
         self.rect = self.image.get_rect()
         self.velocity = [dx, dy]
         self.rect.x, self.rect.y = pos
@@ -31,7 +31,7 @@ def create_particles(position, all_sprites):
     particle_count = 50
     numbers = range(-10, 1)
     for i in range(particle_count):
-        Particle(position, random.choice(numbers), random.choice(numbers), all_sprites)
+        Particle(position, choice(numbers), choice(numbers), all_sprites)
 
 
 def magic():
@@ -50,3 +50,4 @@ def magic():
         clock.tick(50)
         if len(all_sprites) <= 5:
             running = False
+
