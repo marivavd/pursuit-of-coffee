@@ -10,7 +10,7 @@ class Item(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.mask = pygame.mask.from_surface(self.image)
         self.rect.x = pos_x
-        # не понимаю, как сделать так, чтоб нижний край маски изображения = pos_y
+        # сделать self.rect.y выраженный через формулу
         self.rect.y = pos_y - 50
         self.z = k
         self.rotate = False
@@ -23,6 +23,7 @@ class Coffee(Item):
 
     @staticmethod
     def invigorating(coffe):
+        """добавить кофе в кровь"""
         if type(coffe) is MiniCoffee:
             period[0] += 1
         elif type(coffe) is StandartCoffee:
@@ -139,47 +140,61 @@ class ActiveMine(pygame.sprite.Sprite):
         self.band = False
 
     def redefine_pos(self, pos_x=0, pos_y=0, z=0):
+        """переопределяет координаты активной мины"""
         self.rect.x = pos_x
         self.rect.y = pos_y
         self.z = z
 
     def activate(self):
+        """активировать мину"""
         self._timer = perf_counter()
 
     def overwrite_time_band(self):
+        """сбросить счётчик до взрыва"""
         self._time_band = perf_counter()
 
     def get_time_band(self):
+        """получить время до взрыва"""
         return self._time_band
 
-    def check_activate(self):
+    def check_activate(self) -> bool:
+        """мина активирована?"""
         return True if self._timer != -1 else False
 
-    def move(self, screen, upheaval=1):
+    def move(self, screen, upheaval=1) -> bool:
+        """сдвинуть мину, возращает, возможно ли это сделать"""
         if self.fly_height >= -12:
             self.fly(upheaval)
         self.rect.x -= 10
         self.draw_mina(screen)
 
         if self.rect.x <= 0:
-            return self.explosion(screen)
+            return not self.explosion(screen)
+        return True
 
     def draw_mina(self, screen):
+        """рисует мину на поле"""
+        # есть подозрения по переносу его в map
         screen.blit(pygame.transform.scale(load_image('mina.png', -1), (100, 100)),
                     (self.rect.x, self.rect.y))
 
     def draw_band(self, screen):
+        """рисует взрыв на поле"""
+        # есть подозрения по переносу его в map
         screen.blit(pygame.transform.scale(load_image('bang.png', -1), (200, 200)),
                     (self.rect.x, self.rect.y - 40))
 
-    def fly(self, upheaval):
+    def fly(self, upheaval: int):
+        """ответственен за полёт мины по парабуле"""
         if self.fly_height > 0:
             self.rect.y -= (self.fly_height ** 2) / 6 * upheaval
         else:
             self.rect.y += (self.fly_height ** 2) / 6 * upheaval
         self.fly_height -= 1
 
-    def explosion(self, screen):
+    def explosion(self, screen) -> bool:
+        """звзорвать мину, возращает взорвалась ли она окончательно или находится в процессе
+         (True/False соответственно)"""
         if not self.band:
             self.band = True
             self.draw_band(screen)
@@ -191,3 +206,4 @@ class ActiveMine(pygame.sprite.Sprite):
                 return True
             else:
                 self.draw_band(screen)
+        return False

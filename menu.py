@@ -1,5 +1,5 @@
 import sys
-from const import *
+from const import pygame, width, height, clock, FPS
 from load_image import load_image
 
 pygame.init()
@@ -16,22 +16,14 @@ class Images(pygame.sprite.Sprite):
         self.rect.y = y
 
 
-class Rect(pygame.sprite.Sprite):
-    def __init__(self, group, x, y, color):
-        super().__init__(group)
-        width = 40
-        height = 60
-        self.image = pygame.Surface([width, height])
-        self.image.fill((128, 128, 128))
-        self.rect = self.image.get_rect()
-
-
 def terminate():
+    """закрыть всё и вся!!!"""
     pygame.quit()
     sys.exit()
 
 
 def start_screen(screen):
+    """начать рисовать меню"""
     fon = pygame.transform.scale(load_image('fon.jpg'), (width, height))
     screen.blit(fon, (0, 0))
     init_intro_text(screen)
@@ -43,6 +35,7 @@ def init_intro_text(screen, text_coord=50,
                     colors=((100, 37, 51), (0, 0, 0), (0, 0, 0)),
                     intro_text=("Pursuit of coffee", "",
                                 "Выберите персонажа:")):
+    """вывести текст"""
     font = pygame.font.Font(None, 70)
     for n, line in enumerate(intro_text):
         string_rendered = font.render(line, True, colors[n])
@@ -56,13 +49,14 @@ def init_intro_text(screen, text_coord=50,
 
 
 def draw_heror(screen):
+    """нарисовать персонажей"""
     all_sprites = pygame.sprite.Group()
     raccoon = init_raccoon(all_sprites)
     hedgehog = init_hedgehog(all_sprites)
     start = init_start(all_sprites)
     hero = True
-    while hero is True:
-        hero = event(raccoon, hedgehog, start, hero)
+    while hero:
+        hero = check_event(raccoon, hedgehog, start, hero)
         draw_rect(screen, raccoon, hedgehog)
         all_sprites.draw(screen)
         pygame.display.flip()
@@ -71,6 +65,7 @@ def draw_heror(screen):
 
 
 def init_raccoon(all_sprites):
+    """наривать енота (Кофия)"""
     image_r = pygame.transform.scale(load_image('raccoon.png', -1), (213, 177))
     raccoon = Images(all_sprites, (0, 165, 80), -10, 170, image_r)
     all_sprites.add(raccoon)
@@ -78,27 +73,40 @@ def init_raccoon(all_sprites):
 
 
 def init_hedgehog(all_sprites):
+    """нарисовать ёжика"""
     image_h = pygame.transform.scale(load_image('hedgehog.png', -1), (203, 167))
     hedgehog = Images(all_sprites, (128, 128, 128), 180, 170, image_h)
     all_sprites.add(hedgehog)
     return hedgehog
 
 
+def draw_rect(screen, raccoon, hedgehog):
+    """нарисовать прямоугольники"""
+    pygame.draw.rect(screen, raccoon.color,
+                     (raccoon.rect[0] + 40, raccoon.rect[1] + 30,
+                      raccoon.rect[2] - 60, raccoon.rect[3] - 30), 8)
+    pygame.draw.rect(screen, hedgehog.color,
+                     (hedgehog.rect[0] + 10, hedgehog.rect[1] + 30,
+                      hedgehog.rect[2] - 20, hedgehog.rect[3] - 20), 8)
+
+
 def init_start(all_sprites):
+    """начать"""
     image_s = load_image('start.png', -1)
     start = Images(all_sprites, None, 400, 350, image_s)
     all_sprites.add(start)
     return start
 
 
-def event(raccoon, hedgehog, start, hero):
+def check_event(raccoon, hedgehog, start, hero):
+    """проверка всех возможных событий, которые согут произойти в меню"""
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             terminate()
         elif event.type == pygame.MOUSEBUTTONUP:
             x, y = event.pos
             if start.rect.collidepoint(x, y):
-                    hero = 'raccoon' if raccoon.color == (0, 165, 80) else 'hedgehog'
+                hero = 'raccoon' if raccoon.color == (0, 165, 80) else 'hedgehog'
             elif hedgehog.rect.collidepoint(x, y) and hedgehog.color != (0, 165, 80):
                 hedgehog.color = (0, 165, 80)
                 raccoon.color = (128, 128, 128)
@@ -106,12 +114,3 @@ def event(raccoon, hedgehog, start, hero):
                 raccoon.color = (0, 165, 80)
                 hedgehog.color = (128, 128, 128)
     return hero
-
-
-def draw_rect(screen, raccoon, hedgehog):
-    pygame.draw.rect(screen, raccoon.color,
-                     (raccoon.rect[0] + 40, raccoon.rect[1] + 30,
-                      raccoon.rect[2] - 60, raccoon.rect[3] - 30), 8)
-    pygame.draw.rect(screen, hedgehog.color,
-                     (hedgehog.rect[0] + 10, hedgehog.rect[1] + 30,
-                      hedgehog.rect[2] - 20, hedgehog.rect[3] - 20), 8)

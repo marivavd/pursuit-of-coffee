@@ -9,6 +9,7 @@ screen_rect = (0, 0, width, height)
 
 
 def init_intro_text(screen, line):
+    """создать текст нового уровня"""
     font = pygame.font.Font('fonts/ofont.ru_Blood Cyrillic.ttf', 100)
     string_rendered = font.render(line, True, (255, 255, 255))
     intro_rect = string_rendered.get_rect(center=(width // 2, height // 2))
@@ -24,6 +25,7 @@ def check_level(level):
 
 
 def new_level(level):
+    """переключить уровень на следующий"""
     time_begin = time.perf_counter()
     all_sprites = pygame.sprite.Group()
     clock = pygame.time.Clock()

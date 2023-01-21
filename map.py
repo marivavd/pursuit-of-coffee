@@ -203,7 +203,7 @@ class Map:
         """выпущена ли мина? Если да, то отрисовать её и сменить уровень"""
         mina = self.event.active_mine
         if mina.check_activate():
-            if mina.move(self.screen):
+            if not mina.move(self.screen):
                 self.event.active_mine = ActiveMine(0, 0, 0)
                 self.start_screen(self.level)
 
