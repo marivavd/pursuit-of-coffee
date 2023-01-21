@@ -26,12 +26,15 @@ class Animal(pygame.sprite.Sprite):
         self.name = ...
 
     def shift_side(self, k=1):
+        """выполняет перемещение по оси z, т.е. переход между дорожками"""
         shift = 12 * k
-        if 0 <= self.z - k <= 2:  # 3 = кол-во дорожек
+        if 0 <= self.z - k <= 2:  # 2 = кол-во дорожек - 1
             self.rect.y += shift
             self.z -= k
 
-    def jump(self, flag):
+    def jump(self, flag: bool):
+        """выолняет прыжок"""
+        # мне кажется, что сюда можно ввести несколько констант и не париться с ифами
         if self.is_jump:
             if self.jump_count >= -16:
                 if flag is False:
@@ -55,6 +58,7 @@ class Animal(pygame.sprite.Sprite):
                     self.rect.y = 30
 
     def rise(self, name):
+        """подъём персонажа"""
         self.koef -= 0.5
         self.rect.y = self.minus - (height // self.koef)
         self.img = pygame.transform.scale(load_image(f'{name}.png'), (width // self.koef, height // self.koef))
@@ -62,6 +66,7 @@ class Animal(pygame.sprite.Sprite):
         self.mask = pygame.mask.from_surface(self.img)
 
     def drop_mima(self, mina):
+        """выбросывает мину"""
         if self.mina:
             self.mina = False
             self.img = pygame.transform.scale(load_image(f'{self.name}.png'), (width // 6, height // 6))
@@ -80,6 +85,7 @@ class Animal(pygame.sprite.Sprite):
             mina.activate()
 
     def drop_knife(self):
+        """выбросить нож"""
         if self.knife:
             self.knife = False
             self.img = pygame.transform.scale(load_image(f'{self.name}.png'), (width // 6, height // 6))
@@ -98,6 +104,7 @@ class Animal(pygame.sprite.Sprite):
         return []
 
     def take_knife(self, knife=None):
+        """поднять нож"""
         self.knife = True
         self.img = pygame.transform.scale(load_image(f'{self.name}_with_knife.gif'), (width // 6, height // 6))
         if self.measuring == 'hell':
@@ -115,6 +122,7 @@ class Animal(pygame.sprite.Sprite):
             knife.kill()
 
     def take_mina(self, mina=None):
+        """поднять нож"""
         self.mina = True
         self.img = pygame.transform.scale(load_image(f'{self.name}_with_mina.gif'), (width // 6, height // 6))
         if self.measuring == 'hell':
