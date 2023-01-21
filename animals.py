@@ -55,6 +55,12 @@ class Animal(pygame.sprite.Sprite):
             else:
                 self.rect.y = 30
 
+            # перенесём героев на нужную дорожку
+            if self.z <= 1:
+                self.rect.y += 12
+            if self.z == 0:
+                self.rect.y += 12
+
     def rise(self, name):
         """подъём персонажа"""
         self.koef -= 0.5

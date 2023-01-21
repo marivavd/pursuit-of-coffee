@@ -54,7 +54,7 @@ def draw_heror(screen):
     hedgehog = init_hedgehog(all_sprites)
     start = init_start(all_sprites)
     hero = True
-    while hero:
+    while hero is True:
         hero = check_event(raccoon, hedgehog, start, hero)
         draw_rect(screen, raccoon, hedgehog)
         all_sprites.draw(screen)
