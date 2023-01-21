@@ -13,7 +13,7 @@ class Event:
         self.active_mine = ActiveMine(0, 0, 0)
 
     def check_event(self, hero):
-        # обработка событий
+        """обработка событий"""
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
@@ -22,7 +22,7 @@ class Event:
                 # сделать так, чтобы при смене персонажа, и нож, и мина оставались у него
 
     def check_key(self, event, hero):
-        # обработка нажатия на кнопку
+        """обработка нажатия на кнопки"""
         if event.key == pygame.K_UP:  # прыжок
             hero.is_jump = True
         elif event.key == pygame.K_LEFT:
@@ -35,6 +35,7 @@ class Event:
             self.throw_knife = hero.drop_knife()
 
     def check_contact(self, hero, *groups):
+        """проверка столкновения с объектами"""
         sl_group = {all_obstacles: self.crash_obstacles,
                     things: self.crash_things,
                     weapon: self.crash_weapon,
@@ -45,11 +46,13 @@ class Event:
                     sl_group[group](hero, i)
 
     def crash_obstacles(self, hero, i):
+        """проверка столкновения с препятствиями"""
         hero.alive = False
         self.game_over = True
         i.kill()
 
     def crash_things(self, hero, i):
+        """проверка столкновения с вещами (кепкой или очками)"""
         if type(i) is Cap:
             self.goose = True
         elif type(i) is Glasses:
@@ -58,6 +61,7 @@ class Event:
 
     @staticmethod
     def crash_weapon(hero, i):
+        """проверка столкновения с оружием (ножом или миной)"""
         if type(i) is Knife:
             hero.take_knife(i)
         elif type(i) is Mina:
@@ -66,10 +70,12 @@ class Event:
 
     @staticmethod
     def crash_coffee(hero, i):
+        """проверка столкновения с кофе"""
         i.invigorating(i)
         i.kill()
 
     def check_cofe(self, hero):
+        """проверка на уровень кофе в крови"""
         period[0] -= 1
         if not 5 <= period[0] <= 20:
             self.game_over = True

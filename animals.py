@@ -1,5 +1,5 @@
 from load_image import load_image
-from const import width, height
+from const import width, height, sl_fons
 import pygame
 import time
 
@@ -32,30 +32,30 @@ class Animal(pygame.sprite.Sprite):
             self.rect.y += shift
             self.z -= k
 
-    def jump(self, flag: bool):
+    def jump(self, fon: str):
         """выолняет прыжок"""
         # мне кажется, что сюда можно ввести несколько констант и не париться с ифами
-        if self.is_jump:
-            if self.jump_count >= -16:
-                if flag is False:
-                    if self.jump_count > 0:
-                        self.rect.y -= (self.jump_count ** 2) / 7
-                    else:
-                        self.rect.y += (self.jump_count ** 2) / 7
-                    self.jump_count -= 1
+        if self.jump_count >= -16:
+            if self.measuring == 'normal':
+                if self.jump_count > 0:
+                    self.rect.y -= (self.jump_count ** 2) / 7
                 else:
-                    if self.jump_count > 0:
-                        self.rect.y += (self.jump_count ** 2) / 7
-                    else:
-                        self.rect.y -= (self.jump_count ** 2) / 7
-                    self.jump_count -= 1
+                    self.rect.y += (self.jump_count ** 2) / 7
+            elif self.measuring == 'hell':
+                if self.jump_count > 0:
+                    self.rect.y += (self.jump_count ** 2) / 7
+                else:
+                    self.rect.y -= (self.jump_count ** 2) / 7
+            self.jump_count -= 1
+        else:
+            self.is_jump = False
+            self.jump_count = 16
+
+            # выразить через координаты травы (sl_fons[fon]['ground_level'])
+            if self.measuring == 'normal':
+                self.rect.y = 430
             else:
-                self.is_jump = False
-                self.jump_count = 16
-                if self.measuring == 'normal':
-                    self.rect.y = 430
-                else:
-                    self.rect.y = 30
+                self.rect.y = 30
 
     def rise(self, name):
         """подъём персонажа"""
@@ -67,6 +67,7 @@ class Animal(pygame.sprite.Sprite):
 
     def drop_mima(self, mina):
         """выбросывает мину"""
+        # y выразить через координаты
         if self.mina:
             self.mina = False
             self.img = pygame.transform.scale(load_image(f'{self.name}.png'), (width // 6, height // 6))

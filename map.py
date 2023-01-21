@@ -81,10 +81,7 @@ class Map:
         if self.not_event > 100:
             self.generation_obj()
         if self.hero.is_jump:
-            if self.fon_new == 'hell.jpg':
-                self.hero.jump(True)
-            else:
-                self.hero.jump(False)
+            self.hero.jump(self.fon_new)
         if self.s > 10_000:
             self.end()
         if not self.s % 500:
@@ -112,8 +109,15 @@ class Map:
         """метод для проверки продолжается ли игра"""
         if self.event.game_over:
             self.chase = False
+            self.kill_all()
             return False
         return True
+
+    @staticmethod
+    def kill_all():
+        for group in groups:
+            for item in group:
+                item.kill()
 
     def draw_obj(self):
         """рисование объектов"""
