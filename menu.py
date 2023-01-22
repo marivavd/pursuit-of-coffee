@@ -16,12 +16,12 @@ class Images(pygame.sprite.Sprite):
         self.rect.y = y
 
 
-def start_screen(screen):
+def start_screen(screen, music, hell):
     """начать рисовать меню"""
     fon = pygame.transform.scale(load_image('fon.jpg'), (width, height))
     screen.blit(fon, (0, 0))
     init_intro_text(screen)
-    hero1, music, hell = draw_heror(screen)
+    hero1, music, hell = draw_heror(screen, music, hell)
     return hero1, music, hell
 
 
@@ -42,7 +42,7 @@ def init_intro_text(screen, text_coord=50,
         screen.blit(string_rendered, intro_rect)
 
 
-def draw_heror(screen):
+def draw_heror(screen, music, hell):
     """нарисовать персонажей"""
     all_sprites = pygame.sprite.Group()
     raccoon = init_raccoon(all_sprites)
@@ -50,8 +50,6 @@ def draw_heror(screen):
     start = init_start(all_sprites)
     settings_button = init_settings_button(all_sprites)
     hero = True
-    music = True
-    hell = True
     while hero is True:
         hero, music, hell = check_event(raccoon, hedgehog, start, hero, settings_button, screen, music, hell)
         draw_rect(screen, raccoon, hedgehog)

@@ -16,6 +16,8 @@ class Event:
         """обработка событий"""
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                pygame.display.quit()
+                pygame.quit()
                 sys.exit()
             if event.type == pygame.KEYDOWN:
                 self.check_key(event, hero)
