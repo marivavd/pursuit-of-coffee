@@ -3,8 +3,10 @@ from map import Map, Hell
 from final_window_loss import open_loss_window
 from animals import Raccoon, Hedgehog
 
+music, hell = True, True # музыка и ад включены по умолчанию
 
 def main():
+    global music, hell
     sl_measuring = {'hell': Hell,
                     'normal': Map}
     sl_hero = {'raccoon': (Raccoon(), [Hedgehog()]),
@@ -12,7 +14,7 @@ def main():
 
     pygame.init()
     screen = pygame.display.set_mode(size)
-    hero, music, hell = start_screen(screen)
+    hero, music, hell = start_screen(screen, music, hell)
     hero, enemies = sl_hero[hero]
     while hero.alive:  # пока персонаж жив, при его псевдо-смерти мы пермещаем его в соответствии с измерением
         cls_map = sl_measuring[hero.measuring]
