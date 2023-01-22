@@ -16,19 +16,13 @@ class Images(pygame.sprite.Sprite):
         self.rect.y = y
 
 
-def terminate():
-    """закрыть всё и вся!!!"""
-    pygame.quit()
-    sys.exit()
-
-
 def start_screen(screen):
     """начать рисовать меню"""
     fon = pygame.transform.scale(load_image('fon.jpg'), (width, height))
     screen.blit(fon, (0, 0))
     init_intro_text(screen)
-    hero1 = draw_heror(screen)
-    return hero1
+    hero1, music, hell = draw_heror(screen)
+    return hero1, music, hell
 
 
 def init_intro_text(screen, text_coord=50,
@@ -56,13 +50,15 @@ def draw_heror(screen):
     start = init_start(all_sprites)
     settings_button = init_settings_button(all_sprites)
     hero = True
+    music = True
+    hell = True
     while hero is True:
-        hero = check_event(raccoon, hedgehog, start, hero, settings_button, screen)
+        hero, music, hell = check_event(raccoon, hedgehog, start, hero, settings_button, screen, music, hell)
         draw_rect(screen, raccoon, hedgehog)
         all_sprites.draw(screen)
         pygame.display.flip()
         clock.tick(FPS)
-    return hero
+    return hero, music, hell
 
 
 def init_raccoon(all_sprites):
@@ -105,11 +101,12 @@ def init_settings_button(all_sprites):
     all_sprites.add(settings_button)
     return settings_button
 
-def check_event(raccoon, hedgehog, start, hero, settings_button, screen):
+def check_event(raccoon, hedgehog, start, hero, settings_button, screen, music, hell):
     """проверка всех возможных событий, которые согут произойти в меню"""
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            terminate()
+            pygame.quit()
+            sys.exit()
         elif event.type == pygame.MOUSEBUTTONUP:
             x, y = event.pos
             if start.rect.collidepoint(x, y):
@@ -121,8 +118,8 @@ def check_event(raccoon, hedgehog, start, hero, settings_button, screen):
                 raccoon.color = (0, 165, 80)
                 hedgehog.color = (128, 128, 128)
             elif settings_button.rect.collidepoint(x, y):
-                open_settings()
+                music, hell = open_settings()
                 fon = pygame.transform.scale(load_image('fon.jpg'), (width, height))
                 screen.blit(fon, (0, 0))
                 init_intro_text(screen)
-    return hero
+    return hero, music, hell

@@ -22,7 +22,9 @@ class Map:
         self.t, self.s = 0, 0
         self.level = 1
         self.not_event = 0
-
+        pygame.mixer.music.load(f'sounds/normal_music.mp3')
+        pygame.mixer.music.play(-1)
+        pygame.mixer.music.pause()
         self.event = Event()
         self.fon = pygame.transform.scale(load_image('fon.jpg'), size)
 
@@ -37,12 +39,16 @@ class Map:
                                 [Mina] * 2,
                                 [Knife] * 2]
 
-    def start_screen(self, level):
+    def start_screen(self, level, music, hell):
         """метод запускающий обработку карты"""
+        self.music = music
+        self.hell = hell
         if self.hero.measuring == 'normal':
             self.level = 1 + level
             self.flag_weapon = False
             new_level(self.level)
+        if self.music:
+            pygame.mixer.music.unpause()
         while self.check_game_over():
             self.t += period[0]
             self.s += period[0]
@@ -107,6 +113,7 @@ class Map:
         """метод для проверки продолжается ли игра"""
         if self.event.game_over:
             self.chase = False
+            pygame.mixer.music.pause()
             self.kill_all()
             return False
         return True
@@ -188,8 +195,9 @@ class Map:
         if self.event.throw_knife:
             self.draw_knife()
             if self.event.throw_knife[2] - perf_counter() >= 2:
-                self.start_screen(self.level)
+                pygame.mixer.music.pause()
                 self.event.throw_knife = []
+                self.start_screen(self.level)
 
     def draw_knife(self):
         """функция отрисовки ножа"""
@@ -203,6 +211,7 @@ class Map:
         if mina.check_activate():
             if not mina.move(self.screen):
                 self.event.active_mine = ActiveMine(0, 0, 0)
+                pygame.mixer.music.pause()
                 self.start_screen(self.level)
 
     def end(self):
@@ -252,6 +261,9 @@ class Hell(Map):
         for i in range(len(self.sp_enemies)):
             self.sp_enemies[i].img = pygame.transform.flip(self.sp_enemies[i].img, False, True)
             self.sp_enemies[i].rect.y -= 400
+        pygame.mixer.music.load(f'sounds/hell_music.mp3')
+        pygame.mixer.music.play(-1)
+        pygame.mixer.music.pause()
 
     def check_goose(self):
         if self.event.goose and len(self.sp_enemies) != 2:

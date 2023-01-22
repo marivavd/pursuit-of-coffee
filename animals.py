@@ -7,7 +7,7 @@ class Animal(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.pose = []
         self.z = 2
-        self.measuring = 'normal'
+        self.measuring = 'hell'
 
         self.alive = True
         self.is_jump = False

@@ -12,10 +12,11 @@ def main():
 
     pygame.init()
     screen = pygame.display.set_mode(size)
-    hero, enemies = sl_hero[start_screen(screen)]
+    hero, music, hell = start_screen(screen)
+    hero, enemies = sl_hero[hero]
     while hero.alive:  # пока персонаж жив, при его псевдо-смерти мы пермещаем его в соответствии с измерением
         cls_map = sl_measuring[hero.measuring]
-        hero, enemies = cls_map(screen, hero, enemies).start_screen(0)
+        hero, enemies = cls_map(screen, hero, enemies).start_screen(0, music, hell)
     open_loss_window()
 
 

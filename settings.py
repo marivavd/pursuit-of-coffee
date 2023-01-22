@@ -50,7 +50,16 @@ def open_settings():
             elif event.type == pygame.MOUSEBUTTONUP:
                 x, y = event.pos
                 if cross.rect.collidepoint(x, y):
-                    running = False
+                    sp = []
+                    if music_but.name == 'music_on':
+                        sp.append(True)
+                    else:
+                        sp.append(False)
+                    if hell_but.name == 'hell_on':
+                        sp.append(True)
+                    else:
+                        sp.append(False)
+                    return sp
                 elif music_but.rect.collidepoint(x, y):
                     if music_but.name == 'music_on':
                         music_but.image = pygame.transform.scale(load_image('off.png', -1), (128, 128))
