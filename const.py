@@ -35,4 +35,3 @@ sl_fons = {'fon.jpg': {'ground_level': 500,
                         'track_width': 12},
            'hell.jpg': {'ground_level': 100,
                         'track_width': 12}}
-

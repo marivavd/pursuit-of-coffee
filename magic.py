@@ -50,4 +50,3 @@ def magic():
         clock.tick(50)
         if len(all_sprites) <= 5:
             running = False
-

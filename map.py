@@ -40,18 +40,14 @@ class Map:
                                 [Mina] * 2,
                                 [Knife] * 2]
 
+        self.music = ...
+        self.hell = ...
+
     def start_screen(self, level, music, hell):
         """метод запускающий обработку карты"""
         self.music = music
         self.hell = hell
-        if self.hero.measuring == 'normal':
-            self.level = 1 + level
-            self.flag_weapon = False
-            new_level(self.level)
-            if self.level != 1:
-                fon = choice(self.sp_fons)
-                self.sp_fons.remove(fon)
-                self.fon = pygame.transform.scale(load_image(fon), size)
+        self.change_fon(level)
         if self.music:
             pygame.mixer.music.unpause()
         while self.check_game_over():
@@ -68,6 +64,15 @@ class Map:
             self.t %= size[0]
 
         return self.hero, self.sp_enemies
+
+    def change_fon(self, level):
+        self.level = 1 + level
+        self.flag_weapon = False
+        new_level(self.level)
+        if self.level != 1:
+            fon = choice(self.sp_fons)
+            self.sp_fons.remove(fon)
+            self.fon = pygame.transform.scale(load_image(fon), size)
 
     def draw_chas(self):
         """отрисовка погони догоняющего за убегающим и всех событий вокруг них"""
@@ -309,3 +314,6 @@ class Hell(Map):
             self.hero.jump(self.fon_new)
         if self.s > 10_000:
             self.end()
+
+    def change_fon(self, level):
+        ...

@@ -75,7 +75,6 @@ def open_settings():
                         hell_but.image = pygame.transform.scale(load_image('on.png', -1), (128, 128))
                         hell_but.name = 'hell_on'
 
-
         all_sprites.update()
         screen.fill((200, 200, 200))
         init_intro_text()

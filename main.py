@@ -3,7 +3,8 @@ from map import Map, Hell
 from final_window_loss import open_loss_window
 from animals import Raccoon, Hedgehog
 
-music, hell = True, True # музыка и ад включены по умолчанию
+music, hell = True, True  # музыка и ад включены по умолчанию
+
 
 def main():
     global music, hell

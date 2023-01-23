@@ -92,12 +92,14 @@ def init_start(all_sprites):
     all_sprites.add(start)
     return start
 
+
 def init_settings_button(all_sprites):
     """нарисовать кнопку настрок"""
     image_b = pygame.transform.scale(load_image('settings_button.png', -1), (115, 75))
     settings_button = Images(all_sprites, None, 700, 0, image_b)
     all_sprites.add(settings_button)
     return settings_button
+
 
 def check_event(raccoon, hedgehog, start, hero, settings_button, screen, music, hell):
     """проверка всех возможных событий, которые согут произойти в меню"""
