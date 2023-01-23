@@ -197,10 +197,9 @@ class Map:
 
     def check_throw_knife(self):
         """метод при помощи которого осуществляется правельное движение ножа во время полёта"""
-        if self.event.throw_knife:
+        if len(self.event.throw_knife) != 0:
             self.draw_knife()
-            if self.event.throw_knife[2] - perf_counter() >= 2:
-                print(0)
+            if self.event.throw_knife[2] - perf_counter() >= 1: # не работает
                 pygame.mixer.music.pause()
                 self.event.throw_knife = []
                 self.start_screen(self.level, self.music, self.hell)
