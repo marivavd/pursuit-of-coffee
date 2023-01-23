@@ -144,6 +144,33 @@ class Animal(pygame.sprite.Sprite):
         if mina is not None:
             mina.kill()
 
+    def redefine_pos(self, pos_x=0, pos_y=0, z=0):
+        """переопределяет координаты героя"""
+        self.rect.x = pos_x
+        self.rect.y = pos_y
+        self.z = z
+
+    def get_pos(self):
+        return self.rect.x, self.rect.y, self.z
+
+    def copy(self):
+        obj = type(self)()
+        obj.redefine_pos(*self.get_pos())
+        obj.measuring = 'hell'
+        obj.img = self.img
+
+        obj.is_jump = self.is_jump
+        self.jump_count = self.jump_count
+        self.koef = self.koef
+        self.minus = self.minus
+
+        if self.knife:
+            obj.take_knife()
+        if self.mina:
+            obj.take_mina()
+
+        return obj
+
 
 class Raccoon(Animal):
     def __init__(self):

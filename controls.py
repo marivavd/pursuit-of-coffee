@@ -6,7 +6,7 @@ class Event:
     def __init__(self):
         self.isjump = False
         self.game_over = False
-        self.change = False
+        self.swap = False
         self.goose = False
 
         self.throw_knife = []
@@ -58,7 +58,7 @@ class Event:
         if type(i) is Cap:
             self.goose = True
         elif type(i) is Glasses:
-            self.change = True
+            self.swap = True
         i.kill()
 
     @staticmethod

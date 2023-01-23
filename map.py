@@ -29,16 +29,8 @@ class Map:
         if self.hero.measuring == 'normal':
             self.fon = pygame.transform.scale(load_image('fon.jpg'), size)
             self.sp_fons = ['fon1.jpg', 'fon2.jpg', 'fon3.jpg', 'fon4.jpg']
-        self._probability_sp = [[Stone] * 100,
-                                [Bush] * 100,
-                                [Book] * 100,
-                                [MiniCoffee] * 25,
-                                [StandartCoffee] * 10,
-                                [BigCoffee] * 5,
-                                [Glasses] * 1,
-                                [Cap] * 1,
-                                [Mina] * 2,
-                                [Knife] * 2]
+        self._probability_sp = [
+                                [Glasses] * 1]
 
     def start_screen(self, level, music, hell):
         """метод запускающий обработку карты"""
@@ -86,6 +78,7 @@ class Map:
         self.check_goose()
         self.check_mina_explosion()
         self.check_throw_knife()
+        self.check_swap()
 
         if self.not_event > 100:
             self.generation_obj()
@@ -113,6 +106,19 @@ class Map:
             if enemy.rect.x >= -100:
                 enemy.rect.x -= 5
             self.screen.blit(enemy.img, (enemy.rect.x, enemy.rect.y))
+
+    def check_swap(self):
+        if self.event.swap:
+            self.event.swap = False
+
+            self.hero, self.enemy = self.enemy.copy(), self.hero.copy()  # смена ролей
+            self.sp_enemies[0] = self.enemy
+
+            old_pos_hero = self.hero.get_pos()  # смена координат
+            self.hero.redefine_pos(*self.enemy.get_pos())
+            self.enemy.redefine_pos(*old_pos_hero)
+
+            magic()
 
     def check_game_over(self):
         """метод для проверки продолжается ли игра"""
