@@ -29,16 +29,8 @@ class Map:
         if self.hero.measuring == 'normal':
             self.fon = pygame.transform.scale(load_image('fon.jpg'), size)
             self.sp_fons = ['fon1.jpg', 'fon2.jpg', 'fon3.jpg', 'fon4.jpg']
-        self._probability_sp = [[Stone] * 100,
-                                [Bush] * 100,
-                                [Book] * 100,
-                                [MiniCoffee] * 25,
-                                [StandartCoffee] * 10,
-                                [BigCoffee] * 5,
-                                [Glasses] * 1,
-                                [Cap] * 1,
-                                [Mina] * 2,
-                                [Knife] * 2]
+        self._probability_sp = [
+                                [Cap] * 1]
 
         self.music = ...
         self.hell = ...
@@ -175,7 +167,7 @@ class Map:
             self.hero.rect.x = self.enemy.rect.x + 100
             self.hero.z = self.enemy.z
 
-            # перено всех вещей
+            # переноc всех вещей
             if self.hero.is_jump:
                 goose.jump_count = self.hero.jump_count
                 goose.is_jump = self.hero.is_jump
@@ -183,6 +175,7 @@ class Map:
                 goose.take_knife()
             if self.hero.mina:
                 goose.take_mina()
+            goose.measuring = self.hero.measuring
 
             self.sp_enemies.append(self.hero)
             self.hero = goose
