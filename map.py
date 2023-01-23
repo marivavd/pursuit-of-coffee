@@ -29,8 +29,16 @@ class Map:
         if self.hero.measuring == 'normal':
             self.fon = pygame.transform.scale(load_image('fon.jpg'), size)
             self.sp_fons = ['fon1.jpg', 'fon2.jpg', 'fon3.jpg', 'fon4.jpg']
-        self._probability_sp = [
-                                [Glasses] * 1]
+        self._probability_sp = [[Stone] * 100,
+                                [Bush] * 100,
+                                [Book] * 100,
+                                [MiniCoffee] * 25,
+                                [StandartCoffee] * 10,
+                                [BigCoffee] * 5,
+                                [Glasses] * 1,
+                                [Cap] * 1,
+                                [Mina] * 2,
+                                [Knife] * 2]
 
     def start_screen(self, level, music, hell):
         """метод запускающий обработку карты"""
@@ -63,7 +71,7 @@ class Map:
 
     def draw_chas(self):
         """отрисовка погони догоняющего за убегающим и всех событий вокруг них"""
-        # self.draw_coffee_sensor()
+        self.draw_coffee_sensor()
         self.draw_hero()
         self.draw_enemies()
         self.draw_obj()
@@ -285,3 +293,19 @@ class Hell(Map):
         mina = self.event.active_mine
         if mina.check_activate():
             mina.move(self.screen, -1)
+
+    def draw_event(self):
+        """проверка на то, что ничего не происходит | если происходит, то отображение этого"""
+        self.event.check_contact(self.hero, *groups)
+        self.event.check_event(self.hero)
+        self.check_goose()
+        self.check_mina_explosion()
+        self.check_throw_knife()
+        self.check_swap()
+
+        if self.not_event > 100:
+            self.generation_obj()
+        if self.hero.is_jump:
+            self.hero.jump(self.fon_new)
+        if self.s > 10_000:
+            self.end()
