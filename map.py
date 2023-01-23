@@ -1,4 +1,5 @@
-from animals import Goose, perf_counter
+from animals import Goose
+from time import perf_counter
 from const import pygame, load_image, FPS, size, clock, period, sl_fons, groups, width, height
 from Items import MiniCoffee, StandartCoffee, BigCoffee, Glasses, Cap, Knife, Stone, Bush, Book, Mina, ActiveMine
 from controls import Event
@@ -6,6 +7,8 @@ from magic import magic
 from new_level import new_level
 from math import sin, cos, radians
 from random import randint, choice
+
+time = perf_counter()
 
 
 class Map:
@@ -44,10 +47,13 @@ class Map:
         self.hell = ...
 
     def start_screen(self, level, music, hell):
+        global time
         """метод запускающий обработку карты"""
         self.music = music
         self.hell = hell
         self.change_fon(level)
+        if self.level == 1 and self.hero.measuring == 'normal':
+            time = perf_counter()
         if self.music:
             pygame.mixer.music.unpause()
         while self.check_game_over():
