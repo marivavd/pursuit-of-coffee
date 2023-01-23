@@ -109,8 +109,10 @@ class Animal(pygame.sprite.Sprite):
             return [self.rect.x, self.rect.y + 10, perf_counter()]
         return []
 
-    def take_knife(self, x, y, knife=None):
+    def take_knife(self, x=False, y=False, knife=None):
         """поднять нож"""
+        x = x if x else self.rect.x
+        y = y if y else self.rect.y
         self.knife = True
         self.img = pygame.transform.scale(load_image(f'{self.name}_with_knife.gif'), (width // 6, height // 6))
         if self.measuring == 'hell':
