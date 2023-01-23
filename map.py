@@ -1,5 +1,5 @@
 from animals import Goose, perf_counter
-from const import pygame, load_image, FPS, size, clock, period, sl_fons, groups
+from const import pygame, load_image, FPS, size, clock, period, sl_fons, groups, width, height
 from Items import MiniCoffee, StandartCoffee, BigCoffee, Glasses, Cap, Knife, Stone, Bush, Book, Mina, ActiveMine
 from controls import Event
 from magic import magic
@@ -100,7 +100,7 @@ class Map:
         if self.s > 10_000:
             self.end()
         if not self.s % 500:
-            self.event.check_cofe(self.hero, self.hell)
+            self.event.check_cofe(self.hero, self.sp_enemies, self.hell)
 
     def draw_fon(self):
         """метод для рисования фона"""

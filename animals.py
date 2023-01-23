@@ -34,7 +34,6 @@ class Animal(pygame.sprite.Sprite):
         """выолняет прыжок"""
         # мне кажется, что сюда можно ввести несколько констант и не париться с ифами
         if self.jump_count >= -17:
-            print(self.measuring)
             if self.measuring == 'normal':
                 if self.jump_count > 0:
                     self.rect.y -= (self.jump_count ** 2) / 9
@@ -129,8 +128,10 @@ class Animal(pygame.sprite.Sprite):
         if knife is not None:
             knife.kill()
 
-    def take_mina(self, x, y, mina=None):
+    def take_mina(self, x=False, y=False, mina=None):
         """поднять мину"""
+        x = x if x else self.rect.x
+        y = y if y else self.rect.y
         self.mina = True
         self.img = pygame.transform.scale(load_image(f'{self.name}_with_mina.gif'), (width // 6, height // 6))
         if self.measuring == 'hell':

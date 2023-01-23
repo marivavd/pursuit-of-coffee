@@ -76,10 +76,12 @@ class Event:
         i.invigorating(i)
         i.kill()
 
-    def check_cofe(self, hero, hell):
+    def check_cofe(self, hero, enemies, hell):
         """проверка на уровень кофе в крови"""
         period[0] -= 1
         if not 5 <= period[0] <= 20 and hell:
             self.game_over = True
             hero.measuring = 'hell'
+            for enemy in enemies:
+                enemy.measuring = 'hell'
 # при гейм овер удалять все объекты!
