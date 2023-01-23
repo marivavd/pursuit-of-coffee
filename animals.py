@@ -14,7 +14,7 @@ class Animal(pygame.sprite.Sprite):
         self.knife = False
         self.mina = False
 
-        self.jump_count = 16
+        self.jump_count = 17
         self.koef = 6
         self.minus = 530
 
@@ -33,21 +33,22 @@ class Animal(pygame.sprite.Sprite):
     def jump(self, fon: str):
         """выолняет прыжок"""
         # мне кажется, что сюда можно ввести несколько констант и не париться с ифами
-        if self.jump_count >= -16:
+        if self.jump_count >= -17:
+            print(self.measuring)
             if self.measuring == 'normal':
                 if self.jump_count > 0:
-                    self.rect.y -= (self.jump_count ** 2) / 7
+                    self.rect.y -= (self.jump_count ** 2) / 9
                 else:
-                    self.rect.y += (self.jump_count ** 2) / 7
+                    self.rect.y += (self.jump_count ** 2) / 9
             elif self.measuring == 'hell':
                 if self.jump_count > 0:
-                    self.rect.y += (self.jump_count ** 2) / 7
+                    self.rect.y += (self.jump_count ** 2) / 9
                 else:
-                    self.rect.y -= (self.jump_count ** 2) / 7
+                    self.rect.y -= (self.jump_count ** 2) / 9
             self.jump_count -= 1
         else:
             self.is_jump = False
-            self.jump_count = 16
+            self.jump_count = 17
 
             # выразить через координаты травы (sl_fons[fon]['ground_level'])
             if self.measuring == 'normal':
@@ -69,7 +70,7 @@ class Animal(pygame.sprite.Sprite):
         self.rect = self.img.get_rect()
         self.mask = pygame.mask.from_surface(self.img)
 
-    def drop_mima(self, mina):
+    def drop_mima(self, x, y, mina):
         """выбрасывает мину"""
         # y выразить через координаты
         if self.mina:
@@ -79,17 +80,17 @@ class Animal(pygame.sprite.Sprite):
                 self.img = pygame.transform.flip(self.img, False, True)
                 self.rect = self.img.get_rect()
                 self.mask = pygame.mask.from_surface(self.img)
-                self.rect.x = 400
-                self.rect.y = 30
+                self.rect.x = x
+                self.rect.y = y
             else:
                 self.rect = self.img.get_rect()
                 self.mask = pygame.mask.from_surface(self.img)
-                self.rect.x = 400
-                self.rect.y = 430
+                self.rect.x = x
+                self.rect.y = y
             mina.redefine_pos(self.rect.x, self.rect.y + 40)
             mina.activate()
 
-    def drop_knife(self):
+    def drop_knife(self, x, y):
         """выбросить нож"""
         if self.knife:
             self.knife = False
@@ -98,17 +99,17 @@ class Animal(pygame.sprite.Sprite):
                 self.img = pygame.transform.flip(self.img, False, True)
                 self.rect = self.img.get_rect()
                 self.mask = pygame.mask.from_surface(self.img)
-                self.rect.x = 400
-                self.rect.y = 30
+                self.rect.x = x
+                self.rect.y = y
             else:
                 self.rect = self.img.get_rect()
                 self.mask = pygame.mask.from_surface(self.img)
-                self.rect.x = 400
-                self.rect.y = 430
+                self.rect.x = x
+                self.rect.y = y
             return [self.rect.x, self.rect.y + 10, perf_counter()]
         return []
 
-    def take_knife(self, knife=None):
+    def take_knife(self, x, y, knife=None):
         """поднять нож"""
         self.knife = True
         self.img = pygame.transform.scale(load_image(f'{self.name}_with_knife.gif'), (width // 6, height // 6))
@@ -116,17 +117,17 @@ class Animal(pygame.sprite.Sprite):
             self.img = pygame.transform.flip(self.img, False, True)
             self.rect = self.img.get_rect()
             self.mask = pygame.mask.from_surface(self.img)
-            self.rect.x = 400
-            self.rect.y = 30
+            self.rect.x = x
+            self.rect.y = y
         else:
             self.rect = self.img.get_rect()
             self.mask = pygame.mask.from_surface(self.img)
-            self.rect.x = 400
-            self.rect.y = 430
+            self.rect.x = x
+            self.rect.y = y
         if knife is not None:
             knife.kill()
 
-    def take_mina(self, mina=None):
+    def take_mina(self, x, y, mina=None):
         """поднять мину"""
         self.mina = True
         self.img = pygame.transform.scale(load_image(f'{self.name}_with_mina.gif'), (width // 6, height // 6))
@@ -134,13 +135,13 @@ class Animal(pygame.sprite.Sprite):
             self.img = pygame.transform.flip(self.img, False, True)
             self.rect = self.img.get_rect()
             self.mask = pygame.mask.from_surface(self.img)
-            self.rect.x = 400
-            self.rect.y = 30
+            self.rect.x = x
+            self.rect.y = y
         else:
             self.rect = self.img.get_rect()
             self.mask = pygame.mask.from_surface(self.img)
-            self.rect.x = 400
-            self.rect.y = 430
+            self.rect.x = x
+            self.rect.y = y
         if mina is not None:
             mina.kill()
 

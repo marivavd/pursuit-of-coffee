@@ -1,5 +1,5 @@
 from animals import Goose, perf_counter
-from const import pygame, load_image, FPS, size, clock, period, sl_fons, groups
+from const import pygame, load_image, FPS, size, clock, period, sl_fons, groups, width, height
 from Items import MiniCoffee, StandartCoffee, BigCoffee, Glasses, Cap, Knife, Stone, Bush, Book, Mina, ActiveMine
 from controls import Event
 from magic import magic
@@ -100,7 +100,7 @@ class Map:
         if self.s > 10_000:
             self.end()
         if not self.s % 500:
-            self.event.check_cofe(self.hero)
+            self.event.check_cofe(self.hero, self.hell)
 
     def draw_fon(self):
         """метод для рисования фона"""
@@ -127,10 +127,11 @@ class Map:
             self.hero, self.enemy = self.enemy.copy(), self.hero.copy()  # смена ролей
             self.sp_enemies[0] = self.enemy
 
-            old_pos_hero = self.hero.get_pos()  # смена координат
+            old_pos_hero = self.hero.get_pos()# смена координат
+            print('1', self.hero.measuring)
             self.hero.redefine_pos(*self.enemy.get_pos())
             self.enemy.redefine_pos(*old_pos_hero)
-
+            print('1', self.hero.measuring)
             magic()
 
     def check_game_over(self):
@@ -170,19 +171,24 @@ class Map:
             while goose.z != self.hero.z:
                 goose.shift_side()
 
-            # перенос координат врага на координаты героя
-            self.hero.rect.y = self.enemy.rect.y
-            self.hero.rect.x = self.enemy.rect.x + 100
-            self.hero.z = self.enemy.z
-
             # перено всех вещей
             if self.hero.is_jump:
                 goose.jump_count = self.hero.jump_count
                 goose.is_jump = self.hero.is_jump
             if self.hero.knife:
-                goose.take_knife()
+                goose.take_knife(self.hero.rect.x, self.hero.rect.y)
+                self.hero.img = pygame.transform.scale(load_image(f'{self.hero.name}.png'), (width // 6, height // 6))
+                self.hero.rect = self.hero.img.get_rect()
+                self.hero.mask = pygame.mask.from_surface(self.hero.img)
             if self.hero.mina:
-                goose.take_mina()
+                goose.take_mina(self.hero.rect.x, self.hero.rect.y)
+                self.hero.img = pygame.transform.scale(load_image(f'{self.hero.name}.png'), (width // 6, height // 6))
+                self.hero.rect = self.hero.img.get_rect()
+                self.hero.mask = pygame.mask.from_surface(self.hero.img)
+            # перенос координат врага на координаты героя
+            self.hero.rect.y = self.enemy.rect.y
+            self.hero.rect.x = self.enemy.rect.x + 100
+            self.hero.z = self.enemy.z
 
             self.sp_enemies.append(self.hero)
             self.hero = goose
@@ -218,7 +224,7 @@ class Map:
         """метод при помощи которого осуществляется правельное движение ножа во время полёта"""
         if len(self.event.throw_knife) != 0:
             self.draw_knife()
-            if perf_counter() - self.event.throw_knife[2] >= 1:
+            if perf_counter() - self.event.throw_knife[2] >= 2:
                 pygame.mixer.music.pause()
                 self.event.throw_knife = []
                 self.start_screen(self.level, self.music, self.hell)
@@ -277,6 +283,7 @@ class Hell(Map):
     def __init__(self, screen, hero, sp_enemies):
         global fon_new
         super().__init__(screen, hero, sp_enemies)
+        self.begin_time = perf_counter()
         self.fon = pygame.transform.scale(load_image('hell.jpg'), size)
         self.fon = pygame.transform.rotate(self.fon, 180)
         self.fon_new = 'hell.jpg'
@@ -314,6 +321,8 @@ class Hell(Map):
             self.hero.jump(self.fon_new)
         if self.s > 10_000:
             self.end()
+        if perf_counter() - self.begin_time >= 100:
+            self.hero.measuring = 'normal'
 
     def change_fon(self, level):
         ...
