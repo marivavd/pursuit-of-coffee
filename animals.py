@@ -156,7 +156,7 @@ class Animal(pygame.sprite.Sprite):
     def copy(self):
         obj = type(self)()
         obj.redefine_pos(*self.get_pos())
-        obj.measuring = 'hell'
+        obj.measuring = self.measuring
         obj.img = self.img
 
         obj.is_jump = self.is_jump
