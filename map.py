@@ -128,10 +128,9 @@ class Map:
             self.sp_enemies[0] = self.enemy
 
             old_pos_hero = self.hero.get_pos()# смена координат
-            print('1', self.hero.measuring)
             self.hero.redefine_pos(*self.enemy.get_pos())
             self.enemy.redefine_pos(*old_pos_hero)
-            print('1', self.hero.measuring)
+            self.hero.measuring = self.enemy.measuring
             magic()
 
     def check_game_over(self):
@@ -185,6 +184,7 @@ class Map:
                 self.hero.img = pygame.transform.scale(load_image(f'{self.hero.name}.png'), (width // 6, height // 6))
                 self.hero.rect = self.hero.img.get_rect()
                 self.hero.mask = pygame.mask.from_surface(self.hero.img)
+            goose.measuring = self.hero.measuring
             # перенос координат врага на координаты героя
             self.hero.rect.y = self.enemy.rect.y
             self.hero.rect.x = self.enemy.rect.x + 100
