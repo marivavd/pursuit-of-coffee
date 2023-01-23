@@ -49,7 +49,7 @@ class Map:
             self.flag_weapon = False
             new_level(self.level)
             if self.level != 1:
-                fon = choice(self.sp_enemies)
+                fon = choice(self.sp_fons)
                 self.sp_fons.remove(fon)
                 self.fon = pygame.transform.scale(load_image(fon), size)
         if self.music:
@@ -200,6 +200,7 @@ class Map:
         if self.event.throw_knife:
             self.draw_knife()
             if self.event.throw_knife[2] - perf_counter() >= 2:
+                print(0)
                 pygame.mixer.music.pause()
                 self.event.throw_knife = []
                 self.start_screen(self.level, self.music, self.hell)
