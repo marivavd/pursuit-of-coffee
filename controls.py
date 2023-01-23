@@ -1,5 +1,4 @@
 import sys
-from hell_window import open_hell_window
 from Items import *
 
 
@@ -83,5 +82,4 @@ class Event:
         if not 5 <= period[0] <= 20 and hell:
             self.game_over = True
             hero.measuring = 'hell'
-            open_hell_window()
 # при гейм овер удалять все объекты!
