@@ -7,7 +7,7 @@ screen = pygame.display.set_mode(size)
 screen_rect = (0, 0, width, height)
 
 
-def init_intro_text(screen, line):
+def init_intro_text(line):
     """создать текст нового уровня"""
     font = pygame.font.Font('fonts/ofont.ru_Blood Cyrillic.ttf', 100)
     string_rendered = font.render(line, True, (255, 255, 255))
@@ -29,7 +29,7 @@ def new_level(level):
     all_sprites = pygame.sprite.Group()
     clock = pygame.time.Clock()
     line, sound = check_level(level)
-    init_intro_text(screen, line)
+    init_intro_text(line)
     sound = pygame.mixer.Sound(f'sounds/{sound}')
     sound.play()
     running = True
@@ -39,7 +39,7 @@ def new_level(level):
                 running = False
         all_sprites.update()
         screen.fill((0, 0, 0))
-        init_intro_text(screen, line)
+        init_intro_text(line)
         pygame.display.flip()
         clock.tick(50)
         if time.perf_counter() - time_begin >= 3:
