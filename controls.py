@@ -32,9 +32,9 @@ class Event:
         elif event.key == pygame.K_RIGHT:
             hero.shift_side()
         elif event.key == pygame.K_DOWN:  # оставлять мину
-            hero.drop_mima(self.active_mine)
+            hero.drop_mima(hero.rect.x, hero.rect.y, self.active_mine)
         elif event.key == pygame.K_SPACE:  # пулять ножом во врага
-            self.throw_knife = hero.drop_knife()
+            self.throw_knife = hero.drop_knife(hero.rect.x, hero.rect.y)
 
     def check_contact(self, hero, *groups):
         """проверка столкновения с объектами"""
@@ -65,9 +65,9 @@ class Event:
     def crash_weapon(hero, i):
         """проверка столкновения с оружием (ножом или миной)"""
         if type(i) is Knife:
-            hero.take_knife(i)
+            hero.take_knife(hero.rect.x, hero.rect.y, i)
         elif type(i) is Mina:
-            hero.take_mina(i)
+            hero.take_mina(hero.rect.x, hero.rect.y, i)
         i.kill()
 
     @staticmethod
@@ -76,11 +76,10 @@ class Event:
         i.invigorating(i)
         i.kill()
 
-    def check_cofe(self, hero):
+    def check_cofe(self, hero, hell):
         """проверка на уровень кофе в крови"""
         period[0] -= 1
-        if not 5 <= period[0] <= 20:
+        if not 5 <= period[0] <= 20 and hell:
             self.game_over = True
             hero.measuring = 'hell'
-
 # при гейм овер удалять все объекты!

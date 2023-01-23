@@ -21,7 +21,7 @@ def load_image(name, color_key=None):
 
 size = width, height = 800, 600
 FPS = 50
-period = [20, 10]
+period = [15, 15]
 clock = pygame.time.Clock()
 
 all_obstacles = pygame.sprite.Group()  # все препятствия

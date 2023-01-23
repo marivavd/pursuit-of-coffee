@@ -29,7 +29,16 @@ class Map:
         if self.hero.measuring == 'normal':
             self.fon = pygame.transform.scale(load_image('fon.jpg'), size)
             self.sp_fons = ['fon1.jpg', 'fon2.jpg', 'fon3.jpg', 'fon4.jpg']
-        self._probability_sp = [[Glasses] * 1]
+        self._probability_sp = [[Stone] * 100,
+                                [Bush] * 100,
+                                [Book] * 100,
+                                [MiniCoffee] * 25,
+                                [StandartCoffee] * 10,
+                                [BigCoffee] * 5,
+                                [Glasses] * 1,
+                                [Cap] * 1,
+                                [Mina] * 2,
+                                [Knife] * 2]
 
         self.music = ...
         self.hell = ...
@@ -91,7 +100,7 @@ class Map:
         if self.s > 10_000:
             self.end()
         if not self.s % 500:
-            self.event.check_cofe(self.hero)
+            self.event.check_cofe(self.hero, self.hell)
 
     def draw_fon(self):
         """метод для рисования фона"""
@@ -114,12 +123,11 @@ class Map:
     def check_swap(self):
         if self.event.swap:
             self.event.swap = False
-            print(self.hero.measuring, self.enemy.measuring)
+
             self.hero, self.enemy = self.enemy.copy(), self.hero.copy()  # смена ролей
-            print(self.hero.measuring, self.enemy.measuring)
             self.sp_enemies[0] = self.enemy
 
-            old_pos_hero = self.hero.get_pos()  # смена координат
+            old_pos_hero = self.hero.get_pos()   # смена координат
             self.hero.redefine_pos(*self.enemy.get_pos())
             self.enemy.redefine_pos(*old_pos_hero)
 
@@ -162,20 +170,26 @@ class Map:
             while goose.z != self.hero.z:
                 goose.shift_side()
 
-            # перенос координат врага на координаты героя
-            self.hero.rect.y = self.enemy.rect.y
-            self.hero.rect.x = self.enemy.rect.x + 100
-            self.hero.z = self.enemy.z
-
             # переноc всех вещей
             if self.hero.is_jump:
                 goose.jump_count = self.hero.jump_count
                 goose.is_jump = self.hero.is_jump
             if self.hero.knife:
-                goose.take_knife()
+                goose.take_knife(self.hero.rect.x, self.hero.rect.y)
+                self.hero.img = pygame.transform.scale(load_image(f'{self.hero.name}.png'), (width // 6, height // 6))
+                self.hero.rect = self.hero.img.get_rect()
+                self.hero.mask = pygame.mask.from_surface(self.hero.img)
             if self.hero.mina:
-                goose.take_mina()
+                goose.take_mina(self.hero.rect.x, self.hero.rect.y)
+                self.hero.img = pygame.transform.scale(load_image(f'{self.hero.name}.png'), (width // 6, height // 6))
+                self.hero.rect = self.hero.img.get_rect()
+                self.hero.mask = pygame.mask.from_surface(self.hero.img)
             goose.measuring = self.hero.measuring
+
+            # перенос координат врага на координаты героя
+            self.hero.rect.y = self.enemy.rect.y
+            self.hero.rect.x = self.enemy.rect.x + 100
+            self.hero.z = self.enemy.z
 
             self.sp_enemies.append(self.hero)
             self.hero = goose
@@ -211,7 +225,7 @@ class Map:
         """метод при помощи которого осуществляется правельное движение ножа во время полёта"""
         if len(self.event.throw_knife) != 0:
             self.draw_knife()
-            if perf_counter() - self.event.throw_knife[2] >= 1:
+            if perf_counter() - self.event.throw_knife[2] >= 2:
                 pygame.mixer.music.pause()
                 self.event.throw_knife = []
                 self.start_screen(self.level, self.music, self.hell)
@@ -236,24 +250,23 @@ class Map:
         ...
 
     def draw_coffee_sensor(self):
-        ...
-    #     """отрисовка датчика кофе"""
-    #     center = (700, 50)
-    #
-    #     # отображение самого счётчика
-    #     self.draw_pie(self.screen, (122, 122, 122), center, 40, 0, 180)
-    #     self.draw_pie(self.screen, (0, 125, 0), center, 40, 180, 225)
-    #     self.draw_pie(self.screen, (125, 125, 0), center, 40, 225, 270)
-    #     self.draw_pie(self.screen, (125, 0, 0), center, 40, 270, 315)
-    #     self.draw_pie(self.screen, (0, 0, 0), center, 40, 315, 360)
-    #     pygame.draw.circle(self.screen, (255, 0, 0), center, 40, 3)
-    #
-    #     # рисование стрелки на счётчике
-    #     coffe = period[0] - 5
-    #     angle = 180 + 360 * coffe // 40
-    #     pygame.draw.line(self.screen, (255, 0, 0), center,
-    #                      (center[0] + 40 * cos(radians(angle)),
-    #                       center[1] + 40 * sin(radians(angle))), 3)
+        """отрисовка датчика кофе"""
+        center = (700, 50)
+
+        # отображение самого счётчика
+        self.draw_pie(self.screen, (122, 122, 122), center, 40, 0, 180)
+        self.draw_pie(self.screen, (0, 125, 0), center, 40, 180, 225)
+        self.draw_pie(self.screen, (125, 125, 0), center, 40, 225, 270)
+        self.draw_pie(self.screen, (125, 0, 0), center, 40, 270, 315)
+        self.draw_pie(self.screen, (0, 0, 0), center, 40, 315, 360)
+        pygame.draw.circle(self.screen, (255, 0, 0), center, 40, 3)
+
+        # рисование стрелки на счётчике
+        coffe = period[0] - 5
+        angle = 180 + 360 * coffe // 40
+        pygame.draw.line(self.screen, (255, 0, 0), center,
+                         (center[0] + 40 * cos(radians(angle)),
+                          center[1] + 40 * sin(radians(angle))), 3)
 
     @staticmethod
     def draw_pie(scr, color, center, radius, start_angle, stop_angle):
@@ -271,6 +284,7 @@ class Hell(Map):
     def __init__(self, screen, hero, sp_enemies):
         global fon_new
         super().__init__(screen, hero, sp_enemies)
+        self.begin_time = perf_counter()
         self.fon = pygame.transform.scale(load_image('hell.jpg'), size)
         self.fon = pygame.transform.rotate(self.fon, 180)
         self.fon_new = 'hell.jpg'
@@ -308,6 +322,8 @@ class Hell(Map):
             self.hero.jump(self.fon_new)
         if self.s > 10_000:
             self.end()
+        if perf_counter() - self.begin_time >= 100:
+            self.hero.measuring = 'normal'
 
     def change_fon(self, level):
         ...
