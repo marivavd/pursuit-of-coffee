@@ -105,7 +105,7 @@ class Animal(pygame.sprite.Sprite):
                 self.mask = pygame.mask.from_surface(self.img)
                 self.rect.x = 400
                 self.rect.y = 430
-            return [self.rect.x, self.rect.y + 40, perf_counter()]
+            return [self.rect.x, self.rect.y + 10, perf_counter()]
         return []
 
     def take_knife(self, knife=None):

@@ -26,8 +26,9 @@ class Map:
         pygame.mixer.music.play(-1)
         pygame.mixer.music.pause()
         self.event = Event()
-        self.fon = pygame.transform.scale(load_image('fon.jpg'), size)
-
+        if self.hero.measuring == 'normal':
+            self.fon = pygame.transform.scale(load_image('fon.jpg'), size)
+            self.sp_fons = ['fon1.jpg', 'fon2.jpg', 'fon3.jpg', 'fon4.jpg']
         self._probability_sp = [[Stone] * 100,
                                 [Bush] * 100,
                                 [Book] * 100,
@@ -47,6 +48,10 @@ class Map:
             self.level = 1 + level
             self.flag_weapon = False
             new_level(self.level)
+            if self.level != 1:
+                fon = choice(self.sp_enemies)
+                self.sp_fons.remove(fon)
+                self.fon = pygame.transform.scale(load_image(fon), size)
         if self.music:
             pygame.mixer.music.unpause()
         while self.check_game_over():
@@ -197,7 +202,7 @@ class Map:
             if self.event.throw_knife[2] - perf_counter() >= 2:
                 pygame.mixer.music.pause()
                 self.event.throw_knife = []
-                self.start_screen(self.level)
+                self.start_screen(self.level, self.music, self.hell)
 
     def draw_knife(self):
         """функция отрисовки ножа"""
@@ -212,7 +217,7 @@ class Map:
             if not mina.move(self.screen):
                 self.event.active_mine = ActiveMine(0, 0, 0)
                 pygame.mixer.music.pause()
-                self.start_screen(self.level)
+                self.start_screen(self.level, self.music, self.hell)
 
     def end(self):
         """запуск концовки"""

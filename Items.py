@@ -33,14 +33,15 @@ class Coffee(Item):
 
 class MiniCoffee(Coffee):
     def __init__(self, *args):
-        self.image = pygame.transform.scale(load_image('cofe.png', -1), (100, 100))
+        self.image = pygame.transform.scale(load_image('beans_of_coffee.png', -1), (100, 100))
         super(MiniCoffee, self).__init__(*args)
         self.name = 'minicofe'
+        self.rect.y += 25
 
 
 class StandartCoffee(Coffee):
     def __init__(self, *args):
-        self.image = pygame.transform.scale(load_image('cofe.png', -1), (100, 100))
+        self.image = pygame.transform.scale(load_image('glass_of_coffee.png', -1), (100, 100))
         super(StandartCoffee, self).__init__(*args)
         self.name = 'standartcofe'
 
@@ -60,14 +61,14 @@ class Things(Item):
 
 class Glasses(Things):
     def __init__(self, *args):
-        self.image = pygame.transform.scale(load_image('cofe.png', -1), (100, 100))
+        self.image = pygame.transform.scale(load_image('glasses.png', -1), (100, 100))
         super(Glasses, self).__init__(*args)
         self.name = 'glasses'
 
 
 class Cap(Things):
     def __init__(self, *args):
-        self.image = pygame.transform.scale(load_image('cofe.png', -1), (100, 100))
+        self.image = pygame.transform.scale(load_image('cap_sherlock.png', -1), (100, 100))
         super(Cap, self).__init__(*args)
         self.name = 'cap'
 
