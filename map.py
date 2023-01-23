@@ -71,7 +71,7 @@ class Map:
 
     def draw_chas(self):
         """отрисовка погони догоняющего за убегающим и всех событий вокруг них"""
-        self.draw_coffee_sensor()
+        # self.draw_coffee_sensor()
         self.draw_hero()
         self.draw_enemies()
         self.draw_obj()
@@ -181,7 +181,7 @@ class Map:
         track = randint(0, 2)
         ground_level = sl_fons[self.fon_new]['ground_level']
         track_width = sl_fons[self.fon_new]['track_width']
-        cls_obj(600, ground_level - track_width * track, track)
+        cls_obj(size[0], ground_level - track_width * track, track)
 
     def generation_cls_obj(self):
         sp = self.get_probability()
@@ -199,7 +199,7 @@ class Map:
         """метод при помощи которого осуществляется правельное движение ножа во время полёта"""
         if len(self.event.throw_knife) != 0:
             self.draw_knife()
-            if self.event.throw_knife[2] - perf_counter() >= 1: # не работает
+            if perf_counter() - self.event.throw_knife[2] >= 1:
                 pygame.mixer.music.pause()
                 self.event.throw_knife = []
                 self.start_screen(self.level, self.music, self.hell)
@@ -276,5 +276,6 @@ class Hell(Map):
             self.hero.img = pygame.transform.flip(self.hero.img, False, True)
 
     def check_mina_explosion(self):
-        if self.event.active_mine != -1:
-            self.event.active_mine.move(self.screen, -1)
+        mina = self.event.active_mine
+        if mina.check_activate():
+            mina.move(self.screen, -1)

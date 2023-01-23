@@ -146,6 +146,7 @@ class ActiveMine(pygame.sprite.Sprite):
 
     def activate(self):
         """активировать мину"""
+        print(1234567)
         self._timer = perf_counter()
 
     def overwrite_time_band(self):

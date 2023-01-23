@@ -70,7 +70,7 @@ class Animal(pygame.sprite.Sprite):
         self.mask = pygame.mask.from_surface(self.img)
 
     def drop_mima(self, mina):
-        """выбросывает мину"""
+        """выбрасывает мину"""
         # y выразить через координаты
         if self.mina:
             self.mina = False
@@ -127,7 +127,7 @@ class Animal(pygame.sprite.Sprite):
             knife.kill()
 
     def take_mina(self, mina=None):
-        """поднять нож"""
+        """поднять мину"""
         self.mina = True
         self.img = pygame.transform.scale(load_image(f'{self.name}_with_mina.gif'), (width // 6, height // 6))
         if self.measuring == 'hell':
