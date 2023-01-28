@@ -22,12 +22,14 @@ class Animal(pygame.sprite.Sprite):
         self.rect = ...
         self.mask = ...
         self.name = ...
+        self.old_y = ...
 
     def shift_side(self, k=1):
         """выполняет перемещение по оси z, т.е. переход между дорожками"""
         shift = 12 * k
         if 0 <= self.z - k <= 2:  # 2 = кол-во дорожек - 1
             self.rect.y += shift
+            self.old_y += shift
             self.z -= k
 
     def jump(self, fon: str):
@@ -39,32 +41,25 @@ class Animal(pygame.sprite.Sprite):
                     self.rect.y -= (self.jump_count ** 2) / 10
                 else:
                     self.rect.y += (self.jump_count ** 2) / 10
+                    if self.rect.y >= self.old_y:
+                        self.rect.y = self.old_y
+                        self.is_jump = False
+                        self.jump_count = 17
             elif self.measuring == 'hell':
                 if self.jump_count > 0:
                     self.rect.y += (self.jump_count ** 2) / 10
                 else:
                     self.rect.y -= (self.jump_count ** 2) / 10
+                    if self.rect.y <= self.old_y:
+                        self.rect.y = self.old_y
+                        self.is_jump = False
+                        self.jump_count = 17
             self.jump_count -= 1
         else:
             self.is_jump = False
             self.jump_count = 17
-
-            # выразить через координаты травы (sl_fons[fon]['ground_level'])
-            # перенесём героев на нужную дорожку
-            if self.measuring == 'normal':
-                if self.z == 2:
-                    self.rect.y = 430
-                elif self.z == 1:
-                    self.rect.y = 442
-                elif self.z == 0:
-                    self.rect.y = 454
-            else:
-                if self.z == 2:
-                    self.rect.y = 30
-                elif self.z <= 1:
-                    self.rect.y = 42
-                elif self.z == 0:
-                    self.rect.y = 54
+            self.rect.y = self.old_y
+        print(self.rect.y)
 
 
 
@@ -193,6 +188,7 @@ class Raccoon(Animal):
         self.minus += 10
         self.rect.x = 400
         self.rect.y = 430
+        self.old_y = 430
 
 
 class Hedgehog(Animal):
@@ -204,6 +200,7 @@ class Hedgehog(Animal):
         self.name = 'hedgehog'
         self.rect.x = 400
         self.rect.y = 430
+        self.old_y = 430
 
 
 class Goose(Animal):
@@ -215,3 +212,4 @@ class Goose(Animal):
         self.name = 'goose'
         self.rect.x = 400
         self.rect.y = 430
+        self.old_y = 430
