@@ -1,7 +1,7 @@
-from animals import Goose
+from animals import Raccoon, Hedgehog, Goose
 from time import perf_counter
-from const import pygame, load_image, FPS, size, clock, period, sl_fons, groups, width, height
-from Items import MiniCoffee, StandartCoffee, BigCoffee, Glasses, Cap, Knife, Stone, Bush, Book, Mina, ActiveMine
+from const import pygame, load_image, FPS, size, clock, period, sl_fons, groups, width, height, time
+from Items import MiniCoffee, StandartCoffee, BigCoffee, Glasses, Cap, Knife, Stone, Bush, Book, Mina, ActiveMine, House
 from controls import Event
 from magic import magic
 from new_level import new_level
@@ -103,8 +103,6 @@ class Map:
             self.generation_obj()
         if self.hero.is_jump:
             self.hero.jump(self.fon_new)
-        if self.s > 10_000:
-            self.end()
         if not self.s % 500:
             self.event.check_cofe(self.hero, self.sp_enemies, self.hell)
 
@@ -203,7 +201,7 @@ class Map:
 
     def get_probability(self):
         """взять список вероятностей появления предметов"""
-        return self._probability_sp[:]
+        return self._probability_sp[:] if self.level != 6 else [House]
 
     def generation_obj(self):
         """метод для генерации объетов"""
@@ -250,10 +248,6 @@ class Map:
                 self.event.active_mine = ActiveMine(0, 0, 0)
                 pygame.mixer.music.pause()
                 self.start_screen(self.level, self.music, self.hell)
-
-    def end(self):
-        """запуск концовки"""
-        ...
 
     def draw_coffee_sensor(self):
         """отрисовка датчика кофе"""
@@ -326,8 +320,6 @@ class Hell(Map):
             self.generation_obj()
         if self.hero.is_jump:
             self.hero.jump(self.fon_new)
-        if self.s > 10_000:
-            self.end()
         if perf_counter() - self.begin_time >= 100:
             self.hero.measuring = 'normal'
 

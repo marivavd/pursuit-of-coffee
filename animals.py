@@ -1,5 +1,6 @@
-from const import pygame, width, height, sl_fons, load_image
+from const import pygame, width, height, sl_fons, load_image, house
 from time import perf_counter
+from win_window import open_victory_window
 
 
 class Animal(pygame.sprite.Sprite):
@@ -197,6 +198,13 @@ class Hedgehog(Animal):
         self.name = 'hedgehog'
         self.rect.x = 400
         self.rect.y = 430
+
+    def end(self):
+        """функция запуска сна"""
+        self.img = pygame.transform.scale(load_image('cofe.png'), (width // self.koef, height // self.koef))
+        time = perf_counter()
+        while time - perf_counter() > 5:
+            open_victory_window()
 
 
 class Goose(Animal):

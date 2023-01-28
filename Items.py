@@ -1,4 +1,4 @@
-from const import pygame, load_image, coffee, weapon, things, all_obstacles, period
+from const import pygame, load_image, coffee, weapon, things, all_obstacles, period, house
 from time import perf_counter
 
 
@@ -207,3 +207,24 @@ class ActiveMine(pygame.sprite.Sprite):
             else:
                 self.draw_band(screen)
         return False
+
+
+class House(Item):
+    def __init__(self, *args):
+        self.image = pygame.transform.scale(load_image('house.png', -1), (500, 500))
+        super().__init__(*args, house)
+        self.name = 'house'
+
+
+class Bed(Item):
+    def __init__(self, *args):
+        self.image = pygame.transform.scale(load_image('bed.png', -1), (500, 500))
+        super().__init__(*args, house)
+        self.name = 'bed'
+
+
+class Oven(Item):
+    def __init__(self, *args):
+        self.image = pygame.transform.scale(load_image('oven.png', -1), (500, 500))
+        super().__init__(*args, house)
+        self.name = 'oven'
