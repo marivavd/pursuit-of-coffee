@@ -15,7 +15,7 @@ class Animal(pygame.sprite.Sprite):
         self.knife = False
         self.mina = False
 
-        self.jump_count = 17
+        self.jump_count = 18
         self.koef = 6
         self.minus = 530
 
@@ -34,33 +34,40 @@ class Animal(pygame.sprite.Sprite):
     def jump(self, fon: str):
         """выолняет прыжок"""
         # мне кажется, что сюда можно ввести несколько констант и не париться с ифами
-        if self.jump_count >= -17:
+        if self.jump_count >= -18:
             if self.measuring == 'normal':
                 if self.jump_count > 0:
-                    self.rect.y -= (self.jump_count ** 2) / 9
+                    self.rect.y -= (self.jump_count ** 2) / 10
                 else:
-                    self.rect.y += (self.jump_count ** 2) / 9
+                    self.rect.y += (self.jump_count ** 2) / 10
             elif self.measuring == 'hell':
                 if self.jump_count > 0:
-                    self.rect.y += (self.jump_count ** 2) / 9
+                    self.rect.y += (self.jump_count ** 2) / 10
                 else:
-                    self.rect.y -= (self.jump_count ** 2) / 9
+                    self.rect.y -= (self.jump_count ** 2) / 10
             self.jump_count -= 1
         else:
             self.is_jump = False
             self.jump_count = 17
 
             # выразить через координаты травы (sl_fons[fon]['ground_level'])
-            if self.measuring == 'normal':
-                self.rect.y = 430
-            else:
-                self.rect.y = 30
-
             # перенесём героев на нужную дорожку
-            if self.z <= 1:
-                self.rect.y += 12
-            if self.z == 0:
-                self.rect.y += 12
+            if self.measuring == 'normal':
+                if self.z == 2:
+                    self.rect.y = 430
+                elif self.z == 1:
+                    self.rect.y = 442
+                elif self.z == 0:
+                    self.rect.y = 454
+            else:
+                if self.z == 2:
+                    self.rect.y = 30
+                elif self.z <= 1:
+                    self.rect.y = 42
+                elif self.z == 0:
+                    self.rect.y = 54
+
+
 
     def rise(self, name):
         """подъём персонажа"""
