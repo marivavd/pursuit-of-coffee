@@ -8,8 +8,6 @@ from new_level import new_level
 from math import sin, cos, radians
 from random import randint, choice
 
-time = perf_counter()
-
 
 class Map:
     """класс для обработки карты на которой происходят все события в обычном мире"""
@@ -47,13 +45,13 @@ class Map:
         self.hell = ...
 
     def start_screen(self, level, music, hell):
-        global time
+        global time_pl
         """метод запускающий обработку карты"""
         self.music = music
         self.hell = hell
         self.change_fon(level)
         if self.level == 1 and self.hero.measuring == 'normal':
-            time = perf_counter()
+            time_pl = perf_counter()
         if self.music:
             pygame.mixer.music.unpause()
         while self.check_game_over():
@@ -69,7 +67,7 @@ class Map:
             clock.tick(FPS)
             self.t %= size[0]
 
-        return self.hero, self.sp_enemies
+        return self.hero, self.sp_enemies, time_pl
 
     def change_fon(self, level):
         self.level = 1 + level
@@ -106,7 +104,7 @@ class Map:
         if self.s > 10_000:
             self.end()
         if not self.s % 500:
-            self.event.check_cofe(self.hero, self.sp_enemies, self.hell)
+            self.event.check_cofe(self.hero, self.sp_enemies, self.hell, self.screen)
 
     def draw_fon(self):
         """метод для рисования фона"""
@@ -253,7 +251,6 @@ class Map:
 
     def end(self):
         """запуск концовки"""
-        ...
 
     def draw_coffee_sensor(self):
         """отрисовка датчика кофе"""
@@ -290,7 +287,6 @@ class Hell(Map):
     def __init__(self, screen, hero, sp_enemies):
         global fon_new
         super().__init__(screen, hero, sp_enemies)
-        self.begin_time = perf_counter()
         self.fon = pygame.transform.scale(load_image('hell.jpg'), size)
         self.fon = pygame.transform.rotate(self.fon, 180)
         self.fon_new = 'hell.jpg'
@@ -308,10 +304,22 @@ class Hell(Map):
             super().check_goose()
             self.hero.img = pygame.transform.flip(self.hero.img, False, True)
 
+    def draw_knife(self):
+        """функция отрисовки ножа"""
+        self.screen.blit(pygame.transform.scale(load_image('knife.png', -1), (100, 100)),
+                         (self.event.throw_knife[0], self.event.throw_knife[1]))
+        self.event.throw_knife[0] -= 10
+
     def check_mina_explosion(self):
+        """выпущена ли мина? Если да, то отрисовать её и перейти в нормальный мир"""
         mina = self.event.active_mine
         if mina.check_activate():
-            mina.move(self.screen, -1)
+            if not mina.move(self.screen, -1):
+                self.event.active_mine = ActiveMine(0, 0, 0)
+                pygame.mixer.music.pause()
+                self.hero.measuring = 'normal'
+                for enemy in self.sp_enemies:
+                    enemy.measuring = 'normal'
 
     def draw_event(self):
         """проверка на то, что ничего не происходит | если происходит, то отображение этого"""
@@ -328,8 +336,6 @@ class Hell(Map):
             self.hero.jump(self.fon_new)
         if self.s > 10_000:
             self.end()
-        if perf_counter() - self.begin_time >= 100:
-            self.hero.measuring = 'normal'
 
     def change_fon(self, level):
         ...

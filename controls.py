@@ -1,4 +1,6 @@
 import sys
+from const import width, height
+from death import death
 from Items import *
 
 
@@ -76,7 +78,7 @@ class Event:
         i.invigorating(i)
         i.kill()
 
-    def check_cofe(self, hero, enemies, hell):
+    def check_cofe(self, hero, enemies, hell, screen):
         """проверка на уровень кофе в крови"""
         period[0] -= 1
         if not 5 <= period[0] <= 20 and hell:
@@ -84,4 +86,13 @@ class Event:
             hero.measuring = 'hell'
             for enemy in enemies:
                 enemy.measuring = 'hell'
+            rect = pygame.Rect(0, 0, 800, 600)
+            sub = screen.subsurface(rect)
+            screenshot = pygame.Surface((800, 600))
+            screenshot.blit(sub, (0, 0))
+            pygame.image.save(screenshot, "images/screenshot.jpg")
+            death(pygame.transform.scale(load_image('death.png'), (width // 4, height // 4)), hero)
 # при гейм овер удалять все объекты!
+
+
+
