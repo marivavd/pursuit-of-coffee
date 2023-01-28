@@ -43,7 +43,8 @@ class Event:
         sl_group = {all_obstacles: self.crash_obstacles,
                     things: self.crash_things,
                     weapon: self.crash_weapon,
-                    coffee: self.crash_coffee}
+                    coffee: self.crash_coffee,
+                    house: self}
         for group in groups:
             for i in group:
                 if pygame.sprite.collide_mask(i, hero):
@@ -55,7 +56,7 @@ class Event:
         self.game_over = True
         i.kill()
 
-    def crash_things(self, hero, i):
+    def crash_things(self, _, i):
         """проверка столкновения с вещами (кепкой или очками)"""
         if type(i) is Cap:
             self.goose = True
@@ -73,10 +74,15 @@ class Event:
         i.kill()
 
     @staticmethod
-    def crash_coffee(hero, i):
+    def crash_coffee(_, i):
         """проверка столкновения с кофе"""
         i.invigorating(i)
         i.kill()
+
+    @staticmethod
+    def crash_house(hero, i):
+        if type(i) is Bed:
+            hero.end()
 
     def check_cofe(self, hero, enemies, hell, screen):
         """проверка на уровень кофе в крови"""
@@ -86,13 +92,12 @@ class Event:
             hero.measuring = 'hell'
             for enemy in enemies:
                 enemy.measuring = 'hell'
+
             rect = pygame.Rect(0, 0, 800, 600)
             sub = screen.subsurface(rect)
             screenshot = pygame.Surface((800, 600))
             screenshot.blit(sub, (0, 0))
             pygame.image.save(screenshot, "images/screenshot.jpg")
             death(pygame.transform.scale(load_image('death.png'), (width // 4, height // 4)), hero)
+
 # при гейм овер удалять все объекты!
-
-
-

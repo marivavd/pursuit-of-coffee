@@ -23,12 +23,14 @@ size = width, height = 800, 600
 FPS = 50
 period = [15, 15]
 clock = pygame.time.Clock()
+time = -1
 
 all_obstacles = pygame.sprite.Group()  # все препятствия
 things = pygame.sprite.Group()  # кепка и очки
 weapon = pygame.sprite.Group()  # нож и мина
 coffee = pygame.sprite.Group()  # кофе
-groups = (all_obstacles, things, weapon, coffee)
+house = pygame.sprite.Group()  # всё то, что находиться в доме
+groups = (all_obstacles, things, weapon, coffee, house)
 sl_fons = {'fon.jpg': {'ground_level': 500,
                        'track_width': 12},
            'fon1.jpg': {'ground_level': 500,

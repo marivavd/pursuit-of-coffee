@@ -1,8 +1,6 @@
 import time
 from time import perf_counter
-from map import time
-from const import load_image
-from random import choice
+from const import time
 from magic import magic
 from const import pygame, size, width, height
 
@@ -24,7 +22,6 @@ def init_intro_text(intro_text, text_coord=50):
         text_w = string_rendered.get_width()
         text_h = string_rendered.get_height()
         screen.blit(string_rendered, (text_x, text_y))
-
 
 
 def open_victory_window():
@@ -54,4 +51,7 @@ def open_victory_window():
         clock.tick(50)
         if perf_counter() - time_begin >= 7:
             running = False
-open_victory_window()
+
+
+if __name__ == "__main__":
+    open_victory_window()

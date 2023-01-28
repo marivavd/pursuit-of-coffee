@@ -1,7 +1,7 @@
-from animals import Goose
+from animals import Raccoon, Hedgehog, Goose
 from time import perf_counter
-from const import pygame, load_image, FPS, size, clock, period, sl_fons, groups, width, height
-from Items import MiniCoffee, StandartCoffee, BigCoffee, Glasses, Cap, Knife, Stone, Bush, Book, Mina, ActiveMine
+from const import pygame, load_image, FPS, size, clock, period, sl_fons, groups, width, height, time
+from Items import MiniCoffee, StandartCoffee, BigCoffee, Glasses, Cap, Knife, Stone, Bush, Book, Mina, ActiveMine, House
 from controls import Event
 from magic import magic
 from new_level import new_level
@@ -27,6 +27,7 @@ class Map:
         pygame.mixer.music.play(-1)
         pygame.mixer.music.pause()
         self.event = Event()
+        self.time = time
         if self.hero.measuring == 'normal':
             self.fon = pygame.transform.scale(load_image('fon.jpg'), size)
             self.sp_fons = ['fon1.jpg', 'fon2.jpg', 'fon3.jpg', 'fon4.jpg']
@@ -45,13 +46,12 @@ class Map:
         self.hell = ...
 
     def start_screen(self, level, music, hell):
-        global time_pl
         """метод запускающий обработку карты"""
         self.music = music
         self.hell = hell
         self.change_fon(level)
         if self.level == 1 and self.hero.measuring == 'normal':
-            time_pl = perf_counter()
+            self.time = perf_counter()
         if self.music:
             pygame.mixer.music.unpause()
         while self.check_game_over():
@@ -67,7 +67,7 @@ class Map:
             clock.tick(FPS)
             self.t %= size[0]
 
-        return self.hero, self.sp_enemies, time_pl
+        return self.hero, self.sp_enemies
 
     def change_fon(self, level):
         self.level = 1 + level
@@ -101,8 +101,6 @@ class Map:
             self.generation_obj()
         if self.hero.is_jump:
             self.hero.jump(self.fon_new)
-        if self.s > 10_000:
-            self.end()
         if not self.s % 500:
             self.event.check_cofe(self.hero, self.sp_enemies, self.hell, self.screen)
 
@@ -201,7 +199,7 @@ class Map:
 
     def get_probability(self):
         """взять список вероятностей появления предметов"""
-        return self._probability_sp[:]
+        return self._probability_sp[:] if self.level != 6 else [House]
 
     def generation_obj(self):
         """метод для генерации объетов"""
@@ -248,9 +246,6 @@ class Map:
                 self.event.active_mine = ActiveMine(0, 0, 0)
                 pygame.mixer.music.pause()
                 self.start_screen(self.level, self.music, self.hell)
-
-    def end(self):
-        """запуск концовки"""
 
     def draw_coffee_sensor(self):
         """отрисовка датчика кофе"""
@@ -334,8 +329,6 @@ class Hell(Map):
             self.generation_obj()
         if self.hero.is_jump:
             self.hero.jump(self.fon_new)
-        if self.s > 10_000:
-            self.end()
 
     def change_fon(self, level):
         ...
