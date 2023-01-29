@@ -214,6 +214,7 @@ class House(Item):
         self.image = pygame.transform.scale(load_image('house.png', -1), (500, 500))
         super().__init__(*args, house)
         self.name = 'house'
+        self.rect.y -= 300
 
 
 class Bed(Item):
@@ -228,3 +229,10 @@ class Oven(Item):
         self.image = pygame.transform.scale(load_image('oven.png', -1), (500, 500))
         super().__init__(*args, house)
         self.name = 'oven'
+
+
+class Large_coffee(Item):
+    def __init__(self, *args):
+        self.image = pygame.transform.scale(load_image('large_coffee.png', -1), (500, 500))
+        super().__init__(*args, house)
+        self.name = 'Large_coffee'

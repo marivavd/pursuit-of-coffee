@@ -7,6 +7,7 @@ from magic import magic
 from new_level import new_level
 from math import sin, cos, radians
 from random import randint, choice
+from final_window_win import open_win_window
 
 
 class Map:
@@ -50,8 +51,7 @@ class Map:
         """метод запускающий обработку карты"""
         self.music = music
         self.hell = hell
-        if self.level != 6:
-            self.change_fon(level)
+        self.change_fon(level)
         if self.level == 1 and self.hero.measuring == 'normal':
             self.time_pl1 = perf_counter()
         else:
@@ -76,8 +76,11 @@ class Map:
     def change_fon(self, level):
         self.level = 1 + level
         self.flag_weapon = False
-        new_level(self.level)
-        if self.level != 1:
+        if self.level != 6:
+            new_level(self.level)
+        else:
+            open_win_window()
+        if self.level != 1 and self.level != 6:
             fon = choice(self.sp_fons)
             self.sp_fons.remove(fon)
             self.fon = pygame.transform.scale(load_image(fon), size)
@@ -263,20 +266,20 @@ class Map:
         """отрисовка датчика кофе"""
         center = (700, 50)
 
-        # # отображение самого счётчика
-        # self.draw_pie(self.screen, (122, 122, 122), center, 40, 0, 180)
-        # self.draw_pie(self.screen, (0, 125, 0), center, 40, 180, 225)
-        # self.draw_pie(self.screen, (125, 125, 0), center, 40, 225, 270)
-        # self.draw_pie(self.screen, (125, 0, 0), center, 40, 270, 315)
-        # self.draw_pie(self.screen, (0, 0, 0), center, 40, 315, 360)
-        # pygame.draw.circle(self.screen, (255, 0, 0), center, 40, 3)
-        #
-        # # рисование стрелки на счётчике
-        # coffe = period[0] - 5
-        # angle = 180 + 360 * coffe // 40
-        # pygame.draw.line(self.screen, (255, 0, 0), center,
-        #                  (center[0] + 40 * cos(radians(angle)),
-        #                   center[1] + 40 * sin(radians(angle))), 3)
+        # отображение самого счётчика
+        self.draw_pie(self.screen, (122, 122, 122), center, 40, 0, 180)
+        self.draw_pie(self.screen, (0, 125, 0), center, 40, 180, 225)
+        self.draw_pie(self.screen, (125, 125, 0), center, 40, 225, 270)
+        self.draw_pie(self.screen, (125, 0, 0), center, 40, 270, 315)
+        self.draw_pie(self.screen, (0, 0, 0), center, 40, 315, 360)
+        pygame.draw.circle(self.screen, (255, 0, 0), center, 40, 3)
+
+        # рисование стрелки на счётчике
+        coffe = period[0] - 5
+        angle = 180 + 360 * coffe // 40
+        pygame.draw.line(self.screen, (255, 0, 0), center,
+                         (center[0] + 40 * cos(radians(angle)),
+                          center[1] + 40 * sin(radians(angle))), 3)
 
     @staticmethod
     def draw_pie(scr, color, center, radius, start_angle, stop_angle):
