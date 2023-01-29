@@ -61,7 +61,6 @@ class Animal(pygame.sprite.Sprite):
             self.jump_count = 19
             self.rect.y = self.old_y
 
-
     def drop_mima(self, x, y, mina):
         """выбрасывает мину"""
         # y выразить через координаты
@@ -129,15 +128,10 @@ class Animal(pygame.sprite.Sprite):
         self.img = pygame.transform.scale(load_image(f'{self.name}_with_mina.gif'), (width // 6, height // 6))
         if self.measuring == 'hell':
             self.img = pygame.transform.flip(self.img, False, True)
-            self.rect = self.img.get_rect()
-            self.mask = pygame.mask.from_surface(self.img)
-            self.rect.x = x
-            self.rect.y = y
-        else:
-            self.rect = self.img.get_rect()
-            self.mask = pygame.mask.from_surface(self.img)
-            self.rect.x = x
-            self.rect.y = y
+        self.rect = self.img.get_rect()
+        self.mask = pygame.mask.from_surface(self.img)
+        self.rect.x = x
+        self.rect.y = y
         if mina is not None:
             mina.kill()
 
@@ -181,6 +175,10 @@ class Raccoon(Animal):
         self.rect.y = 430
         self.old_y = 430
 
+    def reset_to_standard_img(self):
+        self.img = pygame.transform.scale(load_image('raccoon.png'), (width // self.koef, height // self.koef))
+        self.mask = pygame.mask.from_surface(self.img)
+
 
 class Hedgehog(Animal):
     def __init__(self):
@@ -192,6 +190,10 @@ class Hedgehog(Animal):
         self.rect.x = 400
         self.rect.y = 430
         self.old_y = 430
+
+    def reset_to_standard_img(self):
+        self.img = pygame.transform.scale(load_image('hedgehog.png'), (width // self.koef, height // self.koef))
+        self.mask = pygame.mask.from_surface(self.img)
 
     def end(self):
         """функция запуска сна"""
@@ -211,3 +213,7 @@ class Goose(Animal):
         self.rect.x = 400
         self.rect.y = 430
         self.old_y = 430
+
+    def reset_to_standard_img(self):
+        self.img = pygame.transform.scale(load_image('goose.png'), (width // self.koef, height // self.koef))
+        self.mask = pygame.mask.from_surface(self.img)
