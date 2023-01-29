@@ -287,6 +287,7 @@ class Hell(Map):
         self.fon_new = 'hell.jpg'
         self.hero.img = pygame.transform.flip(self.hero.img, False, True)
         self.hero.rect.y -= 400
+        self.hero.old_y -= 400
         for i in range(len(self.sp_enemies)):
             self.sp_enemies[i].img = pygame.transform.flip(self.sp_enemies[i].img, False, True)
             self.sp_enemies[i].rect.y -= 400
