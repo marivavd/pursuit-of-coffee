@@ -15,7 +15,7 @@ class Animal(pygame.sprite.Sprite):
         self.knife = False
         self.mina = False
 
-        self.jump_count = 18
+        self.jump_count = 19
         self.koef = 6
         self.minus = 530
 
@@ -36,7 +36,7 @@ class Animal(pygame.sprite.Sprite):
     def jump(self, fon: str):
         """выолняет прыжок"""
         # мне кажется, что сюда можно ввести несколько констант и не париться с ифами
-        if self.jump_count >= -18:
+        if self.jump_count >= -19:
             if self.measuring == 'normal':
                 if self.jump_count > 0:
                     self.rect.y -= (self.jump_count ** 2) / 10
@@ -45,7 +45,7 @@ class Animal(pygame.sprite.Sprite):
                     if self.rect.y >= self.old_y:
                         self.rect.y = self.old_y
                         self.is_jump = False
-                        self.jump_count = 17
+                        self.jump_count = 19
             elif self.measuring == 'hell':
                 if self.jump_count > 0:
                     self.rect.y += (self.jump_count ** 2) / 10
@@ -54,20 +54,12 @@ class Animal(pygame.sprite.Sprite):
                     if self.rect.y <= self.old_y:
                         self.rect.y = self.old_y
                         self.is_jump = False
-                        self.jump_count = 17
+                        self.jump_count = 19
             self.jump_count -= 1
         else:
             self.is_jump = False
-            self.jump_count = 17
+            self.jump_count = 19
             self.rect.y = self.old_y
-
-    def rise(self, name):
-        """подъём персонажа"""
-        self.koef -= 0.5
-        self.rect.y = self.minus - (height // self.koef)
-        self.img = pygame.transform.scale(load_image(f'{name}.png'), (width // self.koef, height // self.koef))
-        self.rect = self.img.get_rect()
-        self.mask = pygame.mask.from_surface(self.img)
 
     def drop_mima(self, x, y, mina):
         """выбрасывает мину"""
