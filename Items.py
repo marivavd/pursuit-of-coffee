@@ -240,7 +240,7 @@ class Large_coffee(Item):
         self.image = pygame.transform.scale(load_image('large_coffee.png', -1), (500, 500))
         super().__init__(*args, house)
         self.name = 'large_coffee'
-        self.rect.y -= 300
+        self.rect.y -= 350
 
 
 class Flagpole(Item):

@@ -1,3 +1,4 @@
+import sys
 import time
 import sqlite3
 from const import pygame, size, width, height
@@ -25,7 +26,7 @@ def open_welcome_home_window():
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False
+                sys.exit()
         screen.fill((70, 170, 100))
         init_intro_text('Welcome home')
         pygame.display.flip()

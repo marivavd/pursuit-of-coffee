@@ -1,3 +1,4 @@
+import sys
 from time import perf_counter
 from const import load_image
 from const import pygame, size, width, height
@@ -29,7 +30,7 @@ def open_win_window():
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False
+                sys.exit()
         screen.fill((10, 50, 40))
         init_intro_text(("You are still breathing", 'You are lucky'))
         screen.blit(pygame.transform.scale(load_image('great work.png'), (256, 256)), (550, 350))

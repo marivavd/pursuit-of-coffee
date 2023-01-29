@@ -1,6 +1,5 @@
-import time
+import sys
 from time import perf_counter
-from const import time
 from magic import magic
 from const import pygame, size, width, height
 
@@ -19,15 +18,12 @@ def init_intro_text(intro_text, text_coord=50):
         text_x = width // 2 - string_rendered.get_width() // 2
         text_y = height // 2 - string_rendered.get_height() // 2 + top
         top += 30
-        text_w = string_rendered.get_width()
-        text_h = string_rendered.get_height()
         screen.blit(string_rendered, (text_x, text_y))
 
 
-def open_victory_window():
+def open_victory_window(time_pl):
     time_begin = perf_counter()
-    time_of_game = int(time_begin - time)
-    all_sprites = pygame.sprite.Group()
+    time_of_game = int(time_begin - time_pl)
     f = open("count_victories.txt", "r", encoding="utf8")
     count_win = int(f.read()) + 1
     f.close()
@@ -42,8 +38,7 @@ def open_victory_window():
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False
-        all_sprites.update()
+                sys.exit()
         screen.fill((0, 0, 0))
         init_intro_text(("You win", "", "", "", '', f'Вы играли {time_of_game} секунд', '', '',
                          f'Общее количество ваших побед равно {count_win}'))
@@ -51,7 +46,3 @@ def open_victory_window():
         clock.tick(50)
         if perf_counter() - time_begin >= 7:
             running = False
-
-
-if __name__ == "__main__":
-    open_victory_window()
