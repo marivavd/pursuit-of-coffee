@@ -50,7 +50,8 @@ class Map:
         """метод запускающий обработку карты"""
         self.music = music
         self.hell = hell
-        self.change_fon(level)
+        if self.level != 6:
+            self.change_fon(level)
         if self.level == 1 and self.hero.measuring == 'normal':
             self.time_pl1 = perf_counter()
         else:
@@ -210,7 +211,7 @@ class Map:
 
     def get_probability(self):
         """взять список вероятностей появления предметов"""
-        return self._probability_sp[:] if self.level != 6 else [House]
+        return self._probability_sp[:] if self.level != 1 else [[House]]
 
     def generation_obj(self):
         """метод для генерации объетов"""

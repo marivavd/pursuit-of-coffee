@@ -84,6 +84,7 @@ class Event:
         if type(i) is Bed:
             hero.end()
 
+
     def check_cofe(self, hero, enemies, hell, screen):
         """проверка на уровень кофе в крови"""
         period[0] -= 1
