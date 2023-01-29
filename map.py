@@ -170,31 +170,33 @@ class Map:
                     obj.image = pygame.transform.flip(obj.image, False, True)
                 obj.rect.x -= 5
 
+    def take_all_atributes_for_goose(self, goose):
+        # переноc всех вещей
+        if self.hero.is_jump:
+            goose.jump_count = self.hero.jump_count
+            goose.is_jump = self.hero.is_jump
+        if self.hero.knife:
+            goose.take_knife(self.hero.rect.x, self.hero.rect.y)
+            self.hero.img = pygame.transform.scale(load_image(f'{self.hero.name}.png'), (width // 6, height // 6))
+            self.hero.rect = self.hero.img.get_rect()
+            self.hero.mask = pygame.mask.from_surface(self.hero.img)
+        if self.hero.mina:
+            goose.take_mina(self.hero.rect.x, self.hero.rect.y)
+            self.hero.img = pygame.transform.scale(load_image(f'{self.hero.name}.png'), (width // 6, height // 6))
+            self.hero.rect = self.hero.img.get_rect()
+            self.hero.mask = pygame.mask.from_surface(self.hero.img)
+
     def check_goose(self):
         """если превращение в гуся должно произойти, то оно произойдёт"""
         if self.event.goose and len(self.sp_enemies) == 1:
             goose = Goose()
-
-            # перенос координат героя на координаты гуся
+            # перенос координат x героя на координаты гуся
             goose.rect.y = self.hero.rect.y
             goose.rect.x = self.hero.rect.x
             while goose.z != self.hero.z:
-                goose.shift_side()
+                goose.z -= 1
+            self.take_all_atributes_for_goose(goose)
 
-            # переноc всех вещей
-            if self.hero.is_jump:
-                goose.jump_count = self.hero.jump_count
-                goose.is_jump = self.hero.is_jump
-            if self.hero.knife:
-                goose.take_knife(self.hero.rect.x, self.hero.rect.y)
-                self.hero.img = pygame.transform.scale(load_image(f'{self.hero.name}.png'), (width // 6, height // 6))
-                self.hero.rect = self.hero.img.get_rect()
-                self.hero.mask = pygame.mask.from_surface(self.hero.img)
-            if self.hero.mina:
-                goose.take_mina(self.hero.rect.x, self.hero.rect.y)
-                self.hero.img = pygame.transform.scale(load_image(f'{self.hero.name}.png'), (width // 6, height // 6))
-                self.hero.rect = self.hero.img.get_rect()
-                self.hero.mask = pygame.mask.from_surface(self.hero.img)
             goose.measuring = self.hero.measuring
 
             # перенос координат врага на координаты героя

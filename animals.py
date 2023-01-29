@@ -179,6 +179,13 @@ class Raccoon(Animal):
         self.img = pygame.transform.scale(load_image('raccoon.png'), (width // self.koef, height // self.koef))
         self.mask = pygame.mask.from_surface(self.img)
 
+    def end(self):
+        """функция запуска сна"""
+        self.img = pygame.transform.scale(load_image('cofe.png'), (width // self.koef, height // self.koef))
+        time = perf_counter()
+        while time - perf_counter() > 5:
+            open_victory_window()
+
 
 class Hedgehog(Animal):
     def __init__(self):

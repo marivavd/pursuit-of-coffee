@@ -14,16 +14,11 @@ class Death(pygame.sprite.Sprite):
         self.mask = pygame.mask.from_surface(self.image)
         self.rect.x, self.rect.y = x, y
         self.conflict = False
-        self.move = 0
 
     def update(self, hero):
         self.rect.y += 1
-        if self.move != 0:
-            self.move += 1
-            if self.move == 5:
-                self.conflict = True
-        elif pygame.sprite.collide_mask(self, hero):
-            self.move += 1
+        if pygame.sprite.collide_mask(self, hero):
+            self.conflict = True
 
 
 def death(picture, hero):
@@ -38,12 +33,12 @@ def death(picture, hero):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-        if death_player.conflict:
-            running = False
         all_sprites.update(hero)
         screen.fill((0, 0, 0))
         screen.blit(fon, (0, 0))
         all_sprites.draw(screen)
         pygame.display.flip()
+        if death_player.conflict:
+            running = False
         clock.tick(50)
 
