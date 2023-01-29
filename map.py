@@ -21,6 +21,7 @@ class Map:
         self.chase = True
         self.flag_weapon = True
         self.t, self.s = 0, 0
+        self.time_pl1 = 0
         self.level = 1
         self.not_event = 0
         pygame.mixer.music.load(f'sounds/normal_music.mp3')
@@ -51,9 +52,9 @@ class Map:
         self.hell = hell
         self.change_fon(level)
         if self.level == 1 and self.hero.measuring == 'normal':
-            time_pl1 = perf_counter()
+            self.time_pl1 = perf_counter()
         else:
-            time_pl1 = time_pl
+            self.time_pl1 = time_pl
         if self.music:
             pygame.mixer.music.unpause()
         while self.check_game_over():
@@ -69,7 +70,7 @@ class Map:
             clock.tick(FPS)
             self.t %= size[0]
 
-        return self.hero, self.sp_enemies, time_pl1
+        return self.hero, self.sp_enemies, self.time_pl1
 
     def change_fon(self, level):
         self.level = 1 + level
@@ -238,7 +239,7 @@ class Map:
             if perf_counter() - self.event.throw_knife[2] >= 2:
                 pygame.mixer.music.pause()
                 self.event.throw_knife = []
-                self.start_screen(self.level, self.music, self.hell)
+                self.start_screen(self.level, self.music, self.hell, self.time_pl1)
 
     def draw_knife(self):
         """функция отрисовки ножа"""
@@ -253,7 +254,7 @@ class Map:
             if not mina.move(self.screen):
                 self.event.active_mine = ActiveMine(0, 0, 0)
                 pygame.mixer.music.pause()
-                self.start_screen(self.level, self.music, self.hell)
+                self.start_screen(self.level, self.music, self.hell, self.time_pl1)
 
     def draw_coffee_sensor(self):
         """отрисовка датчика кофе"""
