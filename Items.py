@@ -235,4 +235,11 @@ class Large_coffee(Item):
     def __init__(self, *args):
         self.image = pygame.transform.scale(load_image('large_coffee.png', -1), (500, 500))
         super().__init__(*args, house)
-        self.name = 'Large_coffee'
+        self.name = 'large_coffee'
+
+
+class Flagpole(Item):
+    def __init__(self, *args):
+        self.image = pygame.transform.scale(load_image('flag.png', -1), (500, 500))
+        super().__init__(*args, house)
+        self.name = 'flag'

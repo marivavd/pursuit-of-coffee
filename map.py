@@ -1,7 +1,8 @@
 from animals import Raccoon, Hedgehog, Goose
 from time import perf_counter
 from const import pygame, load_image, FPS, size, clock, period, sl_fons, groups, width, height, time
-from Items import MiniCoffee, StandartCoffee, BigCoffee, Glasses, Cap, Knife, Stone, Bush, Book, Mina, ActiveMine, House
+from Items import MiniCoffee, StandartCoffee, BigCoffee, Glasses, \
+    Cap, Knife, Stone, Bush, Book, Mina, ActiveMine, House, Bed, Oven, Large_coffee, Flagpole
 from controls import Event
 from magic import magic
 from new_level import new_level
@@ -46,6 +47,7 @@ class Map:
 
         self.music = ...
         self.hell = ...
+        self.flag_end_generated = False
 
     def start_screen(self, level, music, hell, time_pl):
         """метод запускающий обработку карты"""
@@ -104,7 +106,9 @@ class Map:
         self.check_throw_knife()
         self.check_swap()
 
-        if self.not_event > 100:
+        if self.level == 1:
+            self.generation_end()
+        elif self.not_event > 100:
             self.generation_obj()
         if self.hero.is_jump:
             self.hero.jump(self.fon_new)
@@ -214,7 +218,7 @@ class Map:
 
     def get_probability(self):
         """взять список вероятностей появления предметов"""
-        return self._probability_sp[:] if self.level != 6 else [[House]]
+        return self._probability_sp[:]
 
     def generation_obj(self):
         """метод для генерации объетов"""
@@ -237,6 +241,21 @@ class Map:
         if cls_obj in (Mina, Knife) and not self.flag_weapon:
             self.flag_weapon = True
         return cls_obj
+
+    def generation_end(self):
+        """генерация объектов концовок"""
+        if not self.flag_end_generated:
+            self.flag_end_generated = True
+
+            ground_level = sl_fons[self.fon_new]['ground_level']
+            if type(self.hero) is Hedgehog:
+                House(size[0], ground_level, 0)
+                oven_x = Oven(size[0] + 10, ground_level, 0).rect.x
+                Bed(size[0] + 20 + oven_x, ground_level, 0)
+            elif type(self.hero) is Raccoon:
+                Large_coffee(size[0], ground_level, 0)
+            elif type(self.hero) is Goose:
+                Flagpole(size[0], ground_level, 0)
 
     def check_throw_knife(self):
         """метод при помощи которого осуществляется правельное движение ножа во время полёта"""
@@ -266,20 +285,20 @@ class Map:
         """отрисовка датчика кофе"""
         center = (700, 50)
 
-        # отображение самого счётчика
-        self.draw_pie(self.screen, (122, 122, 122), center, 40, 0, 180)
-        self.draw_pie(self.screen, (0, 125, 0), center, 40, 180, 225)
-        self.draw_pie(self.screen, (125, 125, 0), center, 40, 225, 270)
-        self.draw_pie(self.screen, (125, 0, 0), center, 40, 270, 315)
-        self.draw_pie(self.screen, (0, 0, 0), center, 40, 315, 360)
-        pygame.draw.circle(self.screen, (255, 0, 0), center, 40, 3)
-
-        # рисование стрелки на счётчике
-        coffe = period[0] - 5
-        angle = 180 + 360 * coffe // 40
-        pygame.draw.line(self.screen, (255, 0, 0), center,
-                         (center[0] + 40 * cos(radians(angle)),
-                          center[1] + 40 * sin(radians(angle))), 3)
+        # # отображение самого счётчика
+        # self.draw_pie(self.screen, (122, 122, 122), center, 40, 0, 180)
+        # self.draw_pie(self.screen, (0, 125, 0), center, 40, 180, 225)
+        # self.draw_pie(self.screen, (125, 125, 0), center, 40, 225, 270)
+        # self.draw_pie(self.screen, (125, 0, 0), center, 40, 270, 315)
+        # self.draw_pie(self.screen, (0, 0, 0), center, 40, 315, 360)
+        # pygame.draw.circle(self.screen, (255, 0, 0), center, 40, 3)
+        #
+        # # рисование стрелки на счётчике
+        # coffe = period[0] - 5
+        # angle = 180 + 360 * coffe // 40
+        # pygame.draw.line(self.screen, (255, 0, 0), center,
+        #                  (center[0] + 40 * cos(radians(angle)),
+        #                   center[1] + 40 * sin(radians(angle))), 3)
 
     @staticmethod
     def draw_pie(scr, color, center, radius, start_angle, stop_angle):
