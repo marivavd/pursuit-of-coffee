@@ -1,4 +1,3 @@
-import time
 from time import perf_counter
 from const import load_image
 from const import pygame, size, width, height
