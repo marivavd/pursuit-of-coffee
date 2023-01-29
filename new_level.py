@@ -26,7 +26,6 @@ def check_level(level):
 def new_level(level):
     """переключить уровень на следующий"""
     time_begin = time.perf_counter()
-    all_sprites = pygame.sprite.Group()
     clock = pygame.time.Clock()
     line, sound = check_level(level)
     init_intro_text(line)
@@ -37,7 +36,6 @@ def new_level(level):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-        all_sprites.update()
         screen.fill((0, 0, 0))
         init_intro_text(line)
         pygame.display.flip()
