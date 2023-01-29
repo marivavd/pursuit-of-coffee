@@ -9,6 +9,7 @@ from new_level import new_level
 from math import sin, cos, radians
 from random import randint, choice
 from final_window_win import open_win_window
+from win_window import open_victory_window
 
 
 class Map:
@@ -16,7 +17,7 @@ class Map:
 
     def __init__(self, screen, hero, sp_enemies):
         self.screen = screen
-        self.hero, self.enemy = hero, sp_enemies[0]
+        self.hero, self.enemy = Hedgehog(), sp_enemies[0]
         self.sp_enemies = sp_enemies
         self.hero.rect.x += 100  # 100 - рандомное число, нужно для того, чтобы персонаж был дальше, чем враг
         self.fon_new = 'fon.jpg'
@@ -54,31 +55,45 @@ class Map:
         self.music = music
         self.hell = hell
         self.change_fon(level)
-        if self.level == 1 and self.hero.measuring == 'normal':
-            self.time_pl1 = perf_counter()
-        else:
-            self.time_pl1 = time_pl
+        self.time_pl1 = perf_counter() if self.level == 1 and self.hero.measuring == 'normal' else time_pl
+
+        self.run()
+
+        return self.hero, self.sp_enemies, self.time_pl1
+
+    def run(self):
         if self.music:
             pygame.mixer.music.unpause()
-        while self.check_game_over():
-            self.t += period[0]
-            self.s += period[0]
-            self.not_event += 1
 
-            self.draw_fon()
-            if self.chase:
-                self.draw_chas()
+        time_sleep = 0
+        while self.check_game_over():
+            if self.hero.flag_move:
+                self.move()
+                self.draw_fon()
+                if self.chase:
+                    self.draw_chas()
+            else:
+                self.event.raw_check_event()
+
+            if self.hero.flag_end_behind:
+                if not time_sleep:
+                    time_sleep = perf_counter()
+                elif perf_counter() - time_sleep > 2:
+                    open_victory_window()
 
             pygame.display.flip()
             clock.tick(FPS)
             self.t %= size[0]
 
-        return self.hero, self.sp_enemies, self.time_pl1
+    def move(self):
+        self.t += period[0]
+        self.s += period[0]
+        self.not_event += 1
 
     def change_fon(self, level):
         self.level = 1 + level
         self.flag_weapon = False
-        if self.level != 6:
+        if self.level != 1:
             new_level(self.level)
         else:
             open_win_window()
@@ -145,7 +160,7 @@ class Map:
             if self.enemy.mina:
                 self.hero.take_mina()
                 self.enemy.reset_to_standard_img()
-            old_pos_hero = self.hero.get_pos()   # смена координат
+            old_pos_hero = self.hero.get_pos()  # смена координат
             self.hero.redefine_pos(*self.enemy.get_pos())
             self.enemy.redefine_pos(*old_pos_hero)
 
@@ -250,8 +265,8 @@ class Map:
             ground_level = sl_fons[self.fon_new]['ground_level']
             if type(self.hero) is Hedgehog:
                 House(size[0], ground_level, 0)
-                oven_x = Oven(size[0] + 10, ground_level, 0).rect.x
-                Bed(size[0] + 20 + oven_x, ground_level, 0)
+                oven_x = Oven(size[0], ground_level, 0).rect.x
+                Bed(size[0] + oven_x, ground_level, 0)
             elif type(self.hero) is Raccoon:
                 Large_coffee(size[0], ground_level, 0)
             elif type(self.hero) is Goose:
@@ -313,6 +328,7 @@ class Map:
 
 class Hell(Map):
     """класс для обработки карты на которой происходят все события в нижнем мире"""
+
     def __init__(self, screen, hero, sp_enemies):
         global fon_new
         super().__init__(screen, hero, sp_enemies)

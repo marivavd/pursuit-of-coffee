@@ -14,6 +14,8 @@ class Animal(pygame.sprite.Sprite):
         self.is_jump = False
         self.knife = False
         self.mina = False
+        self.flag_end_behind = False
+        self.flag_move = True
 
         self.jump_count = 19
         self.koef = 6
@@ -181,10 +183,8 @@ class Raccoon(Animal):
 
     def end(self):
         """функция запуска сна"""
-        self.img = pygame.transform.scale(load_image('cofe.png'), (width // self.koef, height // self.koef))
-        time = perf_counter()
-        while time - perf_counter() > 5:
-            open_victory_window()
+        self.flag_move = False
+        self.flag_end_behind = True
 
 
 class Hedgehog(Animal):
@@ -205,9 +205,8 @@ class Hedgehog(Animal):
     def end(self):
         """функция запуска сна"""
         self.img = pygame.transform.scale(load_image('cofe.png'), (width // self.koef, height // self.koef))
-        time = perf_counter()
-        while time - perf_counter() > 5:
-            open_victory_window()
+        self.flag_move = False
+        self.flag_end_behind = True
 
 
 class Goose(Animal):
@@ -220,6 +219,11 @@ class Goose(Animal):
         self.rect.x = 400
         self.rect.y = 430
         self.old_y = 430
+
+    def end(self):
+        """функция запуска сна"""
+        self.flag_move = False
+        self.flag_end_behind = True
 
     def reset_to_standard_img(self):
         self.img = pygame.transform.scale(load_image('goose.png'), (width // self.koef, height // self.koef))

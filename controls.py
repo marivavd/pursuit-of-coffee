@@ -1,4 +1,6 @@
 import sys
+import time
+
 from const import width, height
 from death import death
 from Items import *
@@ -24,6 +26,14 @@ class Event:
             if event.type == pygame.KEYDOWN:
                 self.check_key(event, hero)
                 # сделать так, чтобы при смене персонажа, и нож, и мина оставались у него
+
+    @staticmethod
+    def raw_check_event():
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.display.quit()
+                pygame.quit()
+                sys.exit()
 
     def check_key(self, event, hero):
         """обработка нажатия на кнопки"""
