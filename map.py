@@ -79,7 +79,7 @@ class Map:
                 if not time_sleep:
                     time_sleep = perf_counter()
                 elif perf_counter() - time_sleep > 2:
-                    open_victory_window()
+                    open_victory_window(self.time_pl1)
 
             pygame.display.flip()
             clock.tick(FPS)
@@ -121,7 +121,7 @@ class Map:
         self.check_throw_knife()
         self.check_swap()
 
-        if self.level == 1:
+        if self.level == 6:
             self.generation_end()
         elif self.not_event > 100:
             self.generation_obj()
