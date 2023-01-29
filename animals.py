@@ -183,7 +183,6 @@ class Raccoon(Animal):
 
     def end(self):
         """функция запуска сна"""
-        self.flag_move = False
         self.flag_end_behind = True
 
 
@@ -222,7 +221,6 @@ class Goose(Animal):
 
     def end(self):
         """функция запуска сна"""
-        self.flag_move = False
         self.flag_end_behind = True
 
     def reset_to_standard_img(self):

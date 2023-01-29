@@ -91,7 +91,7 @@ class Event:
 
     @staticmethod
     def crash_house(hero, i):
-        if type(i) is Bed:
+        if type(i) in (Bed, Flagpole, Large_coffee):
             hero.end()
 
     def check_cofe(self, hero, enemies, hell, screen):
