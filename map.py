@@ -45,13 +45,15 @@ class Map:
         self.music = ...
         self.hell = ...
 
-    def start_screen(self, level, music, hell):
+    def start_screen(self, level, music, hell, time_pl):
         """метод запускающий обработку карты"""
         self.music = music
         self.hell = hell
         self.change_fon(level)
         if self.level == 1 and self.hero.measuring == 'normal':
-            self.time = perf_counter()
+            time_pl1 = perf_counter()
+        else:
+            time_pl1 = time_pl
         if self.music:
             pygame.mixer.music.unpause()
         while self.check_game_over():
@@ -67,7 +69,7 @@ class Map:
             clock.tick(FPS)
             self.t %= size[0]
 
-        return self.hero, self.sp_enemies
+        return self.hero, self.sp_enemies, time_pl1
 
     def change_fon(self, level):
         self.level = 1 + level
