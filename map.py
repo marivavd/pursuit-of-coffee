@@ -127,12 +127,18 @@ class Map:
             self.event.swap = False
 
             self.hero, self.enemy = self.enemy.copy(), self.hero.copy()  # смена ролей
-            self.sp_enemies[0] = self.enemy
-
+            # сменя вещей
+            if self.enemy.knife:
+                self.hero.take_knife()
+                self.enemy.reset_to_standard_img()
+            if self.enemy.mina:
+                self.hero.take_mina()
+                self.enemy.reset_to_standard_img()
             old_pos_hero = self.hero.get_pos()   # смена координат
             self.hero.redefine_pos(*self.enemy.get_pos())
             self.enemy.redefine_pos(*old_pos_hero)
 
+            self.sp_enemies[0] = self.enemy
             magic()
 
     def check_game_over(self):
