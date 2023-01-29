@@ -44,7 +44,7 @@ class Event:
                     things: self.crash_things,
                     weapon: self.crash_weapon,
                     coffee: self.crash_coffee,
-                    house: self}
+                    house: self.crash_house}
         for group in groups:
             for i in group:
                 if pygame.sprite.collide_mask(i, hero):
@@ -83,7 +83,6 @@ class Event:
     def crash_house(hero, i):
         if type(i) is Bed:
             hero.end()
-
 
     def check_cofe(self, hero, enemies, hell, screen):
         """проверка на уровень кофе в крови"""
