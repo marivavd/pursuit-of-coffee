@@ -211,7 +211,7 @@ class Map:
 
     def get_probability(self):
         """взять список вероятностей появления предметов"""
-        return self._probability_sp[:] if self.level != 1 else [[House]]
+        return self._probability_sp[:] if self.level != 6 else [[House]]
 
     def generation_obj(self):
         """метод для генерации объетов"""
