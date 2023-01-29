@@ -121,7 +121,7 @@ class Map:
         self.check_throw_knife()
         self.check_swap()
 
-        if self.level == 6:
+        if self.level == 1:
             self.generation_end()
         elif self.not_event > 100:
             self.generation_obj()
