@@ -1,3 +1,4 @@
+import sys
 from time import perf_counter
 from const import load_image
 from const import pygame, size, width, height
@@ -32,7 +33,7 @@ def open_loss_window(time_pl):
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False
+                sys.exit()
         screen.fill((0, 0, 0))
         init_intro_text(("Game is over", "", "", "", '', f'Вы играли {time_of_game} секунд'))
         screen.blit(pygame.transform.scale(load_image('blood.png'), (width // 3, height // 3)), (100, 10))
