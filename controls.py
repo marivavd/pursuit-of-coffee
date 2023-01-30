@@ -44,9 +44,9 @@ class Event:
         elif event.key == pygame.K_RIGHT:
             hero.shift_side()
         elif event.key == pygame.K_DOWN:  # оставлять мину
-            hero.drop_mima(hero.rect.x, hero.rect.y, self.active_mine)
+            hero.drop_mima(mina=self.active_mine)
         elif event.key == pygame.K_SPACE:  # пулять ножом во врага
-            self.throw_knife = hero.drop_knife(hero.rect.x, hero.rect.y)
+            self.throw_knife = hero.drop_knife()
 
     def check_contact(self, hero, *groups):
         """проверка столкновения с объектами"""
@@ -78,9 +78,9 @@ class Event:
     def crash_weapon(hero, i):
         """проверка столкновения с оружием (ножом или миной)"""
         if type(i) is Knife:
-            hero.take_knife(hero.rect.x, hero.rect.y, i)
+            hero.take_knife(knife=i)
         elif type(i) is Mina:
-            hero.take_mina(hero.rect.x, hero.rect.y, i)
+            hero.take_mina(mina=i)
         i.kill()
 
     @staticmethod

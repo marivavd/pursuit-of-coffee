@@ -1,12 +1,14 @@
-from const import pygame, width, height, sl_fons, load_image, house
+from const import pygame, width, height, load_image, house
 from time import perf_counter
-from win_window import open_victory_window
 
 
 class Animal(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         self.pose = []
+
+        self.x = 400
+        self.y = 430
         self.z = 2
         self.measuring = 'normal'
 
@@ -21,11 +23,16 @@ class Animal(pygame.sprite.Sprite):
         self.koef = 6
         self.minus = 530
 
+        self.count_img = 2
+        self.n_img = 1
+
         self.img = ...
         self.rect = ...
         self.mask = ...
         self.name = ...
         self.old_y = ...
+
+        self.reset_to_standard_img()
 
     def shift_side(self, k=1):
         """выполняет перемещение по оси z, т.е. переход между дорожками"""
@@ -35,7 +42,7 @@ class Animal(pygame.sprite.Sprite):
             self.old_y += shift
             self.z -= k
 
-    def jump(self, fon: str):
+    def jump(self):
         """выолняет прыжок"""
         # мне кажется, что сюда можно ввести несколько констант и не париться с ифами
         if self.jump_count >= -19:
@@ -68,18 +75,10 @@ class Animal(pygame.sprite.Sprite):
         # y выразить через координаты
         if self.mina:
             self.mina = False
-            self.img = pygame.transform.scale(load_image(f'{self.name}.png'), (width // 6, height // 6))
+            self.reset_to_standard_img()
             if self.measuring == 'hell':
                 self.img = pygame.transform.flip(self.img, False, True)
-                self.rect = self.img.get_rect()
-                self.mask = pygame.mask.from_surface(self.img)
-                self.rect.x = x
-                self.rect.y = y
-            else:
-                self.rect = self.img.get_rect()
-                self.mask = pygame.mask.from_surface(self.img)
-                self.rect.x = x
-                self.rect.y = y
+            self.rect.x, self.rect.y = x, y
             mina.redefine_pos(self.rect.x, self.rect.y + 40)
             mina.activate()
 
@@ -87,18 +86,10 @@ class Animal(pygame.sprite.Sprite):
         """выбросить нож"""
         if self.knife:
             self.knife = False
-            self.img = pygame.transform.scale(load_image(f'{self.name}.png'), (width // 6, height // 6))
+            self.reset_to_standard_img()
             if self.measuring == 'hell':
                 self.img = pygame.transform.flip(self.img, False, True)
-                self.rect = self.img.get_rect()
-                self.mask = pygame.mask.from_surface(self.img)
-                self.rect.x = x
-                self.rect.y = y
-            else:
-                self.rect = self.img.get_rect()
-                self.mask = pygame.mask.from_surface(self.img)
-                self.rect.x = x
-                self.rect.y = y
+            self.rect.x, self.rect.y = x, y
             return [self.rect.x, self.rect.y + 10, perf_counter()]
         return []
 
@@ -164,13 +155,34 @@ class Animal(pygame.sprite.Sprite):
 
         return obj
 
+    def update_img(self):
+        self.n_img %= self.count_img
+        self.n_img += 1
+        if self.mina:
+            self.reset_with_mina_img()
+        if self.knife:
+            self.reset_with_knife_img()
+        if not (self.knife or self.mina):
+            self.reset_to_standard_img()
+
+    def reset_img(self):
+        self.rect = self.img.get_rect()
+        self.mask = pygame.mask.from_surface(self.img)
+        self.rect.x, self.rect.y = self.x, self.y
+
+    def reset_to_standard_img(self):
+        self.reset_img()
+
+    def reset_with_knife_img(self):
+        self.reset_img()
+
+    def reset_with_mina_img(self):
+        self.reset_img()
+
 
 class Raccoon(Animal):
     def __init__(self):
         super(Raccoon, self).__init__()
-        self.img = pygame.transform.scale(load_image('raccoon.png'), (width // self.koef, height // self.koef))
-        self.rect = self.img.get_rect()
-        self.mask = pygame.mask.from_surface(self.img)
         self.name = 'raccoon'
         self.minus += 10
         self.rect.x = 400
@@ -178,8 +190,19 @@ class Raccoon(Animal):
         self.old_y = 430
 
     def reset_to_standard_img(self):
-        self.img = pygame.transform.scale(load_image('raccoon.png'), (width // self.koef, height // self.koef))
-        self.mask = pygame.mask.from_surface(self.img)
+        self.img = pygame.transform.scale(load_image(f'Raccoon/raccoon_{self.n_img}.png'),
+                                          (width // self.koef, height // self.koef))
+        super(Raccoon, self).reset_to_standard_img()
+
+    def reset_with_knife_img(self):
+        self.img = pygame.transform.scale(load_image(f'Raccoon/raccoon_with_knife_{self.n_img}.png'),
+                                          (width // self.koef, height // self.koef))
+        super(Raccoon, self).reset_to_standard_img()
+
+    def reset_with_mina_img(self):
+        self.img = pygame.transform.scale(load_image(f'Raccoon/raccoon_with_mina_{self.n_img}.png'),
+                                          (width // self.koef, height // self.koef))
+        super(Raccoon, self).reset_to_standard_img()
 
     def end(self):
         """функция запуска сна"""
@@ -189,21 +212,30 @@ class Raccoon(Animal):
 class Hedgehog(Animal):
     def __init__(self):
         super(Hedgehog, self).__init__()
-        self.img = pygame.transform.scale(load_image('hedgehog.png'), (width // self.koef, height // self.koef))
-        self.rect = self.img.get_rect()
-        self.mask = pygame.mask.from_surface(self.img)
         self.name = 'hedgehog'
         self.rect.x = 400
         self.rect.y = 430
         self.old_y = 430
 
     def reset_to_standard_img(self):
-        self.img = pygame.transform.scale(load_image('hedgehog.png'), (width // self.koef, height // self.koef))
-        self.mask = pygame.mask.from_surface(self.img)
+        self.img = pygame.transform.scale(load_image(f'Hedgehog/hedgehog_{self.n_img}.png'),
+                                          (width // self.koef, height // self.koef))
+        super(Hedgehog, self).reset_to_standard_img()
+
+    def reset_with_knife_img(self):
+        self.img = pygame.transform.scale(load_image(f'Hedgehog/hedgehog_with_knife_{self.n_img}.png'),
+                                          (width // self.koef, height // self.koef))
+        super(Hedgehog, self).reset_to_standard_img()
+
+    def reset_with_mina_img(self):
+        self.img = pygame.transform.scale(load_image(f'Hedgehog/hedgehog_with_mina_{self.n_img}.png'),
+                                          (width // self.koef, height // self.koef))
+        super(Hedgehog, self).reset_to_standard_img()
 
     def end(self):
         """функция запуска сна"""
-        self.img = pygame.transform.scale(load_image('cofe.png'), (width // self.koef, height // self.koef))
+        self.img = pygame.transform.scale(load_image('Hedgehog/hedgehog_in_the_bed.png'),
+                                          (width // self.koef, height // self.koef))
         self.flag_move = False
         self.flag_end_behind = True
 
@@ -211,9 +243,6 @@ class Hedgehog(Animal):
 class Goose(Animal):
     def __init__(self):
         super(Goose, self).__init__()
-        self.img = pygame.transform.scale(load_image('goose.png'), (width // self.koef, height // self.koef))
-        self.rect = self.img.get_rect()
-        self.mask = pygame.mask.from_surface(self.img)
         self.name = 'goose'
         self.rect.x = 400
         self.rect.y = 430
@@ -224,5 +253,16 @@ class Goose(Animal):
         self.flag_end_behind = True
 
     def reset_to_standard_img(self):
-        self.img = pygame.transform.scale(load_image('goose.png'), (width // self.koef, height // self.koef))
-        self.mask = pygame.mask.from_surface(self.img)
+        self.img = pygame.transform.scale(load_image(f'Goose/goose_{self.n_img}.png'),
+                                          (width // self.koef, height // self.koef))
+        super(Goose, self).reset_to_standard_img()
+
+    def reset_with_knife_img(self):
+        self.img = pygame.transform.scale(load_image(f'Goose/goose_with_knife_{self.n_img}.png'),
+                                          (width // self.koef, height // self.koef))
+        super(Goose, self).reset_to_standard_img()
+
+    def reset_with_mina_img(self):
+        self.img = pygame.transform.scale(load_image(f'Goose/goose_with_mina_{self.n_img}.png'),
+                                          (width // self.koef, height // self.koef))
+        super(Goose, self).reset_to_standard_img()

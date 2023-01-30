@@ -61,7 +61,7 @@ def draw_heror(screen, music, hell):
 
 def init_raccoon(all_sprites):
     """наривать енота (Кофия)"""
-    image_r = pygame.transform.scale(load_image('raccoon.png', -1), (213, 177))
+    image_r = pygame.transform.scale(load_image('Raccoon/raccoon.png', -1), (213, 177))
     raccoon = Images(all_sprites, (0, 165, 80), -10, 170, image_r)
     all_sprites.add(raccoon)
     return raccoon
@@ -69,7 +69,7 @@ def init_raccoon(all_sprites):
 
 def init_hedgehog(all_sprites):
     """нарисовать ёжика"""
-    image_h = pygame.transform.scale(load_image('hedgehog.png', -1), (203, 167))
+    image_h = pygame.transform.scale(load_image('Hedgehog/hedgehog_1.png', -1), (203, 167))
     hedgehog = Images(all_sprites, (128, 128, 128), 180, 170, image_h)
     all_sprites.add(hedgehog)
     return hedgehog
