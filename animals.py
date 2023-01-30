@@ -166,6 +166,8 @@ class Animal(pygame.sprite.Sprite):
             self.reset_to_standard_img()
 
     def reset_img(self):
+        if self.measuring == 'hell':
+            self.img = pygame.transform.flip(self.img, False, True)
         self.mask = pygame.mask.from_surface(self.img)
 
     def reset_to_standard_img(self):
