@@ -184,6 +184,7 @@ class Raccoon(Animal):
     def end(self):
         """функция запуска сна"""
         self.flag_end_behind = True
+        self.rect.y -= 8
 
 
 class Hedgehog(Animal):

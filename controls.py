@@ -92,6 +92,7 @@ class Event:
     @staticmethod
     def crash_house(hero, i):
         if type(i) in (Bed, Flagpole, Large_coffee):
+            pygame.mixer.music.pause()
             hero.end()
 
     def check_cofe(self, hero, enemies, hell, screen):
