@@ -1,6 +1,5 @@
 import sys
 import time
-import sqlite3
 from const import pygame, size, width, height
 
 pygame.init()

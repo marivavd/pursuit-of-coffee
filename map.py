@@ -400,6 +400,10 @@ class Hell(Map):
                 self.hero.measuring = 'normal'
                 for enemy in self.sp_enemies:
                     enemy.measuring = 'normal'
+                self.was_hell = True
+                pygame.mixer.music.pause()
+                open_welcome_home_window()
+                self.event.game_over = True
 
     def draw_event(self):
         """Проверка на то, что ничего не происходит | если происходит, то отображение этого"""

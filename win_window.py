@@ -46,3 +46,4 @@ def open_victory_window(time_pl):
         clock.tick(50)
         if perf_counter() - time_begin >= 7:
             running = False
+    sys.exit()
