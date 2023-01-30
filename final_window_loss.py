@@ -18,8 +18,6 @@ def init_intro_text(intro_text, text_coord=50):
         text_x = width // 2 - string_rendered.get_width() // 2
         text_y = height // 2 - string_rendered.get_height() // 2 + top
         top += 30
-        text_w = string_rendered.get_width()
-        text_h = string_rendered.get_height()
         screen.blit(string_rendered, (text_x, text_y))
 
 

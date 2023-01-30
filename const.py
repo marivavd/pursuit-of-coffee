@@ -21,10 +21,9 @@ def load_image(name, color_key=None):
 
 size = width, height = 800, 600
 FPS = 50
-period = [15, 15]
+period = [20, 20]
 clock = pygame.time.Clock()
 time = -1
-a = 30
 
 all_obstacles = pygame.sprite.Group()  # все препятствия
 things = pygame.sprite.Group()  # кепка и очки
@@ -34,7 +33,5 @@ house = pygame.sprite.Group()  # всё то, что находиться в д�
 groups = (all_obstacles, things, weapon, coffee, house)
 sl_fons = {'fon.jpg': {'ground_level': 500,
                        'track_width': 12},
-           'fon1.jpg': {'ground_level': 500,
-                        'track_width': 12},
            'hell.jpg': {'ground_level': 100,
                         'track_width': 12}}

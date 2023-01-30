@@ -1,7 +1,5 @@
 import sys
-import time
-
-from const import width, height, a
+from const import width, height
 from death import death
 from Items import *
 
