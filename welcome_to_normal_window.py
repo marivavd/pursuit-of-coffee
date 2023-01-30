@@ -33,4 +33,3 @@ def open_welcome_home_window():
         clock.tick(50)
         if time.perf_counter() - time_begin >= 5:
             running = False
-open_welcome_home_window()

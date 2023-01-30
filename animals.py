@@ -1,6 +1,5 @@
 from const import pygame, width, height, sl_fons, load_image, house
 from time import perf_counter
-from win_window import open_victory_window
 
 
 class Animal(pygame.sprite.Sprite):
@@ -149,6 +148,7 @@ class Animal(pygame.sprite.Sprite):
     def copy(self):
         obj = type(self)()
         obj.redefine_pos(*self.get_pos())
+        obj.old_y = self.old_y
         obj.measuring = self.measuring
         obj.img = self.img
 

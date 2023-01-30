@@ -1,6 +1,6 @@
 from animals import Raccoon, Hedgehog, Goose
 from time import perf_counter
-from const import pygame, load_image, FPS, size, clock, period, sl_fons, groups, width, height, time
+from const import pygame, load_image, FPS, size, clock, period, sl_fons, groups, width, height, time, a
 from Items import MiniCoffee, StandartCoffee, BigCoffee, Glasses, \
     Cap, Knife, Stone, Bush, Book, Mina, ActiveMine, House, Bed, Oven, Large_coffee, Flagpole
 from controls import Event
@@ -10,6 +10,7 @@ from math import sin, cos, radians
 from random import randint, choice
 from final_window_win import open_win_window
 from win_window import open_victory_window
+from welcome_to_normal_window import open_welcome_home_window
 
 
 class Map:
@@ -49,17 +50,29 @@ class Map:
         self.music = ...
         self.hell = ...
         self.flag_end_generated = False
+        self.was_hell = False
 
-    def start_screen(self, level, music, hell, time_pl):
+    def start_screen(self, level, music, hell, time_pl, was_hell):
         """метод запускающий обработку карты"""
+        self.was_hell = was_hell
+        self.level = level
+        if self.was_hell:
+            self.hero.img = pygame.transform.flip(self.hero.img, False, True)
+            self.hero.rect.y += 400
+            self.hero.old_y += 400
+            for i in range(len(self.sp_enemies)):
+                self.sp_enemies[i].img = pygame.transform.flip(self.sp_enemies[i].img, False, True)
+                self.sp_enemies[i].rect.y += 400
+                self.sp_enemies[i].old_y += 400
         self.music = music
         self.hell = hell
-        self.change_fon(level)
+        if self.hero.measuring == 'normal':
+            self.change_fon(level)
         self.time_pl1 = perf_counter() if self.level == 1 and self.hero.measuring == 'normal' else time_pl
-
+        self.was_hell = False
         self.run()
 
-        return self.hero, self.sp_enemies, self.time_pl1
+        return self.hero, self.sp_enemies, self.time_pl1, self.level
 
     def run(self):
         if self.music:
@@ -93,11 +106,11 @@ class Map:
     def change_fon(self, level):
         self.level = 1 + level
         self.flag_weapon = False
-        if self.level != 6:
+        if self.level != 6 and self.was_hell is False:
             new_level(self.level)
-        else:
+        elif self.level == 6:
             open_win_window()
-        if self.level != 1 and self.level != 6:
+        if self.level != 1 and self.level != 6 and self.was_hell is False:
             fon = choice(self.sp_fons)
             self.sp_fons.remove(fon)
             self.fon = pygame.transform.scale(load_image(fon), size)
@@ -216,6 +229,7 @@ class Map:
             # перенос координат x героя на координаты гуся
             goose.rect.y = self.hero.rect.y
             goose.rect.x = self.hero.rect.x
+            goose.old_y = self.hero.old_y
             while goose.z != self.hero.z:
                 goose.z -= 1
             self.take_all_atributes_for_goose(goose)
@@ -279,7 +293,7 @@ class Map:
             if perf_counter() - self.event.throw_knife[2] >= 2:
                 pygame.mixer.music.pause()
                 self.event.throw_knife = []
-                self.start_screen(self.level, self.music, self.hell, self.time_pl1)
+                self.start_screen(self.level, self.music, self.hell, self.time_pl1, self.was_hell)
 
     def draw_knife(self):
         """функция отрисовки ножа"""
@@ -294,7 +308,7 @@ class Map:
             if not mina.move(self.screen):
                 self.event.active_mine = ActiveMine(0, 0, 0)
                 pygame.mixer.music.pause()
-                self.start_screen(self.level, self.music, self.hell, self.time_pl1)
+                self.start_screen(self.level, self.music, self.hell, self.time_pl1, self.was_hell)
 
     def draw_coffee_sensor(self):
         """отрисовка датчика кофе"""
@@ -341,6 +355,7 @@ class Hell(Map):
         for i in range(len(self.sp_enemies)):
             self.sp_enemies[i].img = pygame.transform.flip(self.sp_enemies[i].img, False, True)
             self.sp_enemies[i].rect.y -= 400
+            self.sp_enemies[i].old_y -= 400
         pygame.mixer.music.load(f'sounds/hell_music.mp3')
         pygame.mixer.music.play(-1)
         pygame.mixer.music.pause()
@@ -356,6 +371,21 @@ class Hell(Map):
                          (self.event.throw_knife[0], self.event.throw_knife[1]))
         self.event.throw_knife[0] -= 10
 
+    def check_throw_knife(self):
+        """метод при помощи которого осуществляется правельное движение ножа во время полёта"""
+        if len(self.event.throw_knife) != 0:
+            self.draw_knife()
+            if perf_counter() - self.event.throw_knife[2] >= 2:
+                pygame.mixer.music.pause()
+                self.event.throw_knife = []
+                self.hero.measuring = 'normal'
+                for enemy in self.sp_enemies:
+                    enemy.measuring = 'normal'
+                self.was_hell = True
+                pygame.mixer.music.pause()
+                open_welcome_home_window()
+                self.event.game_over = True
+
     def check_mina_explosion(self):
         """выпущена ли мина? Если да, то отрисовать её и перейти в нормальный мир"""
         mina = self.event.active_mine
@@ -366,6 +396,11 @@ class Hell(Map):
                 self.hero.measuring = 'normal'
                 for enemy in self.sp_enemies:
                     enemy.measuring = 'normal'
+                self.was_hell = True
+                pygame.mixer.music.pause()
+                open_welcome_home_window()
+                self.event.game_over = True
+
 
     def draw_event(self):
         """проверка на то, что ничего не происходит | если происходит, то отображение этого"""

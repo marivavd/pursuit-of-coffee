@@ -1,7 +1,7 @@
 import sys
 import time
 
-from const import width, height
+from const import width, height, a
 from death import death
 from Items import *
 
@@ -98,7 +98,7 @@ class Event:
     def check_cofe(self, hero, enemies, hell, screen):
         """проверка на уровень кофе в крови"""
         period[0] -= 1
-        if not 5 <= period[0] <= 20 and hell:
+        if not 5 <= period[0] <= 20 and hell and hero.measuring != 'hell':
             self.game_over = True
             hero.measuring = 'hell'
             for enemy in enemies:
