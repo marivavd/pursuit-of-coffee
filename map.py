@@ -1,6 +1,6 @@
-from animals import Raccoon, Hedgehog, Goose, Animal
+from animals import Raccoon, Hedgehog, Goose
 from time import perf_counter
-from const import pygame, load_image, FPS, size, clock, period, sl_fons, groups, time, a
+from const import pygame, load_image, FPS, size, clock, period, sl_fons, groups, width, height, time
 from Items import MiniCoffee, StandartCoffee, BigCoffee, Glasses, \
     Cap, Knife, Stone, Bush, Book, Mina, ActiveMine, House, Bed, Oven, Large_coffee, Flagpole
 from controls import Event
@@ -16,7 +16,7 @@ from welcome_to_normal_window import open_welcome_home_window
 class Map:
     """класс для обработки карты на которой происходят все события в обычном мире"""
 
-    def __init__(self, screen, hero: Animal, sp_enemies):
+    def __init__(self, screen, hero, sp_enemies):
         self.screen = screen
         self.hero, self.enemy = hero, sp_enemies[0]
         self.sp_enemies = sp_enemies
@@ -49,8 +49,8 @@ class Map:
 
         self.music = ...
         self.hell = ...
+        self.was_hell = ...
         self.flag_end_generated = False
-        self.was_hell = False
 
     def start_screen(self, level, music, hell, time_pl, was_hell):
         """Метод запускающий обработку карты"""
@@ -156,16 +156,16 @@ class Map:
 
     def draw_hero(self):
         """Метод для рисования галавного героя"""
-        self.screen.blit(self.hero.img, (self.hero.x, self.hero.rect.y))
-        if self.hero.x > size[0] // 2:
-            self.hero.x -= 5
+        self.screen.blit(self.hero.img, (self.hero.rect.x, self.hero.rect.y))
+        if self.hero.rect.x > size[0] // 2:
+            self.hero.rect.x -= 5
 
     def draw_enemies(self):
         """Метод для рисования врагов"""
         for enemy in self.sp_enemies:
-            if enemy.x >= -100:
-                enemy.x -= 5
-            self.screen.blit(enemy.img, (enemy.x, enemy.rect.y))
+            if enemy.rect.x >= -100:
+                enemy.rect.x -= 5
+            self.screen.blit(enemy.img, (enemy.rect.x, enemy.rect.y))
 
     def check_swap(self):
         """Метод меняющий местами героя и врага"""
@@ -220,10 +220,10 @@ class Map:
             goose.jump_count = self.hero.jump_count
             goose.is_jump = self.hero.is_jump
         if self.hero.knife:
-            goose.take_knife(self.hero.x, self.hero.rect.y)
+            goose.take_knife(self.hero.rect.x, self.hero.rect.y)
             self.hero.reset_to_standard_img()
         if self.hero.mina:
-            goose.take_mina(self.hero.x, self.hero.rect.y)
+            goose.take_mina(self.hero.rect.x, self.hero.rect.y)
             self.hero.reset_to_standard_img()
 
     def check_goose(self):
@@ -232,7 +232,7 @@ class Map:
             goose = Goose()
             # перенос координат x героя на координаты гуся
             goose.rect.y = self.hero.rect.y
-            goose.x = self.hero.x
+            goose.rect.x = self.hero.rect.x
             goose.old_y = self.hero.old_y
             while goose.z != self.hero.z:
                 goose.z -= 1
@@ -242,7 +242,7 @@ class Map:
 
             # перенос координат врага на координаты героя
             self.hero.rect.y = self.enemy.rect.y
-            self.hero.x = self.enemy.x + 100
+            self.hero.rect.x = self.enemy.rect.x + 100
             self.hero.z = self.enemy.z
 
             self.sp_enemies.append(self.hero)
@@ -250,11 +250,11 @@ class Map:
             magic()
 
     def get_probability(self):
-        """взять список вероятностей появления предметов"""
+        """Взять список вероятностей появления предметов"""
         return self._probability_sp[:]
 
     def generation_obj(self):
-        """метод для генерации объектов"""
+        """Метод для генерации объектов"""
         self.not_event = 0
 
         cls_obj = self.generation_cls_obj()
@@ -360,7 +360,6 @@ class Hell(Map):
         for i in range(len(self.sp_enemies)):
             self.sp_enemies[i].img = pygame.transform.flip(self.sp_enemies[i].img, False, True)
             self.sp_enemies[i].rect.y -= 400
-            self.sp_enemies[i].old_y -= 400
         pygame.mixer.music.load(f'sounds/hell_music.mp3')
         pygame.mixer.music.play(-1)
         pygame.mixer.music.pause()
@@ -401,10 +400,6 @@ class Hell(Map):
                 self.hero.measuring = 'normal'
                 for enemy in self.sp_enemies:
                     enemy.measuring = 'normal'
-                self.was_hell = True
-                pygame.mixer.music.pause()
-                open_welcome_home_window()
-                self.event.game_over = True
 
     def draw_event(self):
         """Проверка на то, что ничего не происходит | если происходит, то отображение этого"""

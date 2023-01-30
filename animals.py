@@ -7,8 +7,6 @@ class Animal(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.pose = []
 
-        self.x = 400
-        self.y = 430
         self.z = 2
         self.measuring = 'normal'
 
@@ -33,6 +31,7 @@ class Animal(pygame.sprite.Sprite):
         self.old_y = ...
 
         self.reset_to_standard_img()
+        self.rect = self.img.get_rect()
 
     def shift_side(self, k=1):
         """выполняет перемещение по оси z, т.е. переход между дорожками"""
@@ -167,9 +166,7 @@ class Animal(pygame.sprite.Sprite):
             self.reset_to_standard_img()
 
     def reset_img(self):
-        self.rect = self.img.get_rect()
         self.mask = pygame.mask.from_surface(self.img)
-        self.rect.x, self.rect.y = self.x, self.y
 
     def reset_to_standard_img(self):
         self.reset_img()
