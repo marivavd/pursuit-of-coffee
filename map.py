@@ -295,7 +295,7 @@ class Map:
         """Метод при помощи которого осуществляется правильное движение ножа во время полёта"""
         if len(self.event.throw_knife) != 0:
             self.draw_knife()
-            if perf_counter() - self.event.throw_knife[2] >= 2:
+            if perf_counter() - self.event.throw_knife[2] >= 5:
                 pygame.mixer.music.pause()
                 self.event.throw_knife = []
                 self.start_screen(self.level, self.music, self.hell, self.time_pl1, self.was_hell)
@@ -360,6 +360,7 @@ class Hell(Map):
         for i in range(len(self.sp_enemies)):
             self.sp_enemies[i].img = pygame.transform.flip(self.sp_enemies[i].img, False, True)
             self.sp_enemies[i].rect.y -= 400
+            self.sp_enemies[i].old_y -= 400
         pygame.mixer.music.load(f'sounds/hell_music.mp3')
         pygame.mixer.music.play(-1)
         pygame.mixer.music.pause()

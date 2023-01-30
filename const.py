@@ -21,7 +21,7 @@ def load_image(name, color_key=None):
 
 size = width, height = 800, 600
 FPS = 50
-period = [20, 20]
+period = [15, 15]
 clock = pygame.time.Clock()
 time = -1
 

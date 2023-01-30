@@ -17,8 +17,8 @@ class Animal(pygame.sprite.Sprite):
         self.flag_end_behind = False
         self.flag_move = True
 
-        self.jump_count = 20
-        self.koef = 6
+        self.jump_count = 18
+        self.koef = 7
         self.minus = 530
 
         self.count_img = 2
@@ -42,31 +42,31 @@ class Animal(pygame.sprite.Sprite):
             self.z -= k
 
     def jump(self):
-        """выолняет прыжок"""
+        """выполняет прыжок"""
         # мне кажется, что сюда можно ввести несколько констант и не париться с ифами
-        if self.jump_count >= -20:
+        if self.jump_count >= -18:
             if self.measuring == 'normal':
                 if self.jump_count > 0:
-                    self.rect.y -= (self.jump_count ** 2) / 12
+                    self.rect.y -= (self.jump_count ** 2) / 10
                 else:
-                    self.rect.y += (self.jump_count ** 2) / 12
+                    self.rect.y += (self.jump_count ** 2) / 10
                     if self.rect.y >= self.old_y:
                         self.rect.y = self.old_y
                         self.is_jump = False
-                        self.jump_count = 20
+                        self.jump_count = 18
             elif self.measuring == 'hell':
                 if self.jump_count > 0:
-                    self.rect.y += (self.jump_count ** 2) / 10
+                    self.rect.y += (self.jump_count ** 2) / 12
                 else:
-                    self.rect.y -= (self.jump_count ** 2) / 10
+                    self.rect.y -= (self.jump_count ** 2) / 12
                     if self.rect.y <= self.old_y:
                         self.rect.y = self.old_y
                         self.is_jump = False
-                        self.jump_count = 20
+                        self.jump_count = 18
             self.jump_count -= 1
         else:
             self.is_jump = False
-            self.jump_count = 20
+            self.jump_count = 18
             self.rect.y = self.old_y
 
     def drop_mima(self, x, y, mina):
@@ -97,7 +97,7 @@ class Animal(pygame.sprite.Sprite):
         x = x if x else self.rect.x
         y = y if y else self.rect.y
         self.knife = True
-        self.img = pygame.transform.scale(load_image(f'{self.name}_with_knife1.gif'), (width // 6, height // 6))
+        self.img = pygame.transform.scale(load_image(f'{self.name}_with_knife_1.png'), (width // 6, height // 6))
         if self.measuring == 'hell':
             self.img = pygame.transform.flip(self.img, False, True)
             self.rect = self.img.get_rect()
@@ -117,7 +117,7 @@ class Animal(pygame.sprite.Sprite):
         x = x if x else self.rect.x
         y = y if y else self.rect.y
         self.mina = True
-        self.img = pygame.transform.scale(load_image(f'{self.name}_with_mina1.gif'), (width // 6, height // 6))
+        self.img = pygame.transform.scale(load_image(f'{self.name}_with_mina_1.png'), (width // 6, height // 6))
         if self.measuring == 'hell':
             self.img = pygame.transform.flip(self.img, False, True)
         self.rect = self.img.get_rect()
@@ -186,8 +186,8 @@ class Raccoon(Animal):
         self.name = 'raccoon'
         self.minus += 10
         self.rect.x = 400
-        self.rect.y = 430
-        self.old_y = 430
+        self.rect.y = 450
+        self.old_y = 450
 
     def reset_to_standard_img(self):
         self.img = pygame.transform.scale(load_image(f'raccoon_{self.n_img}.png'),
@@ -215,8 +215,8 @@ class Hedgehog(Animal):
         super(Hedgehog, self).__init__()
         self.name = 'hedgehog'
         self.rect.x = 400
-        self.rect.y = 430
-        self.old_y = 430
+        self.rect.y = 450
+        self.old_y = 450
 
     def reset_to_standard_img(self):
         self.img = pygame.transform.scale(load_image(f'hedgehog_{self.n_img}.png'),
@@ -246,8 +246,8 @@ class Goose(Animal):
         super(Goose, self).__init__()
         self.name = 'goose'
         self.rect.x = 400
-        self.rect.y = 430
-        self.old_y = 430
+        self.rect.y = 450
+        self.old_y = 450
 
     def end(self):
         """функция запуска сна"""
@@ -259,11 +259,13 @@ class Goose(Animal):
         super(Goose, self).reset_to_standard_img()
 
     def reset_with_knife_img(self):
-        self.img = pygame.transform.scale(load_image(f'goose_with_knife_{self.n_img}.png'),
+        # в субботу вставить изображения png
+        self.img = pygame.transform.scale(load_image(f'goose_with_knife.gif'),
                                           (width // self.koef, height // self.koef))
         super(Goose, self).reset_to_standard_img()
 
     def reset_with_mina_img(self):
-        self.img = pygame.transform.scale(load_image(f'goose_with_mina_{self.n_img}.png'),
+        # в субботу вставить изображения png
+        self.img = pygame.transform.scale(load_image(f'goose_with_mina.gif'),
                                           (width // self.koef, height // self.koef))
         super(Goose, self).reset_to_standard_img()
