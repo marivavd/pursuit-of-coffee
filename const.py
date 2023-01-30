@@ -24,6 +24,7 @@ FPS = 50
 period = [15, 15]
 clock = pygame.time.Clock()
 time = -1
+a = 30
 
 all_obstacles = pygame.sprite.Group()  # все препятствия
 things = pygame.sprite.Group()  # кепка и очки

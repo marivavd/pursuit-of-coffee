@@ -16,7 +16,7 @@ class Death(pygame.sprite.Sprite):
         self.conflict = False
 
     def update(self, hero):
-        self.rect.y += 1
+        self.rect.y += 2
         if pygame.sprite.collide_mask(self, hero):
             self.conflict = True
 

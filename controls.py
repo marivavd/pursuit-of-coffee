@@ -1,7 +1,7 @@
 import sys
 import time
 
-from const import width, height
+from const import width, height, a
 from death import death
 from Items import *
 
@@ -92,12 +92,13 @@ class Event:
     @staticmethod
     def crash_house(hero, i):
         if type(i) in (Bed, Flagpole, Large_coffee):
+            pygame.mixer.music.pause()
             hero.end()
 
     def check_cofe(self, hero, enemies, hell, screen):
         """проверка на уровень кофе в крови"""
         period[0] -= 1
-        if not 5 <= period[0] <= 20 and hell:
+        if not 5 <= period[0] <= 20 and hell and hero.measuring != 'hell':
             self.game_over = True
             hero.measuring = 'hell'
             for enemy in enemies:

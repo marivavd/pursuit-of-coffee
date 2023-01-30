@@ -140,6 +140,7 @@ class Animal(pygame.sprite.Sprite):
     def copy(self):
         obj = type(self)()
         obj.redefine_pos(*self.get_pos())
+        obj.old_y = self.old_y
         obj.measuring = self.measuring
         obj.img = self.img
 
@@ -207,6 +208,7 @@ class Raccoon(Animal):
     def end(self):
         """функция запуска сна"""
         self.flag_end_behind = True
+        self.rect.y -= 8
 
 
 class Hedgehog(Animal):
