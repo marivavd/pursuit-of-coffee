@@ -114,7 +114,7 @@ class Map:
         self.flag_weapon = False
         if self.level != 6 and self.was_hell is False:
             new_level(self.level)
-        elif self.level == 6:
+        elif self.level == 1:
             open_win_window()
         if self.level != 1 and self.level != 6 and self.was_hell is False:
             fon = choice(self.sp_fons)
