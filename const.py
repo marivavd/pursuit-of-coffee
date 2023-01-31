@@ -23,6 +23,7 @@ def del_period():
     global period
     period[0] = period[1]
 
+
 size = width, height = 800, 600
 FPS = 50
 period = [15, 15]
