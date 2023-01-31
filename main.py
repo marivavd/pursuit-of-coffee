@@ -21,18 +21,22 @@ def main():
     time_pl = perf_counter()
     is_hell = False
     was_hell = False
-    level = 0
+    level = 1
     while hero.alive:  # пока персонаж жив, при его псевдо-смерти мы пермещаем его в соответствии с измерением
         cls_map = sl_measuring[hero.measuring]
         if cls_map == Hell:
             is_hell = True
-        if cls_map == Map and is_hell:
+            hero, enemies, time_pl, _ = cls_map(screen, hero, enemies).start_screen(level, music, hell, time_pl, was_hell)
+        elif cls_map == Map and is_hell:
             is_hell = False
             was_hell = True
-        hero, enemies, time_pl, now_level = cls_map(screen, hero, enemies).start_screen(level, music, hell, time_pl, was_hell)
+            hero, enemies, time_pl, level = cls_map(screen, hero, enemies).start_screen(level, music, hell, time_pl,
+                                                                                    was_hell)
+        else:
+            hero, enemies, time_pl, level = cls_map(screen, hero, enemies).start_screen(level, music, hell, time_pl,
+                                                                                        was_hell)
+
         was_hell = False
-        if not(now_level - 1 < level):
-            level = now_level - 1
     open_loss_window(time_pl)
 
 

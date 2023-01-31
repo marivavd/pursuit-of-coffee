@@ -1,6 +1,6 @@
 from animals import Raccoon, Hedgehog, Goose
 from time import perf_counter
-from const import pygame, load_image, FPS, size, clock, period, sl_fons, groups, width, height, time
+from const import pygame, load_image, FPS, size, clock, period, sl_fons, groups, time, del_period
 from Items import MiniCoffee, StandartCoffee, BigCoffee, Glasses, \
     Cap, Knife, Stone, Bush, Book, Mina, ActiveMine, House, Bed, Oven, Large_coffee, Flagpole
 from controls import Event
@@ -51,6 +51,7 @@ class Map:
         self.hell = ...
         self.was_hell = ...
         self.flag_end_generated = False
+        del_period()
 
     def start_screen(self, level, music, hell, time_pl, was_hell):
         """Метод запускающий обработку карты"""
@@ -110,11 +111,10 @@ class Map:
 
     def change_fon(self, level):
         """Метод для обработки (выбора фона)"""
-        self.level = 1 + level
         self.flag_weapon = False
         if self.level != 6 and self.was_hell is False:
             new_level(self.level)
-        elif self.level == 1:
+        elif self.level == 6:
             open_win_window()
         if self.level != 1 and self.level != 6 and self.was_hell is False:
             fon = choice(self.sp_fons)
@@ -295,10 +295,10 @@ class Map:
         """Метод при помощи которого осуществляется правильное движение ножа во время полёта"""
         if len(self.event.throw_knife) != 0:
             self.draw_knife()
-            if perf_counter() - self.event.throw_knife[2] >= 5:
+            if perf_counter() - self.event.throw_knife[2] >= 3:
                 pygame.mixer.music.pause()
                 self.event.throw_knife = []
-                self.start_screen(self.level, self.music, self.hell, self.time_pl1, self.was_hell)
+                self.start_screen(self.level + 1, self.music, self.hell, self.time_pl1, self.was_hell)
 
     def draw_knife(self):
         """Функция отрисовки ножа"""
@@ -313,26 +313,26 @@ class Map:
             if not mina.move(self.screen):
                 self.event.active_mine = ActiveMine(0, 0, 0)
                 pygame.mixer.music.pause()
-                self.start_screen(self.level, self.music, self.hell, self.time_pl1, self.was_hell)
+                self.start_screen(self.level + 1, self.music, self.hell, self.time_pl1, self.was_hell)
 
     def draw_coffee_sensor(self):
         """Отрисовка датчика кофе"""
         center = (700, 50)
 
-        # отображение самого счётчика
-        self.draw_pie(self.screen, (122, 122, 122), center, 40, 0, 180)
-        self.draw_pie(self.screen, (0, 125, 0), center, 40, 180, 225)
-        self.draw_pie(self.screen, (125, 125, 0), center, 40, 225, 270)
-        self.draw_pie(self.screen, (125, 0, 0), center, 40, 270, 315)
-        self.draw_pie(self.screen, (0, 0, 0), center, 40, 315, 360)
-        pygame.draw.circle(self.screen, (255, 0, 0), center, 40, 3)
-
-        # рисование стрелки на счётчике
-        coffe = period[0] - 5
-        angle = 180 + 360 * coffe // 40
-        pygame.draw.line(self.screen, (255, 0, 0), center,
-                         (center[0] + 40 * cos(radians(angle)),
-                          center[1] + 40 * sin(radians(angle))), 3)
+        # # отображение самого счётчика
+        # self.draw_pie(self.screen, (122, 122, 122), center, 40, 0, 180)
+        # self.draw_pie(self.screen, (0, 125, 0), center, 40, 180, 225)
+        # self.draw_pie(self.screen, (125, 125, 0), center, 40, 225, 270)
+        # self.draw_pie(self.screen, (125, 0, 0), center, 40, 270, 315)
+        # self.draw_pie(self.screen, (0, 0, 0), center, 40, 315, 360)
+        # pygame.draw.circle(self.screen, (255, 0, 0), center, 40, 3)
+        #
+        # # рисование стрелки на счётчике
+        # coffe = period[0] - 5
+        # angle = 180 + 360 * coffe // 40
+        # pygame.draw.line(self.screen, (255, 0, 0), center,
+        #                  (center[0] + 40 * cos(radians(angle)),
+        #                   center[1] + 40 * sin(radians(angle))), 3)
 
     @staticmethod
     def draw_pie(scr, color, center, radius, start_angle, stop_angle):

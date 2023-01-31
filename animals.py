@@ -17,7 +17,7 @@ class Animal(pygame.sprite.Sprite):
         self.flag_end_behind = False
         self.flag_move = True
 
-        self.jump_count = 18
+        self.jump_count = 19
         self.koef = 7
         self.minus = 530
 
@@ -44,7 +44,7 @@ class Animal(pygame.sprite.Sprite):
     def jump(self):
         """выполняет прыжок"""
         # мне кажется, что сюда можно ввести несколько констант и не париться с ифами
-        if self.jump_count >= -18:
+        if self.jump_count >= -19:
             if self.measuring == 'normal':
                 if self.jump_count > 0:
                     self.rect.y -= (self.jump_count ** 2) / 10
@@ -53,7 +53,7 @@ class Animal(pygame.sprite.Sprite):
                     if self.rect.y >= self.old_y:
                         self.rect.y = self.old_y
                         self.is_jump = False
-                        self.jump_count = 18
+                        self.jump_count = 19
             elif self.measuring == 'hell':
                 if self.jump_count > 0:
                     self.rect.y += (self.jump_count ** 2) / 12
@@ -62,11 +62,11 @@ class Animal(pygame.sprite.Sprite):
                     if self.rect.y <= self.old_y:
                         self.rect.y = self.old_y
                         self.is_jump = False
-                        self.jump_count = 18
+                        self.jump_count = 19
             self.jump_count -= 1
         else:
             self.is_jump = False
-            self.jump_count = 18
+            self.jump_count = 19
             self.rect.y = self.old_y
 
     def drop_mima(self, x, y, mina):
