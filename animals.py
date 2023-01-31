@@ -34,7 +34,7 @@ class Animal(pygame.sprite.Sprite):
         self.rect = self.img.get_rect()
 
     def shift_side(self, k=1):
-        """выполняет перемещение по оси z, т.е. переход между дорожками"""
+        """Выполняет перемещение по оси z, т.е. переход между дорожками"""
         shift = 12 * k
         if 0 <= self.z - k <= 2:  # 2 = кол-во дорожек - 1
             self.rect.y += shift
@@ -42,36 +42,28 @@ class Animal(pygame.sprite.Sprite):
             self.z -= k
 
     def jump(self):
-        """выполняет прыжок"""
+        """Выполняет прыжок"""
         # мне кажется, что сюда можно ввести несколько констант и не париться с ифами
-        if self.jump_count >= -19:
-            if self.measuring == 'normal':
-                if self.jump_count > 0:
-                    self.rect.y -= (self.jump_count ** 2) / 10
-                else:
-                    self.rect.y += (self.jump_count ** 2) / 10
-                    if self.rect.y >= self.old_y:
-                        self.rect.y = self.old_y
-                        self.is_jump = False
-                        self.jump_count = 19
-            elif self.measuring == 'hell':
-                if self.jump_count > 0:
-                    self.rect.y += (self.jump_count ** 2) / 12
-                else:
-                    self.rect.y -= (self.jump_count ** 2) / 12
-                    if self.rect.y <= self.old_y:
-                        self.rect.y = self.old_y
-                        self.is_jump = False
-                        self.jump_count = 19
+        height_jump = 19
+        width_jump = 10
+        coup = 1 if self.measuring == 'normal' else -1
+        if self.jump_count >= -height_jump:
+            if self.jump_count > 0:
+                self.rect.y -= (self.jump_count ** 2) / width_jump * coup
+            else:
+                self.rect.y += (self.jump_count ** 2) / width_jump * coup
+                if self.rect.y >= self.old_y:
+                    self.rect.y = self.old_y
+                    self.is_jump = False
+                    self.jump_count = height_jump
             self.jump_count -= 1
         else:
             self.is_jump = False
-            self.jump_count = 19
+            self.jump_count = height_jump
             self.rect.y = self.old_y
 
     def drop_mima(self, x, y, mina):
-        """выбрасывает мину"""
-        # y выразить через координаты
+        """Выбрасывает мину"""
         if self.mina:
             self.mina = False
             self.reset_to_standard_img()
@@ -207,7 +199,7 @@ class Raccoon(Animal):
     def end(self):
         """функция запуска сна"""
         self.flag_end_behind = True
-        self.rect.y -= 14
+        self.rect.y -= 10
 
 
 class Hedgehog(Animal):
