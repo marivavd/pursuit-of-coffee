@@ -28,6 +28,7 @@ class Particle(pygame.sprite.Sprite):
 
 
 def create_particles(position, all_sprites):
+    """создание 50 звёздочек"""
     particle_count = 50
     numbers = range(-10, 1)
     for i in range(particle_count):
