@@ -38,7 +38,6 @@ def init_images(all_sprites):
 
 
 def open_settings():
-    all_sprites = pygame.sprite.Group()
     clock = pygame.time.Clock()
     all_sprites = pygame.sprite.Group()
     cross, music_but, hell_but = init_images(all_sprites)

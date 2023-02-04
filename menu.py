@@ -1,6 +1,7 @@
 import sys
 from const import pygame, load_image, width, height, clock, FPS, size
 from settings import open_settings
+from rules import open_rules
 
 pygame.init()
 
@@ -49,9 +50,10 @@ def draw_heror(screen, music, hell):
     hedgehog = init_hedgehog(all_sprites)
     start = init_start(all_sprites)
     settings_button = init_settings_button(all_sprites)
+    rules_button = init_rules_button(all_sprites)
     hero = True
     while hero is True:
-        hero, music, hell = check_event(raccoon, hedgehog, start, hero, settings_button, screen, music, hell)
+        hero, music, hell = check_event(raccoon, hedgehog, start, hero, settings_button, screen, music, hell, rules_button)
         draw_rect(screen, raccoon, hedgehog)
         all_sprites.draw(screen)
         pygame.display.flip()
@@ -94,14 +96,22 @@ def init_start(all_sprites):
 
 
 def init_settings_button(all_sprites):
-    """нарисовать кнопку настрок"""
+    """нарисовать кнопку настроек"""
     image_b = pygame.transform.scale(load_image('settings_button.png', -1), (115, 75))
     settings_button = Images(all_sprites, None, 700, 0, image_b)
     all_sprites.add(settings_button)
     return settings_button
 
 
-def check_event(raccoon, hedgehog, start, hero, settings_button, screen, music, hell):
+def init_rules_button(all_sprites):
+    """нарисовать кнопку правил"""
+    image_b = pygame.transform.scale(load_image('rules_button.png', -1), (150, 45))
+    rules_button = Images(all_sprites, None, 570, 15, image_b)
+    all_sprites.add(rules_button)
+    return rules_button
+
+
+def check_event(raccoon, hedgehog, start, hero, settings_button, screen, music, hell, rules_button):
     """проверка всех возможных событий, которые согут произойти в меню"""
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -119,6 +129,11 @@ def check_event(raccoon, hedgehog, start, hero, settings_button, screen, music, 
                 hedgehog.color = (128, 128, 128)
             elif settings_button.rect.collidepoint(x, y):
                 music, hell = open_settings()
+                fon = pygame.transform.scale(load_image('fon.jpg'), (width, height))
+                screen.blit(fon, (0, 0))
+                init_intro_text(screen)
+            elif rules_button.rect.collidepoint(x, y):
+                open_rules()
                 fon = pygame.transform.scale(load_image('fon.jpg'), (width, height))
                 screen.blit(fon, (0, 0))
                 init_intro_text(screen)
