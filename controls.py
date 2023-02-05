@@ -88,7 +88,7 @@ class Event:
 
     @staticmethod
     def crash_end_obj(hero, i):
-        """Провера на концовки"""
+        """Проверка на концовки"""
         if type(i) in (Bed, Flagpole, Large_coffee):
             pygame.mixer.music.pause()
             hero.end()

@@ -14,28 +14,45 @@ from welcome_to_normal_window import open_welcome_home_window
 
 
 class Map:
-    """класс для обработки карты на которой происходят все события в обычном мире"""
+    """Класс для обработки карты на которой происходят все события в обычном мире"""
 
     def __init__(self, screen, hero, sp_enemies):
+        # перенос всех вводных данных в поля класса
         self.screen = screen
         self.hero, self.enemy = hero, sp_enemies[0]
         self.sp_enemies = sp_enemies
-        self.hero.rect.x += 100  # 100 - рандомное число, нужно для того, чтобы персонаж был дальше, чем враг
+
+        # сдвиг главного героя на случайное число 100, чтобы герой не находился в одном месте с врагом
+        self.hero.rect.x += 100
+
+        # инициализация фона
         self.fon_new = 'fon.jpg'
+        self.fon = pygame.transform.scale(load_image('fon.jpg'), size)
+        self.sp_fons = ['fon1.jpg', 'fon2.jpg', 'fon3.jpg', 'fon4.jpg']
+
+        # импорт из других модулей
+        self.event = Event()
+        self.time = time
+
+        # инициализация флагов погони, наличия на карте оружия и флага того, что требуется генерировать погоню
         self.chase = True
-        self.flag_weapon = True
-        self.t, self.s = 0, 0
+        self.flag_weapon = False
+        self.flag_end_generated = False
+
+        # инициализация общего расстояния,
+        # расстояния через которое нужно проверить кофе и
+        # расстояние от предыдущего события
+        # и времени после концовки
+        self.t, self.s, self.not_event = 0, 0, 0
         self.time_pl1 = 0
         self.level = 1
-        self.not_event = 0
+        self.time_end_behind = 0
+
+        # инициализация музыки
         pygame.mixer.music.load(f'sounds/normal_music.mp3')
         pygame.mixer.music.play(-1)
         pygame.mixer.music.pause()
-        self.event = Event()
-        self.time = time
-        if self.hero.measuring == 'normal':
-            self.fon = pygame.transform.scale(load_image('fon.jpg'), size)
-            self.sp_fons = ['fon1.jpg', 'fon2.jpg', 'fon3.jpg', 'fon4.jpg']
+
         self._probability_sp = [[Stone] * 100,
                                 [Bush] * 100,
                                 [Book] * 100,
@@ -47,71 +64,92 @@ class Map:
                                 [Mina] * 2,
                                 [Knife] * 2]
 
+        # инициализация заглушек (вводных данных для start_screen)
         self.music = ...
         self.hell = ...
         self.was_hell = ...
-        self.flag_end_generated = False
+
+        # установка нормальной скорости при переходе из одного мира в другой
         del_period()
 
     def start_screen(self, level, music, hell, time_pl, was_hell):
+        # несколько напрягает количество аргументов, при добавлении нового нужно будет разгружать метод
         """Метод запускающий обработку карты"""
-        self.was_hell = was_hell
-        self.level = level
+        self.input_arg(level, music, hell, time_pl, was_hell)  # хорошо б перенести в декоратор
+
         if self.was_hell:
-            self.hero.img = pygame.transform.flip(self.hero.img, False, True)
-            self.hero.rect.y += 400
-            self.hero.old_y += 400
-            for i in range(len(self.sp_enemies)):
-                self.sp_enemies[i].img = pygame.transform.flip(self.sp_enemies[i].img, False, True)
-                self.sp_enemies[i].rect.y += 400
-                self.sp_enemies[i].old_y += 400
-        self.music = music
-        self.hell = hell
+            self.recovery_all_from_hell()
         if self.hero.measuring == 'normal':
             self.change_fon(level)
-        self.time_pl1 = perf_counter() if self.level == 1 and self.hero.measuring == 'normal' else time_pl
-        self.was_hell = False
-        self.run()
-
-        return self.hero, self.sp_enemies, self.time_pl1, self.level
-
-    def run(self):
-        """Метод отвечающий за движение всего по карте"""
         if self.music:
             pygame.mixer.music.unpause()
 
-        time_sleep = 0
+        self.was_hell = False
+        self.flag_weapon = False
+
         while self.check_game_over():
-            if self.hero.flag_move:
-                self.move()
-                self.draw_fon()
-                if self.chase:
-                    self.draw_chas()
-            else:
-                self.event.raw_check_event()
+            self.run()
+        return self.hero, self.sp_enemies, self.time_pl1, self.level
 
-            if self.hero.flag_end_behind:
-                if not time_sleep:
-                    time_sleep = perf_counter()
-                elif perf_counter() - time_sleep > 2:
-                    open_victory_window(self.time_pl1)
+    def input_arg(self, level, music, hell, time_pl, was_hell):
+        """При вызове start_screen запоминает все аргументы"""
+        # возможен перенос в декоратор
+        self.level = level
+        self.music = music
+        self.hell = hell
+        self.time_pl1 = perf_counter() if self.level == 1 and self.hero.measuring == 'normal' else time_pl
+        self.was_hell = was_hell
 
+    def recovery_all_from_hell(self):
+        """Переносит всех персонажей из нижнего мира"""
+        self.hero.recovery_from_hell()
+        for enemy in self.sp_enemies:
+            enemy.recovery_from_hell()
+
+    def run(self):
+        """Метод отвечающий за движение всего по карте"""
+        if self.hero.flag_move:
+            self.move()
+        else:
+            self.event.raw_check_event()
+        if self.hero.flag_end_behind:
+            self.draw_behind_end()
+
+    def move(self):
+        """Метод для перемещения персонажа по карте, вызывается в run, в том случае, если персонаж бежит"""
+        self.start_move()
+
+        self.draw_fon()
+        if self.chase:
+            self.draw_chas()
+
+        self.end_move()
+
+    def start_move(self):
+        """Метод начала сдвига персонажа"""
+        if self.hero.flag_move:
+            self.t += period[0]
+            self.s += period[0]
+            self.not_event += 1
             for i in [self.hero, *self.sp_enemies]:
                 i.update_img()
 
-            pygame.display.flip()
-            clock.tick(FPS)
+    def end_move(self):
+        """Метод конец сдвига персонажа"""
+        if self.hero.flag_move:
             self.t %= size[0]
 
-    def move(self):
-        """Метод смещающий всё на period[0] количесво пикселей"""
-        self.t += period[0]
-        self.s += period[0]
-        self.not_event += 1
+        pygame.display.flip()
+        clock.tick(FPS)
+
+    def draw_behind_end(self):
+        if not self.time_end_behind:
+            self.time_end_behind = perf_counter()
+        elif perf_counter() - self.time_end_behind > 2:
+            open_victory_window(self.time_pl1)
 
     def change_fon(self, level):
         """Метод для обработки (выбора фона)"""
-        self.flag_weapon = False
         if self.level != 6 and self.was_hell is False:
             new_level(self.level)
         elif self.level == 6:
@@ -155,7 +193,7 @@ class Map:
         self.screen.blit(self.fon, (-self.t + size[0], 0))
 
     def draw_hero(self):
-        """Метод для рисования галавного героя"""
+        """Метод для рисования главного героя"""
         self.screen.blit(self.hero.img, (self.hero.rect.x, self.hero.rect.y))
         if self.hero.rect.x > size[0] // 2:
             self.hero.rect.x -= 5
@@ -173,6 +211,7 @@ class Map:
             self.event.swap = False
 
             self.hero, self.enemy = self.enemy.copy(), self.hero.copy()  # смена ролей
+
             # сменя вещей
             if self.enemy.knife:
                 self.hero.take_knife()
@@ -180,7 +219,9 @@ class Map:
             if self.enemy.mina:
                 self.hero.take_mina()
                 self.enemy.reset_to_standard_img()
-            old_pos_hero = self.hero.get_pos()  # смена координат
+
+            # смена координат
+            old_pos_hero = self.hero.get_pos()
             self.hero.redefine_pos(*self.enemy.get_pos())
             self.enemy.redefine_pos(*old_pos_hero)
 
@@ -214,7 +255,7 @@ class Map:
                     obj.image = pygame.transform.flip(obj.image, False, True)
                 obj.rect.x -= 5
 
-    def take_all_atributes_for_goose(self, goose):
+    def take_all_attribute_for_goose(self, goose):
         """Перенос всех вещей от персонажа к гусю"""
         if self.hero.is_jump:
             goose.jump_count = self.hero.jump_count
@@ -227,17 +268,17 @@ class Map:
             self.hero.reset_to_standard_img()
 
     def check_goose(self):
-        """если превращение в гуся должно произойти, то оно произойдёт"""
+        """Если превращение в гуся должно произойти, то оно произойдёт"""
         if self.event.goose and len(self.sp_enemies) == 1:
             goose = Goose()
-            # перенос координат x героя на координаты гуся
+            # перенос координат героя на координаты гуся
             goose.rect.y = self.hero.rect.y
             goose.rect.x = self.hero.rect.x
             goose.old_y = self.hero.old_y
             while goose.z != self.hero.z:
                 goose.z -= 1
-            self.take_all_atributes_for_goose(goose)
 
+            self.take_all_attribute_for_goose(goose)
             goose.measuring = self.hero.measuring
 
             # перенос координат врага на координаты героя
@@ -328,8 +369,8 @@ class Map:
         pygame.draw.circle(self.screen, (255, 0, 0), center, 40, 3)
 
         # рисование стрелки на счётчике
-        coffe = period[0] - 5
-        angle = 180 + 360 * coffe // 40
+        coffee = period[0] - 5
+        angle = 180 + 360 * coffee // 40
         pygame.draw.line(self.screen, (255, 0, 0), center,
                          (center[0] + 40 * cos(radians(angle)),
                           center[1] + 40 * sin(radians(angle))), 3)
@@ -349,21 +390,24 @@ class Hell(Map):
     """Класс для обработки карты на которой происходят все события в нижнем мире"""
 
     def __init__(self, screen, hero, sp_enemies):
-        global fon_new
         super().__init__(screen, hero, sp_enemies)
-        self.fon = pygame.transform.scale(load_image('hell.jpg'), size)
-        self.fon = pygame.transform.rotate(self.fon, 180)
+        # инициализация фона
         self.fon_new = 'hell.jpg'
-        self.hero.img = pygame.transform.flip(self.hero.img, False, True)
-        self.hero.rect.y -= 400
-        self.hero.old_y -= 400
-        for i in range(len(self.sp_enemies)):
-            self.sp_enemies[i].img = pygame.transform.flip(self.sp_enemies[i].img, False, True)
-            self.sp_enemies[i].rect.y -= 400
-            self.sp_enemies[i].old_y -= 400
+        self.fon = pygame.transform.scale(load_image(self.fon_new), size)
+        self.fon = pygame.transform.rotate(self.fon, 180)
+
+        # инициализация музыки
         pygame.mixer.music.load(f'sounds/hell_music.mp3')
         pygame.mixer.music.play(-1)
         pygame.mixer.music.pause()
+
+        self.recovery_all_in_hell()
+
+    def recovery_all_in_hell(self):
+        """Изменение координат всех героев на нижне-мирские"""
+        self.hero.recovery_in_hell()
+        for enemy in self.sp_enemies:
+            enemy.recovery_in_hell()
 
     def check_goose(self):
         if self.event.goose and len(self.sp_enemies) != 2:
@@ -377,7 +421,7 @@ class Hell(Map):
         self.event.throw_knife[0] -= 10
 
     def check_throw_knife(self):
-        """метод при помощи которого осуществляется правельное движение ножа во время полёта"""
+        """Метод при помощи которого осуществляется правильное движение ножа во время полёта"""
         if len(self.event.throw_knife) != 0:
             self.draw_knife()
             if perf_counter() - self.event.throw_knife[2] >= 2:

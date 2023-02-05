@@ -162,6 +162,14 @@ class Animal(pygame.sprite.Sprite):
     def reset_with_mina_img(self):
         self.reset_img()
 
+    def recovery_from_hell(self):
+        self.rect.y += 400
+        self.old_y += 400
+
+    def recovery_in_hell(self):
+        self.rect.y -= 400
+        self.old_y -= 400
+
 
 class Raccoon(Animal):
     def __init__(self):
