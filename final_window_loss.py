@@ -9,6 +9,7 @@ screen_rect = (0, 0, width, height)
 
 
 def init_intro_text(intro_text, text_coord=50):
+    """вывод текста"""
     font = pygame.font.Font('fonts/Paper.otf', 100)
     top = -30
     for n, line in enumerate(intro_text):
@@ -22,6 +23,7 @@ def init_intro_text(intro_text, text_coord=50):
 
 
 def open_loss_window(time_pl):
+    """создание окна для проигрыша"""
     time_begin = perf_counter()
     time_of_game = int(time_begin - time_pl)
     clock = pygame.time.Clock()

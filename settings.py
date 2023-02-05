@@ -18,6 +18,7 @@ class Images(pygame.sprite.Sprite):
 
 
 def init_intro_text(text_coord=50, intro_text=("Настройки", "", "Музыка", "", 'Ад')):
+    """вывод текста"""
     font = pygame.font.Font('fonts/Paper.otf', 100)
     for n, line in enumerate(intro_text):
         string_rendered = font.render(line, True, (0, 0, 0))
@@ -31,6 +32,7 @@ def init_intro_text(text_coord=50, intro_text=("Настройки", "", "Муз
 
 
 def init_images(all_sprites):
+    """создание кнопки выхода и кнопок <on off>"""
     cross = Images(all_sprites, 725, 0, pygame.transform.scale(load_image('cross.png', -1), (76, 75)), 'cross')
     music_but = Images(all_sprites, 290, 200, pygame.transform.scale(load_image('on.png', -1), (128, 128)), 'music_on')
     hell_but = Images(all_sprites, 290, 330, pygame.transform.scale(load_image('on.png', -1), (128, 128)), 'hell_on')
@@ -38,7 +40,7 @@ def init_images(all_sprites):
 
 
 def open_settings():
-    all_sprites = pygame.sprite.Group()
+    """настройки игры"""
     clock = pygame.time.Clock()
     all_sprites = pygame.sprite.Group()
     cross, music_but, hell_but = init_images(all_sprites)
