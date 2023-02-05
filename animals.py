@@ -51,7 +51,7 @@ class Animal(pygame.sprite.Sprite):
                 self.rect.y -= (self.jump_count ** 2) / width_jump * coup
             else:
                 self.rect.y += (self.jump_count ** 2) / width_jump * coup  # при необходимости можно сократить
-                if self.rect.y >= self.old_y:
+                if self.rect.y * coup >= self.old_y * coup:
                     self.finish_jump(height_jump)
             self.jump_count -= 1
         else:
