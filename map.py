@@ -147,7 +147,7 @@ class Map:
         if self.hero.is_jump:
             self.hero.jump()
         if not self.s % 500:
-            self.event.check_cofe(self.hero, self.sp_enemies, self.hell, self.screen)
+            self.event.check_coffee(self.hero, self.sp_enemies, self.hell, self.screen)
 
     def draw_fon(self):
         """Метод для рисования фона"""

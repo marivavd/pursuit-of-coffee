@@ -81,25 +81,29 @@ class Animal(pygame.sprite.Sprite):
 
     def take_knife(self, x=False, y=False, knife=None):
         """Поднять нож"""
+        x = x if x else self.rect.x
+        y = y if y else self.rect.y
+
         self.knife = True
         self.reset_with_knife_img()
-        self.rect = self.img.get_rect()
+
+        self.rect.x = x
+        self.rect.y = y
+
         # есть сомнения касательно нужности верхней строки, возможно нужно сделать её как kwarg
         self.mask = pygame.mask.from_surface(self.img)
-
-        self.rect.x = x if x else self.rect.x
-        self.rect.y = y if y else self.rect.y
         if knife is not None:
             knife.kill()
 
     def take_mina(self, x=False, y=False, mina=None):
         """поднять мину"""
+        x = x if x else self.rect.x
+        y = y if y else self.rect.y
         self.mina = True
         self.reset_with_mina_img()
 
-        self.rect = self.img.get_rect()
-        self.rect.x = x if x else self.rect.x
-        self.rect.y = y if y else self.rect.y
+        self.rect.x = x
+        self.rect.y = y
 
         self.mask = pygame.mask.from_surface(self.img)
         if mina is not None:

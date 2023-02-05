@@ -6,7 +6,6 @@ from Items import *
 
 class Event:
     def __init__(self):
-        self.isjump = False
         self.game_over = False
         self.swap = False
         self.goose = False
@@ -94,7 +93,7 @@ class Event:
             pygame.mixer.music.pause()
             hero.end()
 
-    def check_cofe(self, hero, enemies, hell, screen):
+    def check_coffee(self, hero, enemies, hell, screen):
         """Проверка на уровень кофе в крови"""
         period[0] -= 1
         if not 5 <= period[0] <= 20 and hell and hero.measuring != 'hell':
