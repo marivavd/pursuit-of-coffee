@@ -128,7 +128,7 @@ def check_event(raccoon, hedgehog, start, hero, settings_button, screen, music, 
                 raccoon.color = (0, 165, 80)
                 hedgehog.color = (128, 128, 128)
             elif settings_button.rect.collidepoint(x, y):
-                music, hell = open_settings()
+                music, hell = open_settings(music, hell)
                 fon = pygame.transform.scale(load_image('fon.jpg'), (width, height))
                 screen.blit(fon, (0, 0))
                 init_intro_text(screen)

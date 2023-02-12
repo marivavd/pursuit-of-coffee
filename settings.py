@@ -31,19 +31,25 @@ def init_intro_text(text_coord=50, intro_text=("Настройки", "", "Муз
         screen.blit(string_rendered, intro_rect)
 
 
-def init_images(all_sprites):
+def init_images(all_sprites, music, hell):
     """создание кнопки выхода и кнопок <on off>"""
     cross = Images(all_sprites, 725, 0, pygame.transform.scale(load_image('cross.png', -1), (76, 75)), 'cross')
-    music_but = Images(all_sprites, 290, 200, pygame.transform.scale(load_image('on.png', -1), (128, 128)), 'music_on')
-    hell_but = Images(all_sprites, 290, 330, pygame.transform.scale(load_image('on.png', -1), (128, 128)), 'hell_on')
+    if music:
+        music_but = Images(all_sprites, 290, 200, pygame.transform.scale(load_image('on.png', -1), (128, 128)), 'music_on')
+    else:
+        music_but = Images(all_sprites, 290, 200, pygame.transform.scale(load_image('off.png', -1), (128, 128)), 'music_off')
+    if hell:
+        hell_but = Images(all_sprites, 290, 330, pygame.transform.scale(load_image('on.png', -1), (128, 128)), 'hell_on')
+    else:
+        hell_but = Images(all_sprites, 290, 330, pygame.transform.scale(load_image('off.png', -1), (128, 128)), 'hell_off')
     return cross, music_but, hell_but
 
 
-def open_settings():
+def open_settings(music, hell):
     """настройки игры"""
     clock = pygame.time.Clock()
     all_sprites = pygame.sprite.Group()
-    cross, music_but, hell_but = init_images(all_sprites)
+    cross, music_but, hell_but = init_images(all_sprites, music, hell)
     running = True
     while running:
         for event in pygame.event.get():
