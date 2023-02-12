@@ -249,13 +249,11 @@ class Goose(Animal):
         super(Goose, self).reset_to_standard_img()
 
     def reset_with_knife_img(self):
-        # в субботу вставить изображения png
-        self.img = pygame.transform.scale(load_image(f'goose_with_knife.gif'),
+        self.img = pygame.transform.scale(load_image(f'goose_with_knife_{self.n_img}.png'),
                                           (width // self.k_img, height // self.k_img))
         super(Goose, self).reset_to_standard_img()
 
     def reset_with_mina_img(self):
-        # в субботу вставить изображения png
-        self.img = pygame.transform.scale(load_image(f'goose_with_mina.gif'),
+        self.img = pygame.transform.scale(load_image(f'goose_with_mina_{self.n_img}.png'),
                                           (width // self.k_img, height // self.k_img))
         super(Goose, self).reset_to_standard_img()
